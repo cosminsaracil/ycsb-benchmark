@@ -1,0 +1,45 @@
+
+FROM openjdk:11-jdk-slim
+
+# Install required tools
+# RUN apt-get update && apt-get install -y \
+#     wget \
+#     curl \
+#     python3 \
+#     python3-pip \
+#     redis-tools \
+#     netcat-openbsd \
+#     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y \
+    wget \
+    curl \
+    python2 \
+    python3 \
+    python3-pip \
+    redis-tools \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN ln -s /usr/bin/python2 /usr/bin/python
+
+# Download and install YCSB
+WORKDIR /ycsb
+RUN wget https://github.com/brianfrankcooper/YCSB/releases/download/0.17.0/ycsb-0.17.0.tar.gz \
+    && tar -xzf ycsb-0.17.0.tar.gz \
+    && mv ycsb-0.17.0/* . \
+    && rm -rf ycsb-0.17.0 ycsb-0.17.0.tar.gz
+
+# Create directories for results and scripts
+RUN mkdir -p /ycsb/results /ycsb/scripts
+
+# Install Python dependencies for analysis (optional)
+RUN pip3 install pandas matplotlib numpy
+
+# Make YCSB executable
+RUN chmod +x /ycsb/bin/ycsb
+
+# Set PATH
+ENV PATH="/ycsb/bin:${PATH}"
+
+CMD ["/bin/bash"]
