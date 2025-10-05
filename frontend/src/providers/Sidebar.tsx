@@ -25,15 +25,15 @@ export default function Sidebar() {
           : "bg-gray-50 border-gray-200"
       )}
     >
-      <div className="p-6">
-        <h2
+      <div className="p-6 flex items-center justify-center">
+        <h1
           className={cn(
             "text-lg font-semibold",
             theme === "dark" ? "text-white" : "text-gray-900"
           )}
         >
           Menu
-        </h2>
+        </h1>
       </div>
 
       <Separator className={theme === "dark" ? "bg-gray-800" : "bg-gray-200"} />
