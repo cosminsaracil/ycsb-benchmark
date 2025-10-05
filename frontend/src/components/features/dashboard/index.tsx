@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useGetAllResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
 import { METRICS } from "@/utils/constants";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +13,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
 import { BenchmarkData, BenchmarkResult } from "./types";
 
 ChartJS.register(
@@ -23,7 +24,7 @@ ChartJS.register(
   Legend
 );
 
-const metricToFieldMap: { [key: string]: string } = {
+const metricToFieldMap: Record<string, string> = {
   "Throughput(ops/sec)": "throughput",
   "AverageLatency(us)": "read_avg",
   "95thPercentileLatency(us)": "read_95th",
@@ -31,62 +32,26 @@ const metricToFieldMap: { [key: string]: string } = {
 };
 
 export default function Dashboard() {
-  const [results, setResults] = useState<BenchmarkResult[]>([]);
   const [selectedMetric, setSelectedMetric] = useState<string>(METRICS[0]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
+  const { data: results = [], isLoading, isError, error } = useGetAllResults();
+
   const metrics = METRICS;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const baseUrl = "http://localhost:8000";
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading...
+      </div>
+    );
+  }
 
-        console.log("Fetching data from:", baseUrl);
-
-        const fetchWithDebug = async (url: string) => {
-          const response = await fetch(url, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          console.log(`Response from ${url}:`, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: (() => {
-              const headersObj: Record<string, string> = {};
-              response.headers.forEach((value, key) => {
-                headersObj[key] = value;
-              });
-              return headersObj;
-            })(),
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response;
-        };
-
-        const [resultsRes] = await Promise.all([
-          fetchWithDebug(`${baseUrl}/api/results`),
-        ]);
-
-        const resultsData = await resultsRes.json();
-
-        console.log("Results data:", resultsData);
-
-        setResults(resultsData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-red-500">
+        {(error as Error)?.message || "Error loading results"}
+      </div>
+    );
+  }
 
   const chartData = {
     labels: ["A", "B", "C", "D", "E", "F"].map((w) => `Workload ${w}`),
@@ -95,15 +60,13 @@ export default function Dashboard() {
         label: "MongoDB",
         data: ["A", "B", "C", "D", "E", "F"].map((workload) => {
           const workloadData = results
-            .flatMap((r) => r.data)
+            .flatMap((r: BenchmarkResult) => r.data)
             .find(
-              (d): d is BenchmarkData =>
+              (d: BenchmarkData) =>
                 d.database === "mongodb" && d.workload === workload
             );
           const metricField = metricToFieldMap[selectedMetric];
-          return workloadData && metricField
-            ? workloadData[metricField] || 0
-            : 0;
+          return workloadData?.[metricField] ?? 0;
         }),
         backgroundColor: "rgba(54, 162, 235, 0.5)",
         borderColor: "rgba(54, 162, 235, 1)",
@@ -113,15 +76,13 @@ export default function Dashboard() {
         label: "Redis",
         data: ["A", "B", "C", "D", "E", "F"].map((workload) => {
           const workloadData = results
-            .flatMap((r) => r.data)
+            .flatMap((r: BenchmarkResult) => r.data)
             .find(
-              (d): d is BenchmarkData =>
+              (d: BenchmarkData) =>
                 d.database === "redis" && d.workload === workload
             );
           const metricField = metricToFieldMap[selectedMetric];
-          return workloadData && metricField
-            ? workloadData[metricField] || 0
-            : 0;
+          return workloadData?.[metricField] ?? 0;
         }),
         backgroundColor: "rgba(255, 99, 132, 0.5)",
         borderColor: "rgba(255, 99, 132, 1)",
@@ -133,46 +94,14 @@ export default function Dashboard() {
   const chartOptions = {
     responsive: true,
     plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: `${selectedMetric} by Workload`,
-      },
+      legend: { position: "top" as const },
+      title: { display: true, text: `${selectedMetric} by Workload` },
     },
     scales: {
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: selectedMetric,
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: "Workloads",
-        },
-      },
+      y: { beginAtZero: true, title: { display: true, text: selectedMetric } },
+      x: { title: { display: true, text: "Workloads" } },
     },
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        Loading...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-500">
-        {error}
-      </div>
-    );
-  }
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -189,18 +118,19 @@ export default function Dashboard() {
         ))}
       </select>
       <div className="w-[1000px] h-[600px]">
-        {/* Bar Chart */}
         <Bar options={chartOptions} data={chartData} />
       </div>
-
       <div className="grid grid-cols-2 gap-4 mt-8">
         {["A", "B", "C", "D", "E", "F"].map((workload) => (
           <div key={workload} className="p-4 border rounded shadow">
             <h3 className="font-bold mb-2">Workload {workload}</h3>
             {["mongodb", "redis"].map((db) => {
-              const data = results
-                .flatMap((r) => r.data)
-                .find((d) => d.database === db && d.workload === workload);
+              const data: BenchmarkData | undefined = results
+                .flatMap((r: BenchmarkResult) => r.data)
+                .find(
+                  (d: BenchmarkData) =>
+                    d.database === db && d.workload === workload
+                );
               return (
                 <div key={db} className="flex justify-between">
                   <span className="capitalize">{db}:</span>
