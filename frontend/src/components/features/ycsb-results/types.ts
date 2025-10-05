@@ -14,6 +14,21 @@ export interface BenchmarkResult {
   data: BenchmarkData[];
 }
 
+export type BenchmarkChartProps = {
+  results: BenchmarkResult[];
+  selectedMetric: string;
+  metricToFieldMap: Record<string, string>;
+  workloads?: string[];
+  databases?: Array<{
+    name: string;
+    label: string;
+    backgroundColor: string;
+    borderColor: string;
+  }>;
+  width?: string;
+  height?: string;
+};
+
 export interface ChartOptions {
   responsive: boolean;
   plugins: {

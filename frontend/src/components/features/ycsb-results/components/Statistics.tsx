@@ -19,7 +19,6 @@ const Statistics = ({
     if (!data) return "N/A";
 
     const value = data[metricToFieldMap[selectedMetric]];
-    console.log(value);
     return typeof value === "string" ? Number(value).toFixed(3) : value;
   };
 
