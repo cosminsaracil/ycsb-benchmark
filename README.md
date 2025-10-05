@@ -15,3 +15,5 @@ use `npm run dev`
 
 backend runs on 8000
 use `uvicorn main:app --reload`
+
+cd inside node-be and then `npm run dev` will start on port 8000 the server.
