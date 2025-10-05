@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { METRICS } from "@/utils/constants";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { BenchmarkData, BenchmarkResult } from "./types";
 
 ChartJS.register(
   CategoryScale,
@@ -30,10 +32,10 @@ const metricToFieldMap: { [key: string]: string } = {
 
 export default function Dashboard() {
   const [results, setResults] = useState<BenchmarkResult[]>([]);
-  const [metrics, setMetrics] = useState<string[]>([]);
-  const [selectedMetric, setSelectedMetric] = useState<string>("");
+  const [selectedMetric, setSelectedMetric] = useState<string>(METRICS[0]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const metrics = METRICS;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,20 +69,15 @@ export default function Dashboard() {
           return response;
         };
 
-        const [resultsRes, metricsRes] = await Promise.all([
+        const [resultsRes] = await Promise.all([
           fetchWithDebug(`${baseUrl}/api/results`),
-          fetchWithDebug(`${baseUrl}/api/metrics`),
         ]);
 
         const resultsData = await resultsRes.json();
-        const metricsData = await metricsRes.json();
 
         console.log("Results data:", resultsData);
-        console.log("Metrics data:", metricsData);
 
         setResults(resultsData);
-        setMetrics(metricsData.metrics);
-        setSelectedMetric(metricsData.metrics[0]);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
@@ -192,6 +189,7 @@ export default function Dashboard() {
         ))}
       </select>
       <div className="w-[1000px] h-[600px]">
+        {/* Bar Chart */}
         <Bar options={chartOptions} data={chartData} />
       </div>
 

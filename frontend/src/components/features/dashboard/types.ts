@@ -1,4 +1,4 @@
-interface BenchmarkData {
+export interface BenchmarkData {
   throughput: number;
   read_avg: number;
   read_95th: number;
@@ -8,13 +8,13 @@ interface BenchmarkData {
   [key: string]: string | number;
 }
 
-interface BenchmarkResult {
+export interface BenchmarkResult {
   filename: string;
   database: string;
   data: BenchmarkData[];
 }
 
-interface ChartOptions {
+export interface ChartOptions {
   responsive: boolean;
   plugins: {
     legend: {
