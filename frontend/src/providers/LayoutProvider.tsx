@@ -1,15 +1,19 @@
 "use client";
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
 import dayjs from "dayjs";
 import Sidebar from "./Sidebar";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ROUTES } from "@/utils/routes";
 
 export default function LayoutProvider({ children }: { children: ReactNode }) {
   const { theme, toggleTheme } = useTheme();
+  const pathname = usePathname();
   const currentDate = dayjs().format("YYYY-MM-DD");
+  const title = pathname === ROUTES.YCSB ? "Statistics" : "Benchmark app";
 
   return (
     <div
@@ -19,18 +23,22 @@ export default function LayoutProvider({ children }: { children: ReactNode }) {
       )}
     >
       {/* Sidebar */}
-      <Sidebar />
+      <div className="fixed left-0 top-0 h-screen z-30">
+        <Sidebar />
+      </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col">
-        {/* Persistent Top Bar */}
+      {/* Main content area with left margin for sidebar */}
+      <div className="flex-1 flex flex-col ml-64">
+        {/* Top Bar */}
         <header
           className={cn(
-            "flex justify-between items-center p-4 border-b",
-            theme === "dark" ? "border-gray-800" : "border-gray-200"
+            "fixed top-0 right-0 left-64 flex justify-between items-center p-4 border-b z-20",
+            theme === "dark"
+              ? "border-gray-800 bg-gray-900"
+              : "border-gray-200 bg-white"
           )}
         >
-          <h1 className="text-2xl font-bold">YCSB Benchmark</h1>
+          <h1 className="text-2xl font-bold">{title}</h1>
           <div className="flex items-center gap-4">
             <span
               className={cn(
@@ -59,8 +67,8 @@ export default function LayoutProvider({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        {/* Page content */}
-        <main className="p-6 flex-1">{children}</main>
+        {/* Scrollable Page content with top padding for fixed header */}
+        <main className="p-6 flex-1 mt-[73px] overflow-y-auto">{children}</main>
       </div>
     </div>
   );

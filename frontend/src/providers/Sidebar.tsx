@@ -19,7 +19,7 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "w-60 min-h-screen border-r transition-colors",
+        "w-60 min-w-60 min-h-screen border-r transition-colors",
         theme === "dark"
           ? "bg-gray-900 border-gray-800"
           : "bg-gray-50 border-gray-200"

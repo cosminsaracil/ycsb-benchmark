@@ -1,10 +1,8 @@
-import Dashboard from "@/components/features/dashboard";
-
+import YCSBResults from "@/components/features/ycsb-results";
 export default function YCSB() {
   return (
     <>
-      <h1>hello</h1>
-      <Dashboard />
+      <YCSBResults />
     </>
   );
 }
