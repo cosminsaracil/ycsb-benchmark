@@ -2,8 +2,15 @@
 
 import Link from "next/link";
 import { ROUTES } from "@/utils/routes";
+import { useGetAllYCSBResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
 
 export default function Dashboard() {
+  const { data: results = [], isFetching, error } = useGetAllYCSBResults();
+
+  if (isFetching || error) return <div>Loading...</div>;
+  if (!results) return <div>No data</div>;
+
+  console.log(results);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4">
       <h1 className="text-3xl font-bold">Hello!</h1>

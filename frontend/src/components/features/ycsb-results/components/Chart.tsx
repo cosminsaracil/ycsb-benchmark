@@ -9,7 +9,7 @@ import {
   Legend,
   ChartOptions,
 } from "chart.js";
-import { BenchmarkData, BenchmarkResult, BenchmarkChartProps } from "../types";
+import { BenchmarkData, BenchmarkChartProps } from "../types";
 
 ChartJS.register(
   CategoryScale,
@@ -42,19 +42,20 @@ export function Chart({
   width = "1000px",
   height = "600px",
 }: BenchmarkChartProps) {
+  const dataArray = results?.data || [];
+
   const chartData = {
     labels: workloads.map((w) => `Workload ${w}`),
     datasets: databases.map((db) => ({
       label: db.label,
       data: workloads.map((workload) => {
-        const workloadData = results
-          .flatMap((r: BenchmarkResult) => r.data)
-          .find(
-            (d: BenchmarkData) =>
-              d.database === db.name && d.workload === workload
-          );
+        const workloadData = dataArray.find(
+          (d: BenchmarkData) =>
+            d.database === db.name && d.workload === workload
+        );
         const metricField = metricToFieldMap[selectedMetric];
-        return workloadData?.[metricField] ?? 0;
+        const value = workloadData?.[metricField];
+        return value ? parseFloat(value as string) : 0;
       }),
       backgroundColor: db.backgroundColor,
       borderColor: db.borderColor,
@@ -66,55 +67,19 @@ export function Chart({
     responsive: true,
     maintainAspectRatio: true,
     plugins: {
-      legend: {
-        position: "top" as const,
-        labels: {
-          font: {
-            size: 12,
-            weight: 500,
-          },
-        },
-      },
+      legend: { position: "top" },
       title: {
         display: true,
         text: `${selectedMetric} by Workload`,
-        font: {
-          size: 16,
-          weight: "bold",
-        },
-        padding: {
-          top: 10,
-          bottom: 20,
-        },
       },
     },
     scales: {
       y: {
         beginAtZero: true,
-        title: {
-          display: true,
-          text: selectedMetric,
-          font: {
-            size: 12,
-            weight: 500,
-          },
-        },
-        grid: {
-          color: "rgba(0, 0, 0, 0.05)",
-        },
+        title: { display: true, text: selectedMetric },
       },
       x: {
-        title: {
-          display: true,
-          text: "Workloads",
-          font: {
-            size: 12,
-            weight: 500,
-          },
-        },
-        grid: {
-          display: false,
-        },
+        title: { display: true, text: "Workloads" },
       },
     },
   };

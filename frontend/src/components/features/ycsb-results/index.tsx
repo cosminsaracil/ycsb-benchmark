@@ -21,14 +21,20 @@ const metricToFieldMap: Record<string, string> = {
 
 export default function YCSBResults() {
   const [selectedMetric, setSelectedMetric] = useState<string>(METRICS[0]);
-  const { data: results = [], isError, error } = useGetAllYCSBResults();
-
-  const metrics = METRICS;
+  const { data: results, isError, error } = useGetAllYCSBResults();
 
   if (isError) {
     return (
       <div className="flex justify-center items-center min-h-screen text-red-500">
         {(error as Error)?.message || "Error loading results"}
+      </div>
+    );
+  }
+
+  if (!results) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading benchmark results...
       </div>
     );
   }
@@ -41,7 +47,7 @@ export default function YCSBResults() {
           <SelectValue placeholder="Select a metric" />
         </SelectTrigger>
         <SelectContent>
-          {metrics.map((metric) => (
+          {METRICS.map((metric) => (
             <SelectItem key={metric} value={metric}>
               {metric}
             </SelectItem>

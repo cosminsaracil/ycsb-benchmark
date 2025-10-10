@@ -10,12 +10,12 @@ export interface BenchmarkData {
 
 export interface BenchmarkResult {
   filename: string;
-  database: string;
+  benchmark: string;
   data: BenchmarkData[];
 }
 
 export type BenchmarkChartProps = {
-  results: BenchmarkResult[];
+  results: BenchmarkResult;
   selectedMetric: string;
   metricToFieldMap: Record<string, string>;
   workloads?: string[];
@@ -29,37 +29,9 @@ export type BenchmarkChartProps = {
   height?: string;
 };
 
-export interface ChartOptions {
-  responsive: boolean;
-  plugins: {
-    legend: {
-      position: "top";
-    };
-    title: {
-      display: true;
-      text: string;
-    };
-  };
-  scales: {
-    y: {
-      beginAtZero: boolean;
-      title: {
-        display: boolean;
-        text: string;
-      };
-    };
-    x: {
-      title: {
-        display: boolean;
-        text: string;
-      };
-    };
-  };
-}
-
 export type ResultsCardProps = {
   workload: string;
-  results: BenchmarkResult[];
+  results: BenchmarkResult;
   selectedMetric: string;
   metricToFieldMap: Record<string, string>;
 };

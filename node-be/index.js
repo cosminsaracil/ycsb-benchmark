@@ -60,13 +60,11 @@ async function loadResults() {
 
     const cleanedData = cleanFloatValues(data);
 
-    return [
-      {
-        filename: "benchmark_summary.csv",
-        benchmark: "ycsb-Benchmark",
-        data: cleanedData,
-      },
-    ];
+    return {
+      filename: "benchmark_summary.csv",
+      benchmark: "ycsb-Benchmark",
+      data: cleanedData,
+    };
   } catch (err) {
     console.error(`Error reading file benchmark_summary.csv:`, err.message);
     throw err;

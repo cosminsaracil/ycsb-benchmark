@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BenchmarkData, BenchmarkResult, ResultsCardProps } from "../types";
+import { BenchmarkData, ResultsCardProps } from "../types";
 
 const Statistics = ({
   workload,
@@ -10,23 +10,22 @@ const Statistics = ({
   const databases = ["mongodb", "redis"];
 
   const getDatabaseData = (db: string) => {
-    return results
-      .flatMap((r: BenchmarkResult) => r.data)
-      .find((d: BenchmarkData) => d.database === db && d.workload === workload);
+    return results.data.find(
+      (d: BenchmarkData) => d.database === db && d.workload === workload
+    );
   };
 
   const formatValue = (data: BenchmarkData | undefined) => {
     if (!data) return "N/A";
-
     const value = data[metricToFieldMap[selectedMetric]];
-    return typeof value === "string" ? Number(value).toFixed(3) : value;
+    const num = Number(value);
+    return isNaN(num) ? "N/A" : num.toFixed(3);
   };
 
-  const getDatabaseColor = (db: string) => {
-    return db === "mongodb"
+  const getDatabaseColor = (db: string) =>
+    db === "mongodb"
       ? "text-blue-600 dark:text-blue-400"
       : "text-red-600 dark:text-red-400";
-  };
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
