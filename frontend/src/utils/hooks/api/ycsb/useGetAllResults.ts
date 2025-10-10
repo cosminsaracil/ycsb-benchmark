@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-export const fetchResults = async () => {
+export const fetchYCSBResults = async () => {
   const baseUrl = "http://localhost:8000";
   const response = await fetch(`${baseUrl}/api/results`);
   if (!response.ok) {
@@ -9,8 +9,8 @@ export const fetchResults = async () => {
   return response.json();
 };
 
-export const useGetAllResults = () =>
+export const useGetAllYCSBResults = () =>
   useQuery({
     queryKey: ["results"],
-    queryFn: fetchResults,
+    queryFn: fetchYCSBResults,
   });

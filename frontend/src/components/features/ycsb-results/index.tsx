@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useGetAllResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
+import { useGetAllYCSBResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
 import { METRICS } from "@/utils/constants";
 import Statistics from "./components/Statistics";
 import { Chart } from "./components/Chart";
@@ -21,7 +21,7 @@ const metricToFieldMap: Record<string, string> = {
 
 export default function YCSBResults() {
   const [selectedMetric, setSelectedMetric] = useState<string>(METRICS[0]);
-  const { data: results = [], isError, error } = useGetAllResults();
+  const { data: results = [], isError, error } = useGetAllYCSBResults();
 
   const metrics = METRICS;
 
