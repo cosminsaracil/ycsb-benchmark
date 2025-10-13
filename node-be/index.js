@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import csv from "csv-parser";
 import morgan from "morgan";
 import process from "process";
+import { checkConnections } from "./clients/index.js";
 
 // load env variables
 dotenv.config();
@@ -96,4 +97,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Server is running at http://localhost:${PORT}`);
 });
 
-// test commit
+// Clients connections
+// Expose the API from clients/index.js
+app.get("/api/check-connection", checkConnections);
