@@ -43,17 +43,43 @@ export default function YCSBResults() {
     <main className="flex min-h-screen flex-col items-center p-10">
       <h1 className="text-4xl font-bold mb-8">YCSB Benchmark Results</h1>
       <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-        <SelectTrigger className="w-[280px] mb-8">
+        <SelectTrigger
+          className="
+      w-[280px] mb-8
+      bg-gray-200 text-gray-900 border border-gray-300
+      hover:bg-gray-300  
+      dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700
+      dark:hover:bg-gray-700
+      transition-colors
+    "
+        >
           <SelectValue placeholder="Select a metric" />
         </SelectTrigger>
-        <SelectContent>
+
+        <SelectContent
+          className="
+      bg-gray-100 border border-gray-300
+      dark:bg-gray-900 dark:border-gray-700
+      transition-colors
+    "
+        >
           {METRICS.map((metric) => (
-            <SelectItem key={metric} value={metric}>
+            <SelectItem
+              key={metric}
+              value={metric}
+              className="
+          bg-gray-100 hover:bg-red-100 focus:bg-red-200 text-gray-900
+          dark:bg-gray-900 dark:text-gray-100
+          dark:hover:bg-green-900 dark:focus:bg-red-800
+          cursor-pointer transition-colors
+        "
+            >
               {metric}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+
       <Chart
         results={results}
         selectedMetric={selectedMetric}

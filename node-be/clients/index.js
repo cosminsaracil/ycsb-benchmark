@@ -35,8 +35,5 @@ export const checkConnections = async (req, res) => {
     redisStatus = "stopped";
   }
 
-  console.log(`MongoDB: ${mongoStatus}`);
-  console.log(`Redis: ${redisStatus}`);
-
   res.json({ mongo: mongoStatus, redis: redisStatus });
 };
