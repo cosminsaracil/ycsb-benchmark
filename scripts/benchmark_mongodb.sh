@@ -71,7 +71,7 @@ mkdir -p /ycsb/results/mongodb
 
 # Load data ONCE using workload A
 echo "Loading initial dataset..."
-ycsb load mongodb -s \
+ycsb.sh load mongodb -s \
     -P workloads/workloada \
     -p mongodb.url=mongodb://mongodb:27017/ycsb \
     -p recordcount=$RECORD_COUNT \
@@ -82,7 +82,7 @@ ycsb load mongodb -s \
 for workload in a b c d e f; do
     echo "Running MongoDB Workload $workload..."
     
-    ycsb run mongodb -s \
+    ycsb.sh run mongodb -s \
         -P workloads/workload$workload \
         -p mongodb.url=mongodb://mongodb:27017/ycsb \
         -p recordcount=$RECORD_COUNT \

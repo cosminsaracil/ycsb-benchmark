@@ -74,11 +74,6 @@ async function loadResults() {
 
 // Routes
 
-// ✅ Debug route
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 // ! YCSB Benchmark
 
 // GET /api/results

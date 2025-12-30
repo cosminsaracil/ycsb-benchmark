@@ -1,5 +1,5 @@
-/usr/local/openjdk-11/bin/java -cp /ycsb/redis-binding/conf:/ycsb/conf:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/redis-binding/lib/jedis-2.9.0.jar:/ycsb/redis-binding/lib/redis-binding-0.17.0.jar:/ycsb/redis-binding/lib/commons-pool2-2.4.2.jar site.ycsb.Client -db site.ycsb.db.RedisClient -s -P workloads/workloadc -p redis.host=redis -p redis.port=6379 -p recordcount=100000 -p operationcount=100000 -p threadcount=10 -t
-Command line: -db site.ycsb.db.RedisClient -s -P workloads/workloadc -p redis.host=redis -p redis.port=6379 -p recordcount=100000 -p operationcount=100000 -p threadcount=10 -t
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/redis-binding/lib/commons-pool2-2.4.2.jar:/ycsb/redis-binding/lib/jedis-2.9.0.jar:/ycsb/redis-binding/lib/redis-binding-0.17.0.jar site.ycsb.Client -t -db site.ycsb.db.RedisClient -s -P workloads/workloadc -p redis.host=redis -p redis.port=6379 -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+Command line: -t -db site.ycsb.db.RedisClient -s -P workloads/workloadc -p redis.host=redis -p redis.port=6379 -p recordcount=100000 -p operationcount=100000 -p threadcount=10
 YCSB Client 0.17.0
 
 Loading workload...
@@ -14,29 +14,29 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-2025-09-30 18:50:04:526 0 sec: 0 operations; est completion in 0 second 
-2025-09-30 18:50:06:781 2 sec: 100000 operations; 43610.99 current ops/sec; [READ: Count=100000, Max=18671, Min=42, Avg=221.18, 90=299, 99=466, 99.9=1289, 99.99=13607] [CLEANUP: Count=10, Max=591, Min=26, Avg=91.6, 90=53, 99=591, 99.9=591, 99.99=591] 
-[OVERALL], RunTime(ms), 2293
-[OVERALL], Throughput(ops/sec), 43610.989969472306
+2025-12-30 11:07:49:060 0 sec: 0 operations; est completion in 0 second 
+2025-12-30 11:07:52:745 3 sec: 100000 operations; 26816.84 current ops/sec; [READ: Count=100000, Max=18127, Min=72, Avg=412.18, 90=564, 99=1068, 99.9=5291, 99.99=13271] [CLEANUP: Count=10, Max=905, Min=47, Avg=154, 90=91, 99=905, 99.9=905, 99.99=905] 
+[OVERALL], RunTime(ms), 3730
+[OVERALL], Throughput(ops/sec), 26809.65147453083
 [TOTAL_GCS_G1_Young_Generation], Count, 8
-[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 30
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 1.3083296990841693
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 27
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.7238605898123325
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
 [TOTAL_GCs], Count, 8
-[TOTAL_GC_TIME], Time(ms), 30
-[TOTAL_GC_TIME_%], Time(%), 1.3083296990841693
+[TOTAL_GC_TIME], Time(ms), 27
+[TOTAL_GC_TIME_%], Time(%), 0.7238605898123325
 [READ], Operations, 100000
-[READ], AverageLatency(us), 221.18469
-[READ], MinLatency(us), 42
-[READ], MaxLatency(us), 18671
-[READ], 95thPercentileLatency(us), 350
-[READ], 99thPercentileLatency(us), 466
+[READ], AverageLatency(us), 412.17564
+[READ], MinLatency(us), 72
+[READ], MaxLatency(us), 18127
+[READ], 95thPercentileLatency(us), 647
+[READ], 99thPercentileLatency(us), 1068
 [READ], Return=OK, 100000
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 91.6
-[CLEANUP], MinLatency(us), 26
-[CLEANUP], MaxLatency(us), 591
-[CLEANUP], 95thPercentileLatency(us), 591
-[CLEANUP], 99thPercentileLatency(us), 591
+[CLEANUP], AverageLatency(us), 154.0
+[CLEANUP], MinLatency(us), 47
+[CLEANUP], MaxLatency(us), 905
+[CLEANUP], 95thPercentileLatency(us), 905
+[CLEANUP], 99thPercentileLatency(us), 905

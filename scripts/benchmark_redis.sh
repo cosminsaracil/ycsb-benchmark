@@ -79,7 +79,7 @@ sleep 1
 
 # Load data once using workload A
 echo "Loading initial data using workload A..."
-ycsb load redis -s \
+ycsb.sh load redis -s \
     -P workloads/workloada \
     -p redis.host=redis \
     -p redis.port=6379 \
@@ -103,7 +103,7 @@ for workload in a b c d e f; do
     
     # Run phase only (data already loaded)
     echo "Running workload $workload..."
-    ycsb run redis -s \
+    ycsb.sh run redis -s \
         -P workloads/workload$workload \
         -p redis.host=redis \
         -p redis.port=6379 \
