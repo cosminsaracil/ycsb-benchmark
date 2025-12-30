@@ -29,7 +29,11 @@ def parse_ycsb_output(file_path):
         'update_99th': r'\[UPDATE\], 99thPercentileLatency\(us\), ([\d.]+)',
         'insert_avg': r'\[INSERT\], AverageLatency\(us\), ([\d.]+)',
         'insert_95th': r'\[INSERT\], 95thPercentileLatency\(us\), ([\d.]+)',
+        'insert_99th': r'\[INSERT\], 99thPercentileLatency\(us\), ([\d.]+)',
         'scan_avg': r'\[SCAN\], AverageLatency\(us\), ([\d.]+)',
+        'scan_95th': r'\[SCAN\], 95thPercentileLatency\(us\), ([\d.]+)',
+        'scan_99th': r'\[SCAN\], 99thPercentileLatency\(us\), ([\d.]+)',
+
     }
     
     for metric, pattern in latency_patterns.items():

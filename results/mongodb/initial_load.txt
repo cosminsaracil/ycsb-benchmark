@@ -1,10 +1,10 @@
-/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar site.ycsb.Client -load -db site.ycsb.db.MongoDbClient -s -P workloads/workloada -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p threadcount=10
-Command line: -load -db site.ycsb.db.MongoDbClient -s -P workloads/workloada -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p threadcount=10
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar site.ycsb.Client -load -db site.ycsb.db.MongoDbClient -s -P workloads/workloada -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p threadcount=10 -p mongodb.upsert=true -p core_workload_insertion_retry_limit=10
+Command line: -load -db site.ycsb.db.MongoDbClient -s -P workloads/workloada -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p threadcount=10 -p mongodb.upsert=true -p core_workload_insertion_retry_limit=10
 YCSB Client 0.17.0
 
 Loading workload...
 Starting test.
-2025-12-30 11:11:25:140 0 sec: 0 operations; est completion in 0 second 
+2025-12-30 20:02:23:768 0 sec: 0 operations; est completion in 0 second 
 mongo client connection created with mongodb://mongodb:27017/ycsb
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
@@ -16,154 +16,28 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-Exception while trying bulk insert with 0
-Exception while trying bulk insert with 0
-Exception while trying bulk insert with 0
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user1820151046732198393" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-Exception while trying bulk insert with 0
-Exception while trying bulk insert with 0
-Exception while trying bulk insert with 0
-Exception while trying bulk insert with 0
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user1000385178204227360" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-Exception while trying bulk insert with 0
-Exception while trying bulk insert with 0
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user6284781860667377211" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user8517097267634966620" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-Exception while trying bulk insert with 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user3232700585171816769" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user9105318085603802964" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user7697331399106995587" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user6873002678636213555" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user4052466453699787802" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-com.mongodb.MongoWriteException: E11000 duplicate key error collection: ycsb.usertable index: _id_ dup key: { _id: "user5465015992139406178" }
-	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:967)
-	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:494)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:478)
-	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:472)
-	at site.ycsb.db.MongoDbClient.insert(MongoDbClient.java:270)
-	at site.ycsb.DBWrapper.insert(DBWrapper.java:221)
-	at site.ycsb.workloads.CoreWorkload.doInsert(CoreWorkload.java:601)
-	at site.ycsb.ClientThread.run(ClientThread.java:135)
-	at java.base/java.lang.Thread.run(Thread.java:829)
-Error inserting, not retrying any more. number of attempts: 1Insertion Retry Limit: 0
-2025-12-30 11:11:25:560 0 sec: 0 operations; est completion in 106751991167300 days 15 hours [CLEANUP: Count=10, Max=7275, Min=2, Avg=734.3, 90=37, 99=7275, 99.9=7275, 99.99=7275] [INSERT: Count=0, Max=0, Min=9223372036854775807, Avg=NaN, 90=0, 99=0, 99.9=0, 99.99=0] [INSERT-FAILED: Count=10, Max=142335, Min=91072, Avg=117318.4, 90=136703, 99=142335, 99.9=142335, 99.99=142335] 
-[OVERALL], RunTime(ms), 463
-[OVERALL], Throughput(ops/sec), 0.0
-[TOTAL_GCS_G1_Young_Generation], Count, 1
-[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 19
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 4.103671706263499
+2025-12-30 20:02:29:170 5 sec: 100000 operations; 18416.21 current ops/sec; [CLEANUP: Count=10, Max=7479, Min=1, Avg=752.6, 90=26, 99=7479, 99.9=7479, 99.99=7479] [INSERT: Count=100000, Max=245247, Min=226, Avg=492.09, 90=677, 99=1883, 99.9=5631, 99.99=24607] 
+[OVERALL], RunTime(ms), 5430
+[OVERALL], Throughput(ops/sec), 18416.206261510128
+[TOTAL_GCS_G1_Young_Generation], Count, 19
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 72
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 1.3259668508287292
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
-[TOTAL_GCs], Count, 1
-[TOTAL_GC_TIME], Time(ms), 19
-[TOTAL_GC_TIME_%], Time(%), 4.103671706263499
+[TOTAL_GCs], Count, 19
+[TOTAL_GC_TIME], Time(ms), 72
+[TOTAL_GC_TIME_%], Time(%), 1.3259668508287292
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 734.3
-[CLEANUP], MinLatency(us), 2
-[CLEANUP], MaxLatency(us), 7275
-[CLEANUP], 95thPercentileLatency(us), 7275
-[CLEANUP], 99thPercentileLatency(us), 7275
-[INSERT], Operations, 0
-[INSERT], AverageLatency(us), NaN
-[INSERT], MinLatency(us), 9223372036854775807
-[INSERT], MaxLatency(us), 0
-[INSERT], 95thPercentileLatency(us), 0
-[INSERT], 99thPercentileLatency(us), 0
-[INSERT], Return=ERROR, 10
-[INSERT-FAILED], Operations, 10
-[INSERT-FAILED], AverageLatency(us), 117318.4
-[INSERT-FAILED], MinLatency(us), 91072
-[INSERT-FAILED], MaxLatency(us), 142335
-[INSERT-FAILED], 95thPercentileLatency(us), 142335
-[INSERT-FAILED], 99thPercentileLatency(us), 142335
+[CLEANUP], AverageLatency(us), 752.6
+[CLEANUP], MinLatency(us), 1
+[CLEANUP], MaxLatency(us), 7479
+[CLEANUP], 95thPercentileLatency(us), 7479
+[CLEANUP], 99thPercentileLatency(us), 7479
+[INSERT], Operations, 100000
+[INSERT], AverageLatency(us), 492.08579
+[INSERT], MinLatency(us), 226
+[INSERT], MaxLatency(us), 245247
+[INSERT], 95thPercentileLatency(us), 888
+[INSERT], 99thPercentileLatency(us), 1883
+[INSERT], Return=OK, 100000

@@ -25,7 +25,7 @@ RUN wget https://github.com/brianfrankcooper/YCSB/releases/download/0.17.0/ycsb-
 RUN mkdir -p /ycsb/results /ycsb/scripts
 
 # Install Python dependencies for analysis
-RUN pip3 install --no-cache-dir pandas matplotlib numpy
+RUN pip3 install --no-cache-dir pandas matplotlib numpy pymongo
 
 # Make YCSB executable
 RUN chmod +x /ycsb/bin/ycsb
