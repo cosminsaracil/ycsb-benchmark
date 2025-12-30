@@ -34,6 +34,19 @@ Some workloads may insert additional data (like workload E or F), so the dataset
 
 Before executing each YCSB workload, the target database was reset and reloaded with the initial dataset. This step was necessary to avoid key collisions in insert-heavy workloads (D and E) and to ensure that all operations completed successfully, producing uncontaminated throughput and latency measurements
 
+`for workload in a b c d e f; do
+  DROP DB
+  LOAD
+  RUN workload
+done`
+
+- Consistent starting state for each workload
+- No data pollution from previous workloads
+- Accurate performance measurements without interference
+- No duplicate key errors (each workload gets clean data)
+
+YCSB never includes the load phase in workload metrics. The measured benchmark is only the run phase. </br>
+
 Note: The original ycsb CLI script (bin/ycsb) was written for Python 2 syntax.
 You must call ycsb.sh which is the Java launcher instead of the Python wrapper.
 ycsb.sh calls java -cp ... site.ycsb.CommandLine → fully Java-based

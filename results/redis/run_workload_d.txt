@@ -14,36 +14,36 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-2025-12-30 19:59:08:281 0 sec: 0 operations; est completion in 0 second 
-2025-12-30 19:59:11:698 3 sec: 100000 operations; 28977.11 current ops/sec; [READ: Count=94984, Max=14935, Min=64, Avg=319.11, 90=442, 99=651, 99.9=2047, 99.99=11647] [CLEANUP: Count=10, Max=600, Min=39, Avg=102, 90=57, 99=600, 99.9=600, 99.99=600] [INSERT: Count=5016, Max=11687, Min=332, Avg=661.76, 90=917, 99=1482, 99.9=3735, 99.99=9671] 
-[OVERALL], RunTime(ms), 3450
-[OVERALL], Throughput(ops/sec), 28985.507246376812
+2025-12-30 20:46:42:021 0 sec: 0 operations; est completion in 0 second 
+2025-12-30 20:46:45:163 3 sec: 100000 operations; 31496.06 current ops/sec; [READ: Count=94957, Max=13279, Min=60, Avg=295.81, 90=379, 99=562, 99.9=2271, 99.99=11031] [CLEANUP: Count=10, Max=561, Min=36, Avg=97.2, 90=65, 99=561, 99.9=561, 99.99=561] [INSERT: Count=5043, Max=11455, Min=240, Avg=613.98, 90=777, 99=1148, 99.9=2815, 99.99=11175] 
+[OVERALL], RunTime(ms), 3175
+[OVERALL], Throughput(ops/sec), 31496.062992125986
 [TOTAL_GCS_G1_Young_Generation], Count, 9
 [TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 23
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.6666666666666667
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.7244094488188977
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
 [TOTAL_GCs], Count, 9
 [TOTAL_GC_TIME], Time(ms), 23
-[TOTAL_GC_TIME_%], Time(%), 0.6666666666666667
-[READ], Operations, 94984
-[READ], AverageLatency(us), 319.1110502821528
-[READ], MinLatency(us), 64
-[READ], MaxLatency(us), 14935
-[READ], 95thPercentileLatency(us), 504
-[READ], 99thPercentileLatency(us), 651
-[READ], Return=OK, 94984
+[TOTAL_GC_TIME_%], Time(%), 0.7244094488188977
+[READ], Operations, 94957
+[READ], AverageLatency(us), 295.81295744389564
+[READ], MinLatency(us), 60
+[READ], MaxLatency(us), 13279
+[READ], 95thPercentileLatency(us), 439
+[READ], 99thPercentileLatency(us), 562
+[READ], Return=OK, 94957
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 102.0
-[CLEANUP], MinLatency(us), 39
-[CLEANUP], MaxLatency(us), 600
-[CLEANUP], 95thPercentileLatency(us), 600
-[CLEANUP], 99thPercentileLatency(us), 600
-[INSERT], Operations, 5016
-[INSERT], AverageLatency(us), 661.7641547049442
-[INSERT], MinLatency(us), 332
-[INSERT], MaxLatency(us), 11687
-[INSERT], 95thPercentileLatency(us), 1042
-[INSERT], 99thPercentileLatency(us), 1482
-[INSERT], Return=OK, 5016
+[CLEANUP], AverageLatency(us), 97.2
+[CLEANUP], MinLatency(us), 36
+[CLEANUP], MaxLatency(us), 561
+[CLEANUP], 95thPercentileLatency(us), 561
+[CLEANUP], 99thPercentileLatency(us), 561
+[INSERT], Operations, 5043
+[INSERT], AverageLatency(us), 613.9750148720999
+[INSERT], MinLatency(us), 240
+[INSERT], MaxLatency(us), 11455
+[INSERT], 95thPercentileLatency(us), 901
+[INSERT], 99thPercentileLatency(us), 1148
+[INSERT], Return=OK, 5043

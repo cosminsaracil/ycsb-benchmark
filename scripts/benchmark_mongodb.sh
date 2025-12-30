@@ -1,10 +1,14 @@
 #!/bin/bash
 echo "Starting MongoDB YCSB Benchmark..."
 
-# Configuration  
+# Configuration
 RECORD_COUNT=100000
 OPERATION_COUNT=100000
 THREADS=10
+MONGO_URL="mongodb://mongodb:27017/ycsb"
+RESULTS_DIR="/ycsb/results/mongodb"
+
+mkdir -p "$RESULTS_DIR"
 
 # Wait for MongoDB
 echo "Waiting for MongoDB to be ready..."
@@ -15,82 +19,64 @@ done
 sleep 3
 echo "MongoDB is ready!"
 
-mkdir -p /ycsb/results/mongodb
-
-# SOLUTION: Use Python to clear MongoDB (pymongo should be available)
-echo "Clearing MongoDB database..."
+# Function to drop DB
+drop_db() {
 python3 << 'PYTHON_CLEAR'
-try:
-    from pymongo import MongoClient
-    client = MongoClient('mongodb://mongodb:27017/', serverSelectionTimeoutMS=5000)
-    client.drop_database('ycsb')
-    print("  ✓ Database dropped successfully using pymongo")
-except ImportError:
-    print("  ! pymongo not available, will rely on YCSB to handle")
-except Exception as e:
-    print(f"  ! Could not drop database: {e}")
-    print("  ! Will proceed - YCSB should handle conflicts")
+from pymongo import MongoClient
+client = MongoClient('mongodb://mongodb:27017/', serverSelectionTimeoutMS=5000)
+client.drop_database('ycsb')
+print("  ✓ MongoDB database dropped")
 PYTHON_CLEAR
+}
 
-sleep 2
-
-# Load initial dataset with proper parameters
-echo "Loading initial dataset..."
-ycsb.sh load mongodb -s \
-    -P workloads/workloada \
-    -p mongodb.url=mongodb://mongodb:27017/ycsb \
-    -p recordcount=$RECORD_COUNT \
-    -p threadcount=$THREADS \
-    -p mongodb.upsert=true \
-    -p core_workload_insertion_retry_limit=10 \
-    > /ycsb/results/mongodb/initial_load.txt 2>&1
-
-# Check if load succeeded
-if grep -q "INSERT.*Operations, 0" /ycsb/results/mongodb/initial_load.txt; then
-    echo "ERROR: No records inserted!"
-    echo ""
-    echo "Last 30 lines of error log:"
-    tail -30 /ycsb/results/mongodb/initial_load.txt
-    echo ""
-    echo "This usually means:"
-    echo "1. MongoDB database wasn't cleared properly"
-    echo "2. There's a connection issue"
-    echo ""
-    echo "SOLUTION: Restart MongoDB container and try again:"
-    echo "  docker-compose restart mongodb"
-    echo "  sleep 10"
-    echo "  ./scripts/benchmark_mongodb.sh"
-    exit 1
-fi
-
-# Check for successful inserts
-insert_count=$(grep "\[INSERT\], Operations," /ycsb/results/mongodb/initial_load.txt | grep -o "[0-9]*$" | head -1)
-if [ ! -z "$insert_count" ] && [ "$insert_count" -gt 0 ]; then
-    echo "Initial load completed ($insert_count records)"
-else
-    echo "WARNING: Could not verify insert count"
-fi
-
-# Run ALL workloads sequentially
+# Loop through workloads
 for workload in a b c d e f; do
-    echo "Running MongoDB workload $workload..."
-    if [ "$workload" == "e" ]; then
-        echo "  (Workload E may take 2-3 minutes)"
+    echo ""
+    echo "=============================="
+    echo "Running workload $workload"
+    echo "=============================="
+
+    echo "Step 1/3: Dropping database..."
+    drop_db
+    sleep 2
+
+    echo "Step 2/3: Loading data..."
+    ycsb.sh load mongodb -s \
+        -P workloads/workloada \
+        -p mongodb.url=$MONGO_URL \
+        -p recordcount=$RECORD_COUNT \
+        -p threadcount=$THREADS \
+        -p mongodb.upsert=true \
+        -p core_workload_insertion_retry_limit=10 \
+        > "$RESULTS_DIR/load_workload_${workload}.txt" 2>&1
+
+    if grep -q "INSERT.*Operations, 0" "$RESULTS_DIR/load_workload_${workload}.txt"; then
+        echo "ERROR: No records inserted during load for workload $workload"
+        tail -30 "$RESULTS_DIR/load_workload_${workload}.txt"
+        exit 1
     fi
-    
+
+    echo "  ✓ Initial load for workload $workload completed successfully"
+
+    echo "Step 3/3: Running workload $workload..."
+    if [ "$workload" == "e" ]; then
+        echo "  (Workload E is scan-heavy and may take longer)"
+    fi
+
     ycsb.sh run mongodb -s \
         -P workloads/workload$workload \
-        -p mongodb.url=mongodb://mongodb:27017/ycsb \
+        -p mongodb.url=$MONGO_URL \
         -p recordcount=$RECORD_COUNT \
         -p operationcount=$OPERATION_COUNT \
         -p threadcount=$THREADS \
-        > /ycsb/results/mongodb/run_workload_${workload}.txt 2>&1
-    
-    if grep -q "Return=ERROR" /ycsb/results/mongodb/run_workload_${workload}.txt; then
-        echo "  WARNING: Workload $workload had errors"
+        > "$RESULTS_DIR/run_workload_${workload}.txt" 2>&1
+
+    if grep -q "Return=ERROR" "$RESULTS_DIR/run_workload_${workload}.txt"; then
+        echo "WARNING: Workload $workload completed with errors"
     else
-        echo "  ✓ Completed"
+        echo "  ✓ Workload $workload completed successfully"
     fi
 done
 
-echo "MongoDB benchmark completed!"
+echo ""
+echo "MongoDB YCSB benchmark completed successfully!"
