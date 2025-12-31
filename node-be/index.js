@@ -19,13 +19,27 @@ app.use(cors({ origin: "*", credentials: false }));
 app.use(express.json());
 app.use(morgan("dev"));
 
+// Benchmark configuration
+const WORKLOADS = ["a", "b", "c", "d", "e", "f"];
+const DATABASES = ["redis", "mongodb"];
+const STEPS_PER_WORKLOAD = 3;
+
+// Calculate progress weights
+const TOTAL_WORKLOADS = WORKLOADS.length * DATABASES.length; // 12 workloads total
+const PROGRESS_PER_DATABASE = 50; // Redis: 50%, MongoDB: 50%
+const PROGRESS_PER_WORKLOAD = PROGRESS_PER_DATABASE / WORKLOADS.length; // ~8.33% per workload
+const PROGRESS_PER_STEP = PROGRESS_PER_WORKLOAD / STEPS_PER_WORKLOAD; // ~2.78% per step
+
 // Track benchmark status
 let benchmarkStatus = {
   isRunning: false,
   progress: 0,
+  currentDatabase: null,
   currentWorkload: null,
+  currentStep: null,
   message: "",
   startTime: null,
+  completedWorkloads: [],
 };
 
 // Utility: clean float values
@@ -44,6 +58,31 @@ const cleanFloatValues = (obj) => {
   }
   return obj;
 };
+
+// Calculate precise progress
+function calculateProgress(database, workload, step) {
+  let progress = 0;
+
+  // Base progress for completed databases
+  if (database === "mongodb") {
+    progress += PROGRESS_PER_DATABASE; // Redis completed
+  }
+
+  // Progress for completed workloads in current database
+  const workloadIndex = WORKLOADS.indexOf(workload.toLowerCase());
+  if (workloadIndex > 0) {
+    progress += workloadIndex * PROGRESS_PER_WORKLOAD;
+  }
+
+  // Progress for current workload steps
+  const stepMatch = step?.match(/Step (\d+)\/3/);
+  if (stepMatch) {
+    const currentStep = parseInt(stepMatch[1]);
+    progress += (currentStep - 1) * PROGRESS_PER_STEP;
+  }
+
+  return Math.min(Math.round(progress * 10) / 10, 100); // Round to 1 decimal, max 100
+}
 
 // Load CSV results
 async function loadResults() {
@@ -110,9 +149,12 @@ app.post("/api/benchmark/start", async (req, res) => {
   benchmarkStatus = {
     isRunning: true,
     progress: 0,
-    currentWorkload: "Initializing...",
-    message: "Starting benchmark...",
+    currentDatabase: null,
+    currentWorkload: null,
+    currentStep: null,
+    message: "Initializing benchmark suite...",
     startTime: new Date().toISOString(),
+    completedWorkloads: [],
   };
 
   res.json({
@@ -134,31 +176,83 @@ function runBenchmark() {
     maxBuffer: 10 * 1024 * 1024, // 10MB buffer
   });
 
-  // Update progress based on output
-  let outputBuffer = "";
+  let currentDatabase = null;
+  let currentWorkload = null;
+  let currentStep = null;
 
   benchmarkProcess.stdout.on("data", (data) => {
-    outputBuffer += data.toString();
-    console.log("STDOUT:", data.toString());
+    const output = data.toString();
+    console.log("STDOUT:", output);
 
-    // Parse output for progress (customize based on your script output)
-    if (data.toString().includes("workload")) {
-      const match = data.toString().match(/workload[a-z]/i);
-      if (match) {
-        benchmarkStatus.currentWorkload = match[0];
+    // Detect database phase
+    if (output.includes("PHASE 1: Redis Benchmarks")) {
+      currentDatabase = "redis";
+      benchmarkStatus.currentDatabase = "Redis";
+      benchmarkStatus.message = "Starting Redis benchmarks...";
+      benchmarkStatus.progress = 0;
+    } else if (output.includes("PHASE 2: MongoDB Benchmarks")) {
+      currentDatabase = "mongodb";
+      benchmarkStatus.currentDatabase = "MongoDB";
+      benchmarkStatus.message = "Starting MongoDB benchmarks...";
+      benchmarkStatus.progress = 50;
+    }
+
+    // Detect workload
+    const workloadMatch = output.match(/Running workload ([a-f])/i);
+    if (workloadMatch) {
+      currentWorkload = workloadMatch[1].toLowerCase();
+      benchmarkStatus.currentWorkload = `Workload ${currentWorkload.toUpperCase()}`;
+    }
+
+    // Detect steps
+    if (output.includes("Step 1/3")) {
+      currentStep = "Step 1/3";
+      benchmarkStatus.currentStep = "Resetting database";
+      benchmarkStatus.message = `${
+        benchmarkStatus.currentDatabase
+      } - Workload ${currentWorkload?.toUpperCase()}: Resetting database...`;
+    } else if (output.includes("Step 2/3")) {
+      currentStep = "Step 2/3";
+      benchmarkStatus.currentStep = "Loading data";
+      benchmarkStatus.message = `${
+        benchmarkStatus.currentDatabase
+      } - Workload ${currentWorkload?.toUpperCase()}: Loading initial dataset...`;
+    } else if (output.includes("Step 3/3")) {
+      currentStep = "Step 3/3";
+      benchmarkStatus.currentStep = "Running workload";
+      benchmarkStatus.message = `${
+        benchmarkStatus.currentDatabase
+      } - Workload ${currentWorkload?.toUpperCase()}: Running measured workload...`;
+    }
+
+    // Detect workload completion
+    if (output.includes("completed successfully") && currentWorkload) {
+      const completedKey = `${currentDatabase}-${currentWorkload}`;
+      if (!benchmarkStatus.completedWorkloads.includes(completedKey)) {
+        benchmarkStatus.completedWorkloads.push(completedKey);
       }
     }
 
-    // Estimate progress (customize this logic based on your workflow)
-    if (data.toString().includes("Loading")) {
-      benchmarkStatus.progress = 20;
-      benchmarkStatus.message = "Loading data...";
-    } else if (data.toString().includes("Running")) {
-      benchmarkStatus.progress = 50;
-      benchmarkStatus.message = "Running workloads...";
-    } else if (data.toString().includes("analyze")) {
-      benchmarkStatus.progress = 90;
-      benchmarkStatus.message = "Analyzing results...";
+    // Detect analysis phase
+    if (
+      output.includes("YCSB Workload Descriptions") ||
+      output.includes("analyze_results.py")
+    ) {
+      benchmarkStatus.progress = 95;
+      benchmarkStatus.message = "Analyzing results and generating reports...";
+      benchmarkStatus.currentDatabase = null;
+      benchmarkStatus.currentWorkload = null;
+      benchmarkStatus.currentStep = "Analyzing";
+    }
+
+    // Update progress calculation
+    if (currentDatabase && currentWorkload && currentStep) {
+      const calculatedProgress = calculateProgress(
+        currentDatabase,
+        currentWorkload,
+        currentStep
+      );
+      benchmarkStatus.progress = calculatedProgress;
     }
   });
 
@@ -171,18 +265,24 @@ function runBenchmark() {
       benchmarkStatus = {
         isRunning: false,
         progress: 100,
+        currentDatabase: null,
         currentWorkload: "Completed",
-        message: "Benchmark completed successfully",
+        currentStep: null,
+        message: "All benchmarks completed successfully! Results are ready.",
         startTime: benchmarkStatus.startTime,
+        completedWorkloads: benchmarkStatus.completedWorkloads,
       };
       console.log("Benchmark completed successfully");
     } else {
       benchmarkStatus = {
         isRunning: false,
-        progress: 0,
+        progress: benchmarkStatus.progress,
+        currentDatabase: benchmarkStatus.currentDatabase,
         currentWorkload: "Failed",
-        message: `Benchmark failed with code ${code}`,
+        currentStep: null,
+        message: `Benchmark failed with exit code ${code}`,
         startTime: benchmarkStatus.startTime,
+        completedWorkloads: benchmarkStatus.completedWorkloads,
       };
       console.error(`Benchmark failed with code ${code}`);
     }
@@ -192,9 +292,12 @@ function runBenchmark() {
     benchmarkStatus = {
       isRunning: false,
       progress: 0,
+      currentDatabase: null,
       currentWorkload: "Error",
+      currentStep: null,
       message: `Error: ${error.message}`,
       startTime: benchmarkStatus.startTime,
+      completedWorkloads: [],
     };
     console.error("Benchmark error:", error);
   });

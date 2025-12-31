@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { DbStatusIndicator } from "./StatusIndicator";
-import { Activity, Database, RefreshCw } from "lucide-react";
 
 export const BenchmarkCard = ({
   title,

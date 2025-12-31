@@ -3,9 +3,12 @@ import { useState, useEffect, useCallback } from "react";
 interface BenchmarkStatus {
   isRunning: boolean;
   progress: number;
+  currentDatabase: string | null;
   currentWorkload: string | null;
+  currentStep: string | null;
   message: string;
   startTime: string | null;
+  completedWorkloads: string[];
 }
 
 export const useStartBenchmark = () => {
@@ -50,9 +53,12 @@ export const useBenchmarkStatus = (pollInterval = 2000) => {
   const [status, setStatus] = useState<BenchmarkStatus>({
     isRunning: false,
     progress: 0,
+    currentDatabase: null,
     currentWorkload: null,
+    currentStep: null,
     message: "",
     startTime: null,
+    completedWorkloads: [],
   });
   const [error, setError] = useState<string | null>(null);
 
