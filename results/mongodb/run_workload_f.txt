@@ -4,7 +4,7 @@ YCSB Client 0.17.0
 
 Loading workload...
 Starting test.
-2025-12-31 13:53:11:594 0 sec: 0 operations; est completion in 0 second 
+2025-12-31 15:12:10:939 0 sec: 0 operations; est completion in 0 second 
 mongo client connection created with mongodb://mongodb:27017/ycsb
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
@@ -16,41 +16,41 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-2025-12-31 13:53:19:254 7 sec: 100000 operations; 13000.52 current ops/sec; [READ: Count=100000, Max=68863, Min=182, Avg=472.89, 90=719, 99=3101, 99.9=11799, 99.99=36991] [READ-MODIFY-WRITE: Count=49886, Max=95551, Min=392, Avg=949.58, 90=1488, 99=5603, 99.9=16023, 99.99=36863] [CLEANUP: Count=10, Max=6547, Min=1, Avg=658.3, 90=15, 99=6547, 99.9=6547, 99.99=6547] [UPDATE: Count=49886, Max=34719, Min=182, Avg=473.24, 90=729, 99=3213, 99.9=11063, 99.99=22383] 
-[OVERALL], RunTime(ms), 7692
-[OVERALL], Throughput(ops/sec), 13000.520020800832
-[TOTAL_GCS_G1_Young_Generation], Count, 28
-[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 137
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 1.781071242849714
+2025-12-31 15:12:17:729 6 sec: 100000 operations; 14652.01 current ops/sec; [READ: Count=100000, Max=56991, Min=183, Avg=409.83, 90=625, 99=1905, 99.9=7195, 99.99=18095] [READ-MODIFY-WRITE: Count=49755, Max=79423, Min=386, Avg=831.21, 90=1260, 99=3559, 99.9=9607, 99.99=18063] [CLEANUP: Count=10, Max=6163, Min=1, Avg=682.4, 90=627, 99=6163, 99.9=6163, 99.99=6163] [UPDATE: Count=49755, Max=17263, Min=188, Avg=416.94, 90=642, 99=1866, 99.9=8027, 99.99=12735] 
+[OVERALL], RunTime(ms), 6825
+[OVERALL], Throughput(ops/sec), 14652.014652014652
+[TOTAL_GCS_G1_Young_Generation], Count, 30
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 115
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 1.684981684981685
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
-[TOTAL_GCs], Count, 28
-[TOTAL_GC_TIME], Time(ms), 137
-[TOTAL_GC_TIME_%], Time(%), 1.781071242849714
+[TOTAL_GCs], Count, 30
+[TOTAL_GC_TIME], Time(ms), 115
+[TOTAL_GC_TIME_%], Time(%), 1.684981684981685
 [READ], Operations, 100000
-[READ], AverageLatency(us), 472.88897
-[READ], MinLatency(us), 182
-[READ], MaxLatency(us), 68863
-[READ], 95thPercentileLatency(us), 1068
-[READ], 99thPercentileLatency(us), 3101
+[READ], AverageLatency(us), 409.83158
+[READ], MinLatency(us), 183
+[READ], MaxLatency(us), 56991
+[READ], 95thPercentileLatency(us), 851
+[READ], 99thPercentileLatency(us), 1905
 [READ], Return=OK, 100000
-[READ-MODIFY-WRITE], Operations, 49886
-[READ-MODIFY-WRITE], AverageLatency(us), 949.5799021769635
-[READ-MODIFY-WRITE], MinLatency(us), 392
-[READ-MODIFY-WRITE], MaxLatency(us), 95551
-[READ-MODIFY-WRITE], 95thPercentileLatency(us), 2205
-[READ-MODIFY-WRITE], 99thPercentileLatency(us), 5603
+[READ-MODIFY-WRITE], Operations, 49755
+[READ-MODIFY-WRITE], AverageLatency(us), 831.2069741734499
+[READ-MODIFY-WRITE], MinLatency(us), 386
+[READ-MODIFY-WRITE], MaxLatency(us), 79423
+[READ-MODIFY-WRITE], 95thPercentileLatency(us), 1676
+[READ-MODIFY-WRITE], 99thPercentileLatency(us), 3559
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 658.3
+[CLEANUP], AverageLatency(us), 682.4
 [CLEANUP], MinLatency(us), 1
-[CLEANUP], MaxLatency(us), 6547
-[CLEANUP], 95thPercentileLatency(us), 6547
-[CLEANUP], 99thPercentileLatency(us), 6547
-[UPDATE], Operations, 49886
-[UPDATE], AverageLatency(us), 473.23513611033155
-[UPDATE], MinLatency(us), 182
-[UPDATE], MaxLatency(us), 34719
-[UPDATE], 95thPercentileLatency(us), 1075
-[UPDATE], 99thPercentileLatency(us), 3213
-[UPDATE], Return=OK, 49886
+[CLEANUP], MaxLatency(us), 6163
+[CLEANUP], 95thPercentileLatency(us), 6163
+[CLEANUP], 99thPercentileLatency(us), 6163
+[UPDATE], Operations, 49755
+[UPDATE], AverageLatency(us), 416.93560446186314
+[UPDATE], MinLatency(us), 188
+[UPDATE], MaxLatency(us), 17263
+[UPDATE], 95thPercentileLatency(us), 855
+[UPDATE], 99thPercentileLatency(us), 1866
+[UPDATE], Return=OK, 49755

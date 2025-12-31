@@ -14,42 +14,42 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-2025-12-31 13:51:15:350 0 sec: 0 operations; est completion in 0 second 
-2025-12-31 13:51:20:578 5 sec: 100000 operations; 19004.18 current ops/sec; [READ: Count=100000, Max=14199, Min=64, Avg=345.58, 90=467, 99=923, 99.9=3215, 99.99=9623] [READ-MODIFY-WRITE: Count=50057, Max=29679, Min=136, Avg=688.46, 90=927, 99=1876, 99.9=5695, 99.99=25151] [CLEANUP: Count=10, Max=589, Min=43, Avg=123.3, 90=166, 99=589, 99.9=589, 99.99=589] [UPDATE: Count=50057, Max=12071, Min=63, Avg=338.96, 90=460, 99=887, 99.9=2985, 99.99=7515] 
-[OVERALL], RunTime(ms), 5262
-[OVERALL], Throughput(ops/sec), 19004.180919802355
+2025-12-31 15:10:10:092 0 sec: 0 operations; est completion in 0 second 
+2025-12-31 15:10:14:222 4 sec: 100000 operations; 23986.57 current ops/sec; [READ: Count=100000, Max=15479, Min=87, Avg=334.49, 90=435, 99=617, 99.9=1379, 99.99=8151] [READ-MODIFY-WRITE: Count=49885, Max=34975, Min=183, Avg=668.74, 90=855, 99=1166, 99.9=3105, 99.99=12391] [CLEANUP: Count=10, Max=741, Min=63, Avg=155.8, 90=122, 99=741, 99.9=741, 99.99=741] [UPDATE: Count=49885, Max=8655, Min=80, Avg=330.11, 90=431, 99=624, 99.9=1991, 99.99=4555] 
+[OVERALL], RunTime(ms), 4169
+[OVERALL], Throughput(ops/sec), 23986.567522187575
 [TOTAL_GCS_G1_Young_Generation], Count, 9
-[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 22
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.41809198023565186
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 25
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.5996641880546894
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
 [TOTAL_GCs], Count, 9
-[TOTAL_GC_TIME], Time(ms), 22
-[TOTAL_GC_TIME_%], Time(%), 0.41809198023565186
+[TOTAL_GC_TIME], Time(ms), 25
+[TOTAL_GC_TIME_%], Time(%), 0.5996641880546894
 [READ], Operations, 100000
-[READ], AverageLatency(us), 345.58448
-[READ], MinLatency(us), 64
-[READ], MaxLatency(us), 14199
-[READ], 95thPercentileLatency(us), 541
-[READ], 99thPercentileLatency(us), 923
+[READ], AverageLatency(us), 334.49043
+[READ], MinLatency(us), 87
+[READ], MaxLatency(us), 15479
+[READ], 95thPercentileLatency(us), 482
+[READ], 99thPercentileLatency(us), 617
 [READ], Return=OK, 100000
-[READ-MODIFY-WRITE], Operations, 50057
-[READ-MODIFY-WRITE], AverageLatency(us), 688.461194238568
-[READ-MODIFY-WRITE], MinLatency(us), 136
-[READ-MODIFY-WRITE], MaxLatency(us), 29679
-[READ-MODIFY-WRITE], 95thPercentileLatency(us), 1053
-[READ-MODIFY-WRITE], 99thPercentileLatency(us), 1876
+[READ-MODIFY-WRITE], Operations, 49885
+[READ-MODIFY-WRITE], AverageLatency(us), 668.7385586849755
+[READ-MODIFY-WRITE], MinLatency(us), 183
+[READ-MODIFY-WRITE], MaxLatency(us), 34975
+[READ-MODIFY-WRITE], 95thPercentileLatency(us), 935
+[READ-MODIFY-WRITE], 99thPercentileLatency(us), 1166
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 123.3
-[CLEANUP], MinLatency(us), 43
-[CLEANUP], MaxLatency(us), 589
-[CLEANUP], 95thPercentileLatency(us), 589
-[CLEANUP], 99thPercentileLatency(us), 589
-[UPDATE], Operations, 50057
-[UPDATE], AverageLatency(us), 338.95515112771443
-[UPDATE], MinLatency(us), 63
-[UPDATE], MaxLatency(us), 12071
-[UPDATE], 95thPercentileLatency(us), 536
-[UPDATE], 99thPercentileLatency(us), 887
-[UPDATE], Return=OK, 50057
+[CLEANUP], AverageLatency(us), 155.8
+[CLEANUP], MinLatency(us), 63
+[CLEANUP], MaxLatency(us), 741
+[CLEANUP], 95thPercentileLatency(us), 741
+[CLEANUP], 99thPercentileLatency(us), 741
+[UPDATE], Operations, 49885
+[UPDATE], AverageLatency(us), 330.1109151047409
+[UPDATE], MinLatency(us), 80
+[UPDATE], MaxLatency(us), 8655
+[UPDATE], 95thPercentileLatency(us), 481
+[UPDATE], 99thPercentileLatency(us), 624
+[UPDATE], Return=OK, 49885
