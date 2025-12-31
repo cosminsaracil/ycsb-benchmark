@@ -14,42 +14,42 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-2025-12-30 20:49:22:897 0 sec: 0 operations; est completion in 0 second 
-2025-12-30 20:49:27:307 4 sec: 100000 operations; 22522.52 current ops/sec; [READ: Count=100000, Max=12671, Min=66, Avg=291.12, 90=362, 99=530, 99.9=890, 99.99=10031] [READ-MODIFY-WRITE: Count=49970, Max=28751, Min=155, Avg=582.71, 90=713, 99=1035, 99.9=2621, 99.99=25983] [CLEANUP: Count=10, Max=593, Min=38, Avg=106.6, 90=67, 99=593, 99.9=593, 99.99=593] [UPDATE: Count=49970, Max=8751, Min=76, Avg=287.1, 90=358, 99=538, 99.9=897, 99.99=3925] 
-[OVERALL], RunTime(ms), 4440
-[OVERALL], Throughput(ops/sec), 22522.522522522522
+2025-12-31 13:51:15:350 0 sec: 0 operations; est completion in 0 second 
+2025-12-31 13:51:20:578 5 sec: 100000 operations; 19004.18 current ops/sec; [READ: Count=100000, Max=14199, Min=64, Avg=345.58, 90=467, 99=923, 99.9=3215, 99.99=9623] [READ-MODIFY-WRITE: Count=50057, Max=29679, Min=136, Avg=688.46, 90=927, 99=1876, 99.9=5695, 99.99=25151] [CLEANUP: Count=10, Max=589, Min=43, Avg=123.3, 90=166, 99=589, 99.9=589, 99.99=589] [UPDATE: Count=50057, Max=12071, Min=63, Avg=338.96, 90=460, 99=887, 99.9=2985, 99.99=7515] 
+[OVERALL], RunTime(ms), 5262
+[OVERALL], Throughput(ops/sec), 19004.180919802355
 [TOTAL_GCS_G1_Young_Generation], Count, 9
-[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 23
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.5180180180180181
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 22
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.41809198023565186
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
 [TOTAL_GCs], Count, 9
-[TOTAL_GC_TIME], Time(ms), 23
-[TOTAL_GC_TIME_%], Time(%), 0.5180180180180181
+[TOTAL_GC_TIME], Time(ms), 22
+[TOTAL_GC_TIME_%], Time(%), 0.41809198023565186
 [READ], Operations, 100000
-[READ], AverageLatency(us), 291.12135
-[READ], MinLatency(us), 66
-[READ], MaxLatency(us), 12671
-[READ], 95thPercentileLatency(us), 418
-[READ], 99thPercentileLatency(us), 530
+[READ], AverageLatency(us), 345.58448
+[READ], MinLatency(us), 64
+[READ], MaxLatency(us), 14199
+[READ], 95thPercentileLatency(us), 541
+[READ], 99thPercentileLatency(us), 923
 [READ], Return=OK, 100000
-[READ-MODIFY-WRITE], Operations, 49970
-[READ-MODIFY-WRITE], AverageLatency(us), 582.7132479487692
-[READ-MODIFY-WRITE], MinLatency(us), 155
-[READ-MODIFY-WRITE], MaxLatency(us), 28751
-[READ-MODIFY-WRITE], 95thPercentileLatency(us), 814
-[READ-MODIFY-WRITE], 99thPercentileLatency(us), 1035
+[READ-MODIFY-WRITE], Operations, 50057
+[READ-MODIFY-WRITE], AverageLatency(us), 688.461194238568
+[READ-MODIFY-WRITE], MinLatency(us), 136
+[READ-MODIFY-WRITE], MaxLatency(us), 29679
+[READ-MODIFY-WRITE], 95thPercentileLatency(us), 1053
+[READ-MODIFY-WRITE], 99thPercentileLatency(us), 1876
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 106.6
-[CLEANUP], MinLatency(us), 38
-[CLEANUP], MaxLatency(us), 593
-[CLEANUP], 95thPercentileLatency(us), 593
-[CLEANUP], 99thPercentileLatency(us), 593
-[UPDATE], Operations, 49970
-[UPDATE], AverageLatency(us), 287.10110066039624
-[UPDATE], MinLatency(us), 76
-[UPDATE], MaxLatency(us), 8751
-[UPDATE], 95thPercentileLatency(us), 411
-[UPDATE], 99thPercentileLatency(us), 538
-[UPDATE], Return=OK, 49970
+[CLEANUP], AverageLatency(us), 123.3
+[CLEANUP], MinLatency(us), 43
+[CLEANUP], MaxLatency(us), 589
+[CLEANUP], 95thPercentileLatency(us), 589
+[CLEANUP], 99thPercentileLatency(us), 589
+[UPDATE], Operations, 50057
+[UPDATE], AverageLatency(us), 338.95515112771443
+[UPDATE], MinLatency(us), 63
+[UPDATE], MaxLatency(us), 12071
+[UPDATE], 95thPercentileLatency(us), 536
+[UPDATE], 99thPercentileLatency(us), 887
+[UPDATE], Return=OK, 50057

@@ -1,19 +1,22 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import { DbStatusIndicator } from "./StatusIndicator";
 
 export const BenchmarkCard = ({
   title,
   isReady,
   dashboardLink,
-  handleConnectionCheck,
   handleStartBenchmark,
+  databaseStatus,
+  onCheckConnection,
 }: {
   title: string;
   isReady: boolean;
   dashboardLink: string;
-  handleConnectionCheck: () => void;
   handleStartBenchmark: () => void;
+  databaseStatus: Record<string, string>;
+  onCheckConnection: () => void;
 }) => (
   <div className="flex-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-md p-6 flex flex-col justify-between">
     <div>
@@ -68,15 +71,30 @@ export const BenchmarkCard = ({
             : `${title} results are not ready or not available`}
         </p>
       </div>
+      {/* DB Status Indicator */}
+      {databaseStatus && Object.keys(databaseStatus).length > 0 && (
+        <div className="mt-4 rounded-lg border border-neutral-200 dark:border-neutral-800 p-4">
+          <p className="text-sm font-semibold mb-3 text-neutral-600 dark:text-neutral-400">
+            Database Connections
+          </p>
+
+          <div className="flex flex-col gap-2">
+            <DbStatusIndicator
+              name="Redis"
+              isOnline={databaseStatus.redis === "running"}
+            />
+            <DbStatusIndicator
+              name="MongoDB"
+              isOnline={databaseStatus.mongo === "running"}
+            />
+          </div>
+        </div>
+      )}
     </div>
 
     <div className="mt-6 flex flex-col sm:flex-row gap-3">
-      <Button
-        onClick={handleConnectionCheck}
-        variant="outline"
-        className="flex-1"
-      >
-        Check Connection
+      <Button onClick={onCheckConnection} variant="outline" className="flex-1">
+        Check DB Connection
       </Button>
       <Button
         onClick={handleStartBenchmark}
