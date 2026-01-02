@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-interface BenchmarkStatus {
+export interface BenchmarkStatus {
   isRunning: boolean;
   progress: number;
   currentDatabase: string | null;
