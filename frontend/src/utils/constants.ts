@@ -1,9 +1,4 @@
-// export const METRICS = [
-//   "Throughput(ops/sec)",
-//   "AverageLatency(us)",
-//   "95thPercentileLatency(us)",
-//   "99thPercentileLatency(us)",
-// ];
+import { Activity, Database, FileText, TrendingUp } from "lucide-react";
 
 export const COLORS = [
   "#3b82f6", // blue
@@ -20,7 +15,6 @@ export const COLORS = [
 //  NiVO Dark Theme
 // -------------------------------
 export const NIVO_THEME_DARK = {
-  background: "#111827", // gray-900
   textColor: "#f3f4f6", // gray-100
   fontSize: 12,
   axis: {
@@ -76,7 +70,6 @@ export const NIVO_THEME_DARK = {
 //  NiVO Light Theme
 // -------------------------------
 export const NIVO_THEME_LIGHT = {
-  background: "#ffffff",
   textColor: "#111827", // gray-900
   fontSize: 12,
   axis: {
@@ -184,7 +177,73 @@ export const WORKLOAD_INFO = {
 
 export const WORKLOADS = ["A", "B", "C", "D", "E", "F"];
 
+export const INFO_SECTION_WORKLOAD = {
+  A: { name: "Update Heavy", desc: "50% reads, 50% updates", icon: Activity },
+  B: { name: "Read Heavy", desc: "95% reads, 5% updates", icon: FileText },
+  C: { name: "Read Only", desc: "100% reads", icon: FileText },
+  D: { name: "Read Latest", desc: "95% reads, 5% inserts", icon: TrendingUp },
+  E: { name: "Scan Heavy", desc: "95% scans, 5% inserts", icon: Database },
+  F: { name: "Read-Modify-Write", desc: "50% reads, 50% RMW", icon: Activity },
+};
+
+export const INFO_SECTION_METRICS = {
+  throughput: {
+    label: "Throughput",
+    unit: "ops/sec",
+    description:
+      "Total number of operations completed per second across all operation types",
+    interpretation: "Higher is better",
+    badge: "Performance",
+  },
+  read_avg: {
+    label: "Avg Read Latency",
+    unit: "μs",
+    description:
+      "Average time taken to complete a read operation from the database",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  read_95th: {
+    label: "95th Percentile Read",
+    unit: "μs",
+    description: "95% of read operations complete faster than this time",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  read_99th: {
+    label: "99th Percentile Read",
+    unit: "μs",
+    description:
+      "99% of read operations complete faster than this time - represents tail latency",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  update_avg: {
+    label: "Avg Update Latency",
+    unit: "μs",
+    description:
+      "Average time taken to update an existing record in the database",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  insert_avg: {
+    label: "Avg Insert Latency",
+    unit: "μs",
+    description: "Average time taken to insert a new record into the database",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  scan_avg: {
+    label: "Avg Scan Latency",
+    unit: "μs",
+    description:
+      "Average time taken to scan a range of records from the database",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+};
+
 export const DB_COLORS = {
-  redis: "#ef4444",
-  mongodb: "#3b82f6",
+  redis: "#DC2626",
+  mongodb: "#10B981",
 };
