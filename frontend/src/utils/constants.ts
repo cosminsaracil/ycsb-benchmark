@@ -152,15 +152,51 @@ export const METRICS = {
     unit: "μs",
     higher: false,
   },
+  update_95th: {
+    label: "95th Update",
+    field: "update_95th",
+    unit: "μs",
+    higher: false,
+  },
+  update_99th: {
+    label: "99th Update",
+    field: "update_99th",
+    unit: "μs",
+    higher: false,
+  },
   insert_avg: {
     label: "Avg Insert Latency",
     field: "insert_avg",
     unit: "μs",
     higher: false,
   },
+  insert_95th: {
+    label: "95th Insert",
+    field: "insert_95th",
+    unit: "μs",
+    higher: false,
+  },
+  insert_99th: {
+    label: "99th Insert",
+    field: "insert_99th",
+    unit: "μs",
+    higher: false,
+  },
   scan_avg: {
     label: "Avg Scan Latency",
     field: "scan_avg",
+    unit: "μs",
+    higher: false,
+  },
+  scan_95th: {
+    label: "95th Scan",
+    field: "scan_95th",
+    unit: "μs",
+    higher: false,
+  },
+  scan_99th: {
+    label: "99th Scan",
+    field: "scan_99th",
     unit: "μs",
     higher: false,
   },
@@ -172,7 +208,10 @@ export const WORKLOAD_INFO = {
   C: { name: "Read Only", desc: "100% reads" },
   D: { name: "Read Latest", desc: "95% reads, 5% inserts" },
   E: { name: "Scan Heavy", desc: "95% scans, 5% inserts" },
-  F: { name: "Read-Modify-Write", desc: "50% reads, 50% RMW" },
+  F: {
+    name: "Read-Modify-Write",
+    desc: "50% reads, 50% RMW (read-modify-write)",
+  },
 };
 
 export const WORKLOADS = ["A", "B", "C", "D", "E", "F"];
@@ -183,7 +222,11 @@ export const INFO_SECTION_WORKLOAD = {
   C: { name: "Read Only", desc: "100% reads", icon: FileText },
   D: { name: "Read Latest", desc: "95% reads, 5% inserts", icon: TrendingUp },
   E: { name: "Scan Heavy", desc: "95% scans, 5% inserts", icon: Database },
-  F: { name: "Read-Modify-Write", desc: "50% reads, 50% RMW", icon: Activity },
+  F: {
+    name: "Read-Modify-Write",
+    desc: "50% reads, 50% RMW (read-modify-write)",
+    icon: Activity,
+  },
 };
 
 export const INFO_SECTION_METRICS = {
@@ -226,10 +269,40 @@ export const INFO_SECTION_METRICS = {
     interpretation: "Lower is better",
     badge: "Latency",
   },
+  update_95th: {
+    label: "95th Percentile Update",
+    unit: "μs",
+    description: "95% of update operations complete faster than this time",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  update_99th: {
+    label: "99th Percentile Update",
+    unit: "μs",
+    description:
+      "99% of update operations complete faster than this time - represents tail latency",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
   insert_avg: {
     label: "Avg Insert Latency",
     unit: "μs",
     description: "Average time taken to insert a new record into the database",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  insert_95th: {
+    label: "95th Percentile Insert",
+    unit: "μs",
+    description: "95% of insert operations complete faster than this time",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  insert_99th: {
+    label: "99th Percentile Insert",
+    unit: "μs",
+    description:
+      "99% of insert operations complete faster than this time - represents tail latency",
     interpretation: "Lower is better",
     badge: "Latency",
   },
@@ -238,6 +311,21 @@ export const INFO_SECTION_METRICS = {
     unit: "μs",
     description:
       "Average time taken to scan a range of records from the database",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  scan_95th: {
+    label: "95th Percentile Scan",
+    unit: "μs",
+    description: "95% of scan operations complete faster than this time",
+    interpretation: "Lower is better",
+    badge: "Latency",
+  },
+  scan_99th: {
+    label: "99th Percentile Scan",
+    unit: "μs",
+    description:
+      "99% of scan operations complete faster than this time - represents tail latency",
     interpretation: "Lower is better",
     badge: "Latency",
   },
