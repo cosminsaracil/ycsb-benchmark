@@ -14,53 +14,52 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-2026-01-02 19:54:07:905 0 sec: 0 operations; est completion in 0 second 
-2026-01-02 19:54:17:872 10 sec: 5188 operations; 518.8 current ops/sec; est completion in 3 minutes [INSERT: Count=250, Max=2065, Min=523, Avg=830.81, 90=1129, 99=1774, 99.9=2065, 99.99=2065] [SCAN: Count=4940, Max=93311, Min=523, Avg=20062.8, 90=35935, 99=48927, 99.9=61599, 99.99=93311] 
-2026-01-02 19:54:27:871 20 sec: 11163 operations; 597.5 current ops/sec; est completion in 2 minutes [INSERT: Count=317, Max=1709, Min=514, Avg=701.26, 90=939, 99=1171, 99.9=1709, 99.99=1709] [SCAN: Count=5658, Max=79423, Min=520, Avg=17626.77, 90=30607, 99=46271, 99.9=58911, 99.99=70271] 
-2026-01-02 19:54:37:869 29 sec: 17667 operations; 650.53 current ops/sec; est completion in 2 minutes [INSERT: Count=327, Max=2731, Min=456, Avg=655.77, 90=788, 99=1143, 99.9=2731, 99.99=2731] [SCAN: Count=6175, Max=76863, Min=509, Avg=16150.29, 90=28495, 99=34943, 99.9=61823, 99.99=72959] 
-2026-01-02 19:54:47:869 39 sec: 24197 operations; 653 current ops/sec; est completion in 2 minutes [INSERT: Count=303, Max=1067, Min=490, Avg=642.39, 90=793, 99=1048, 99.9=1067, 99.99=1067] [SCAN: Count=6228, Max=54495, Min=508, Avg=16015.73, 90=28415, 99=32751, 99.9=43135, 99.99=52319] 
-2026-01-02 19:54:57:869 49 sec: 30426 operations; 622.9 current ops/sec; est completion in 1 minute [INSERT: Count=291, Max=2233, Min=514, Avg=707.23, 90=914, 99=1299, 99.9=2233, 99.99=2233] [SCAN: Count=5937, Max=63071, Min=511, Avg=16796.18, 90=29727, 99=40159, 99.9=56607, 99.99=59743] 
-2026-01-02 19:55:07:868 59 sec: 34378 operations; 395.24 current ops/sec; est completion in 1 minute [INSERT: Count=189, Max=4807, Min=490, Avg=1070.17, 90=1475, 99=3221, 99.9=4807, 99.99=4807] [SCAN: Count=3764, Max=122431, Min=593, Avg=26468.73, 90=48895, 99=76223, 99.9=95487, 99.99=122431] 
-2026-01-02 19:55:17:868 69 sec: 36950 operations; 257.2 current ops/sec; est completion in 2 minutes [INSERT: Count=112, Max=10487, Min=493, Avg=1493.26, 90=1771, 99=10423, 99.9=10487, 99.99=10487] [SCAN: Count=2459, Max=158847, Min=614, Avg=40638.14, 90=81727, 99=129983, 99.9=148351, 99.99=158847] 
-2026-01-02 19:55:27:868 79 sec: 42021 operations; 507.1 current ops/sec; est completion in 1 minute [INSERT: Count=258, Max=3515, Min=532, Avg=851.5, 90=1153, 99=2161, 99.9=3515, 99.99=3515] [SCAN: Count=4814, Max=93631, Min=550, Avg=20726.11, 90=37343, 99=56639, 99.9=74431, 99.99=93631] 
-2026-01-02 19:55:37:866 89 sec: 47943 operations; 592.32 current ops/sec; est completion in 1 minute [INSERT: Count=305, Max=1632, Min=529, Avg=723.2, 90=939, 99=1257, 99.9=1632, 99.99=1632] [SCAN: Count=5616, Max=58495, Min=525, Avg=17762.09, 90=31359, 99=41151, 99.9=51007, 99.99=55359] 
-2026-01-02 19:55:47:866 99 sec: 54427 operations; 648.4 current ops/sec; est completion in 1 minute [INSERT: Count=339, Max=4027, Min=505, Avg=670.12, 90=796, 99=1207, 99.9=4027, 99.99=4027] [SCAN: Count=6145, Max=113215, Min=503, Avg=16229.67, 90=28383, 99=37247, 99.9=58751, 99.99=89983] 
-2026-01-02 19:55:57:866 109 sec: 60864 operations; 643.7 current ops/sec; est completion in 1 minute [INSERT: Count=344, Max=2225, Min=520, Avg=683.29, 90=873, 99=1412, 99.9=2225, 99.99=2225] [SCAN: Count=6093, Max=52319, Min=508, Avg=16361.6, 90=29135, 99=36831, 99.9=46399, 99.99=50751] 
-2026-01-02 19:56:07:865 119 sec: 66958 operations; 609.46 current ops/sec; est completion in 1 minute [INSERT: Count=285, Max=2247, Min=525, Avg=705.53, 90=915, 99=1262, 99.9=2247, 99.99=2247] [SCAN: Count=5810, Max=62079, Min=516, Avg=17182.04, 90=30175, 99=39839, 99.9=49599, 99.99=57311] 
-2026-01-02 19:56:17:865 129 sec: 73290 operations; 633.2 current ops/sec; est completion in 48 seconds [INSERT: Count=323, Max=3437, Min=517, Avg=686.88, 90=860, 99=1288, 99.9=3437, 99.99=3437] [SCAN: Count=6009, Max=64863, Min=507, Avg=16596.31, 90=29455, 99=37023, 99.9=56351, 99.99=64415] 
-2026-01-02 19:56:27:865 139 sec: 79608 operations; 631.8 current ops/sec; est completion in 36 seconds [INSERT: Count=289, Max=1223, Min=526, Avg=670.94, 90=870, 99=1136, 99.9=1223, 99.99=1223] [SCAN: Count=6028, Max=72191, Min=524, Avg=16550.33, 90=29023, 99=40511, 99.9=55327, 99.99=65919] 
-2026-01-02 19:56:37:861 149 sec: 85821 operations; 621.55 current ops/sec; est completion in 25 seconds [INSERT: Count=283, Max=1159, Min=526, Avg=662.44, 90=809, 99=1059, 99.9=1159, 99.99=1159] [SCAN: Count=5930, Max=66623, Min=518, Avg=16831.41, 90=29327, 99=41247, 99.9=51327, 99.99=63775] 
-2026-01-02 19:56:47:861 159 sec: 92476 operations; 665.5 current ops/sec; est completion in 14 seconds [INSERT: Count=301, Max=1284, Min=522, Avg=648.51, 90=788, 99=1080, 99.9=1284, 99.99=1284] [SCAN: Count=6354, Max=47455, Min=513, Avg=15701.21, 90=27887, 99=34015, 99.9=41439, 99.99=44575] 
-2026-01-02 19:56:57:861 169 sec: 99306 operations; 683 current ops/sec; est completion in 2 second [CLEANUP: Count=1, Max=636, Min=636, Avg=636, 90=636, 99=636, 99.9=636, 99.99=636] [INSERT: Count=351, Max=1274, Min=401, Avg=621.8, 90=718, 99=947, 99.9=1274, 99.99=1274] [SCAN: Count=6479, Max=42783, Min=509, Avg=15321.73, 90=27071, 99=30863, 99.9=37791, 99.99=40639] 
-2026-01-02 19:56:58:942 171 sec: 100000 operations; 642.59 current ops/sec; [CLEANUP: Count=9, Max=105, Min=64, Avg=81.22, 90=98, 99=105, 99.9=105, 99.99=105] [INSERT: Count=38, Max=784, Min=246, Avg=404.58, 90=563, 99=784, 99.9=784, 99.99=784] [SCAN: Count=656, Max=30239, Min=292, Avg=9975.39, 90=19439, 99=24767, 99.9=27583, 99.99=30239] 
-[OVERALL], RunTime(ms), 171070
-[OVERALL], Throughput(ops/sec), 584.5560296954463
-[TOTAL_GCS_G1_Young_Generation], Count, 315
-[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 359
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.20985561466066524
+2026-01-15 18:55:41:885 0 sec: 0 operations; est completion in 0 second 
+2026-01-15 18:55:51:857 10 sec: 5889 operations; 588.55 current ops/sec; est completion in 2 minutes [INSERT: Count=310, Max=2765, Min=515, Avg=758.37, 90=990, 99=1452, 99.9=2765, 99.99=2765] [SCAN: Count=5582, Max=52159, Min=508, Avg=17766.7, 90=31439, 99=39903, 99.9=46143, 99.99=51263] 
+2026-01-15 18:56:01:852 20 sec: 11987 operations; 610.04 current ops/sec; est completion in 2 minutes [INSERT: Count=300, Max=2067, Min=515, Avg=727.48, 90=924, 99=1432, 99.9=2067, 99.99=2067] [SCAN: Count=5796, Max=48319, Min=522, Avg=17189.4, 90=30767, 99=35679, 99.9=40991, 99.99=47039] 
+2026-01-15 18:56:11:853 30 sec: 17963 operations; 597.6 current ops/sec; est completion in 2 minutes [INSERT: Count=311, Max=1916, Min=516, Avg=714.54, 90=943, 99=1152, 99.9=1916, 99.99=1916] [SCAN: Count=5664, Max=54559, Min=527, Avg=17595.95, 90=30991, 99=37439, 99.9=50815, 99.99=52927] 
+2026-01-15 18:56:21:853 40 sec: 23956 operations; 599.24 current ops/sec; est completion in 2 minutes [INSERT: Count=300, Max=2377, Min=517, Avg=716.71, 90=945, 99=1302, 99.9=2377, 99.99=2377] [SCAN: Count=5694, Max=58975, Min=521, Avg=17527.28, 90=31135, 99=39135, 99.9=47839, 99.99=55871] 
+2026-01-15 18:56:31:852 50 sec: 30110 operations; 615.46 current ops/sec; est completion in 1 minute [INSERT: Count=312, Max=1366, Min=522, Avg=692.63, 90=873, 99=1219, 99.9=1366, 99.99=1366] [SCAN: Count=5842, Max=53631, Min=520, Avg=17076.47, 90=30191, 99=36351, 99.9=45791, 99.99=49439] 
+2026-01-15 18:56:41:856 60 sec: 36172 operations; 605.96 current ops/sec; est completion in 1 minute [INSERT: Count=312, Max=2031, Min=517, Avg=716.14, 90=912, 99=1204, 99.9=2031, 99.99=2031] [SCAN: Count=5749, Max=52319, Min=505, Avg=17338.58, 90=30639, 99=37279, 99.9=44959, 99.99=51167] 
+2026-01-15 18:56:51:852 70 sec: 42291 operations; 612.14 current ops/sec; est completion in 1 minute [INSERT: Count=311, Max=1337, Min=521, Avg=705.73, 90=917, 99=1232, 99.9=1337, 99.99=1337] [SCAN: Count=5809, Max=49695, Min=518, Avg=17178.46, 90=30559, 99=37183, 99.9=45247, 99.99=47647] 
+2026-01-15 18:57:01:854 80 sec: 48214 operations; 592.18 current ops/sec; est completion in 1 minute [INSERT: Count=269, Max=2309, Min=517, Avg=729.78, 90=960, 99=1246, 99.9=2309, 99.99=2309] [SCAN: Count=5653, Max=51647, Min=522, Avg=17639.91, 90=30863, 99=38367, 99.9=46239, 99.99=48767] 
+2026-01-15 18:57:11:854 90 sec: 54171 operations; 595.7 current ops/sec; est completion in 1 minute [INSERT: Count=302, Max=1478, Min=524, Avg=715.43, 90=900, 99=1250, 99.9=1478, 99.99=1478] [SCAN: Count=5656, Max=57727, Min=523, Avg=17645.56, 90=30863, 99=38207, 99.9=44671, 99.99=57151] 
+2026-01-15 18:57:21:855 100 sec: 60087 operations; 591.54 current ops/sec; est completion in 1 minute [INSERT: Count=273, Max=1715, Min=532, Avg=738.74, 90=963, 99=1328, 99.9=1715, 99.99=1715] [SCAN: Count=5643, Max=61759, Min=526, Avg=17674.81, 90=31023, 99=40543, 99.9=48959, 99.99=55455] 
+2026-01-15 18:57:31:852 110 sec: 66185 operations; 610.04 current ops/sec; est completion in 57 seconds [INSERT: Count=312, Max=1854, Min=532, Avg=720.77, 90=909, 99=1336, 99.9=1854, 99.99=1854] [SCAN: Count=5786, Max=59007, Min=514, Avg=17237.23, 90=30239, 99=39551, 99.9=51935, 99.99=57791] 
+2026-01-15 18:57:41:852 120 sec: 72264 operations; 607.9 current ops/sec; est completion in 47 seconds [INSERT: Count=314, Max=5607, Min=527, Avg=726.65, 90=920, 99=1251, 99.9=5607, 99.99=5607] [SCAN: Count=5764, Max=63295, Min=526, Avg=17285.34, 90=30287, 99=36287, 99.9=42847, 99.99=57279] 
+2026-01-15 18:57:51:852 130 sec: 78391 operations; 612.7 current ops/sec; est completion in 36 seconds [INSERT: Count=301, Max=3277, Min=511, Avg=704.54, 90=868, 99=1204, 99.9=3277, 99.99=3277] [SCAN: Count=5826, Max=51327, Min=505, Avg=17112.92, 90=30271, 99=35615, 99.9=42719, 99.99=48767] 
+2026-01-15 18:58:01:850 140 sec: 84451 operations; 606.06 current ops/sec; est completion in 26 seconds [INSERT: Count=272, Max=1356, Min=537, Avg=720.1, 90=955, 99=1208, 99.9=1356, 99.99=1356] [SCAN: Count=5788, Max=54687, Min=524, Avg=17235.96, 90=30895, 99=38911, 99.9=45311, 99.99=51903] 
+2026-01-15 18:58:11:851 150 sec: 90489 operations; 603.74 current ops/sec; est completion in 16 seconds [INSERT: Count=268, Max=1739, Min=534, Avg=739.02, 90=975, 99=1317, 99.9=1739, 99.99=1739] [SCAN: Count=5772, Max=53535, Min=518, Avg=17310.99, 90=30815, 99=37247, 99.9=45247, 99.99=51647] 
+2026-01-15 18:58:21:851 160 sec: 96535 operations; 604.66 current ops/sec; est completion in 6 second [INSERT: Count=292, Max=1658, Min=533, Avg=711.74, 90=916, 99=1276, 99.9=1658, 99.99=1658] [SCAN: Count=5752, Max=59327, Min=528, Avg=17334.07, 90=30671, 99=38431, 99.9=49599, 99.99=57951] 
+2026-01-15 18:58:42:630 180 sec: 100000 operations; 166.75 current ops/sec; [CLEANUP: Count=10, Max=1422, Min=67, Avg=243, 90=182, 99=1422, 99.9=1422, 99.99=1422] [INSERT: Count=167, Max=1404, Min=220, Avg=634.86, 90=850, 99=1102, 99.9=1404, 99.99=1404] [SCAN: Count=3298, Max=51583, Min=246, Avg=15290.43, 90=28879, 99=36255, 99.9=42335, 99.99=51583] 
+[OVERALL], RunTime(ms), 180780
+[OVERALL], Throughput(ops/sec), 553.1585352361986
+[TOTAL_GCS_G1_Young_Generation], Count, 359
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 300
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.1659475605708596
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
-[TOTAL_GCs], Count, 315
-[TOTAL_GC_TIME], Time(ms), 359
-[TOTAL_GC_TIME_%], Time(%), 0.20985561466066524
+[TOTAL_GCs], Count, 359
+[TOTAL_GC_TIME], Time(ms), 300
+[TOTAL_GC_TIME_%], Time(%), 0.1659475605708596
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 136.7
-[CLEANUP], MinLatency(us), 64
-[CLEANUP], MaxLatency(us), 636
-[CLEANUP], 95thPercentileLatency(us), 636
-[CLEANUP], 99thPercentileLatency(us), 636
-[INSERT], Operations, 4905
-[INSERT], AverageLatency(us), 723.7539245667687
-[INSERT], MinLatency(us), 246
-[INSERT], MaxLatency(us), 10487
-[INSERT], 95thPercentileLatency(us), 1109
-[INSERT], 99thPercentileLatency(us), 1622
-[INSERT], Return=OK, 4905
-[SCAN], Operations, 95095
-[SCAN], AverageLatency(us), 17890.028655554972
-[SCAN], MinLatency(us), 292
-[SCAN], MaxLatency(us), 158847
-[SCAN], 95thPercentileLatency(us), 35391
-[SCAN], 99thPercentileLatency(us), 56639
-[SCAN], Return=OK, 95095
+[CLEANUP], AverageLatency(us), 243.0
+[CLEANUP], MinLatency(us), 67
+[CLEANUP], MaxLatency(us), 1422
+[CLEANUP], 95thPercentileLatency(us), 1422
+[CLEANUP], 99thPercentileLatency(us), 1422
+[INSERT], Operations, 4926
+[INSERT], AverageLatency(us), 717.9303694681283
+[INSERT], MinLatency(us), 220
+[INSERT], MaxLatency(us), 5607
+[INSERT], 95thPercentileLatency(us), 1031
+[INSERT], 99thPercentileLatency(us), 1294
+[INSERT], Return=OK, 4926
+[SCAN], Operations, 95074
+[SCAN], AverageLatency(us), 17309.034131308243
+[SCAN], MinLatency(us), 246
+[SCAN], MaxLatency(us), 63295
+[SCAN], 95thPercentileLatency(us), 32863
+[SCAN], 99thPercentileLatency(us), 38015
+[SCAN], Return=OK, 95074
