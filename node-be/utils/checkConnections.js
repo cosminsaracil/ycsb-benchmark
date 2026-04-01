@@ -8,7 +8,7 @@ export const checkConnections = async (req, res) => {
   // MongoDB
   try {
     const client = new MongoClient("mongodb://localhost:27017", {
-      serverSelectionTimeoutMS: 1000,
+      serverSelectionTimeoutMS: 3000,
     });
     await client.connect();
     await client.db("admin").command({ ping: 1 });

@@ -4,7 +4,7 @@ YCSB Client 0.17.0
 
 Loading workload...
 Starting test.
-2026-01-15 19:00:14:313 0 sec: 0 operations; est completion in 0 second 
+2026-04-01 18:13:47:113 0 sec: 0 operations; est completion in 0 second 
 mongo client connection created with mongodb://mongodb:27017/ycsb
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
@@ -16,36 +16,36 @@ DBWrapper: report latency for each error is false and specific error codes to tr
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
 DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
-2026-01-15 19:00:24:281 9 sec: 80495 operations; 8051.11 current ops/sec; est completion in 3 second [INSERT: Count=4089, Max=54079, Min=225, Avg=750.35, 90=1299, 99=4195, 99.9=9735, 99.99=54079] [SCAN: Count=76603, Max=83199, Min=229, Avg=1211.39, 90=2040, 99=5179, 99.9=10295, 99.99=65663] 
-2026-01-15 19:00:26:507 12 sec: 100000 operations; 8758.42 current ops/sec; [CLEANUP: Count=10, Max=5371, Min=0, Avg=540.7, 90=18, 99=5371, 99.9=5371, 99.99=5371] [INSERT: Count=980, Max=6895, Min=240, Avg=607.68, 90=976, 99=3887, 99.9=6703, 99.99=6895] [SCAN: Count=18328, Max=12503, Min=246, Avg=1123.05, 90=1855, 99=4787, 99.9=8975, 99.99=11535] 
-[OVERALL], RunTime(ms), 12225
-[OVERALL], Throughput(ops/sec), 8179.959100204499
-[TOTAL_GCS_G1_Young_Generation], Count, 151
-[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 281
-[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 2.298568507157464
+2026-04-01 18:13:56:074 8 sec: 61153 operations; 6796.29 current ops/sec; est completion in 6 second [INSERT: Count=3068, Max=52831, Min=260, Avg=1063.93, 90=1918, 99=5947, 99.9=26399, 99.99=52831] [SCAN: Count=58369, Max=76479, Min=254, Avg=1576.14, 90=2809, 99=7355, 99.9=15479, 99.99=65311] 
+2026-04-01 18:14:00:276 13 sec: 100000 operations; 9244.88 current ops/sec; [CLEANUP: Count=10, Max=6739, Min=3, Avg=680.2, 90=20, 99=6739, 99.9=6739, 99.99=6739] [INSERT: Count=1973, Max=6107, Min=270, Avg=699.45, 90=1116, 99=2733, 99.9=4459, 99.99=6107] [SCAN: Count=36590, Max=11567, Min=259, Avg=1212.39, 90=1960, 99=4061, 99.9=6447, 99.99=8847] 
+[OVERALL], RunTime(ms), 13200
+[OVERALL], Throughput(ops/sec), 7575.757575757576
+[TOTAL_GCS_G1_Young_Generation], Count, 150
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 321
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 2.4318181818181817
 [TOTAL_GCS_G1_Old_Generation], Count, 0
 [TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
 [TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
-[TOTAL_GCs], Count, 151
-[TOTAL_GC_TIME], Time(ms), 281
-[TOTAL_GC_TIME_%], Time(%), 2.298568507157464
+[TOTAL_GCs], Count, 150
+[TOTAL_GC_TIME], Time(ms), 321
+[TOTAL_GC_TIME_%], Time(%), 2.4318181818181817
 [CLEANUP], Operations, 10
-[CLEANUP], AverageLatency(us), 540.7
-[CLEANUP], MinLatency(us), 0
-[CLEANUP], MaxLatency(us), 5371
-[CLEANUP], 95thPercentileLatency(us), 5371
-[CLEANUP], 99thPercentileLatency(us), 5371
-[INSERT], Operations, 5069
-[INSERT], AverageLatency(us), 722.7685934109292
-[INSERT], MinLatency(us), 225
-[INSERT], MaxLatency(us), 54079
-[INSERT], 95thPercentileLatency(us), 1790
-[INSERT], 99thPercentileLatency(us), 4107
-[INSERT], Return=OK, 5069
-[SCAN], Operations, 94931
-[SCAN], AverageLatency(us), 1194.336518102622
-[SCAN], MinLatency(us), 229
-[SCAN], MaxLatency(us), 83199
-[SCAN], 95thPercentileLatency(us), 2703
-[SCAN], 99thPercentileLatency(us), 5079
-[SCAN], Return=OK, 94931
+[CLEANUP], AverageLatency(us), 680.2
+[CLEANUP], MinLatency(us), 3
+[CLEANUP], MaxLatency(us), 6739
+[CLEANUP], 95thPercentileLatency(us), 6739
+[CLEANUP], 99thPercentileLatency(us), 6739
+[INSERT], Operations, 5041
+[INSERT], AverageLatency(us), 921.2757389406863
+[INSERT], MinLatency(us), 260
+[INSERT], MaxLatency(us), 52831
+[INSERT], 95thPercentileLatency(us), 2355
+[INSERT], 99thPercentileLatency(us), 4975
+[INSERT], Return=OK, 5041
+[SCAN], Operations, 94959
+[SCAN], AverageLatency(us), 1435.9790435872324
+[SCAN], MinLatency(us), 254
+[SCAN], MaxLatency(us), 76479
+[SCAN], 95thPercentileLatency(us), 3353
+[SCAN], 99thPercentileLatency(us), 6243
+[SCAN], Return=OK, 94959
