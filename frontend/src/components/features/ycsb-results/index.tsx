@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Activity } from "lucide-react";
-import { useGetAllYCSBResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
+import { useGetAllYCSBResults } from "@/hooks/api/ycsb";
 import { useCurrentTheme } from "@/utils/useCurrentTheme";
 import { WORKLOADS, METRICS, DB_COLORS } from "@/utils/constants";
 import { GraphConfiguration } from "./components/GraphConfiguration";
@@ -28,7 +28,7 @@ export default function EnhancedYCSBDashboard() {
       };
       ["redis", "mongodb"].forEach((db) => {
         const entry = results.data.find(
-          (d) => d.database === db && d.workload === workload
+          (d) => d.database === db && d.workload === workload,
         );
         const value = entry?.[selectedMetric as keyof typeof entry];
         workloadData[db] =
@@ -45,7 +45,7 @@ export default function EnhancedYCSBDashboard() {
       color: DB_COLORS[db as keyof typeof DB_COLORS],
       data: selectedWorkloads.map((workload) => {
         const entry = results.data.find(
-          (d) => d.database === db && d.workload === workload
+          (d) => d.database === db && d.workload === workload,
         );
         const value = entry?.[selectedMetric as keyof typeof entry];
         return {
@@ -61,7 +61,7 @@ export default function EnhancedYCSBDashboard() {
     const calcStats = (db: string) => {
       const values = results.data
         .filter(
-          (d) => d.database === db && selectedWorkloads.includes(d.workload)
+          (d) => d.database === db && selectedWorkloads.includes(d.workload),
         )
         .map((d) => parseFloat(d[selectedMetric as keyof typeof d] as string))
         .filter((v) => !isNaN(v) && v > 0);

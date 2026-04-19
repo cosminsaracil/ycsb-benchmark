@@ -1,12 +1,4 @@
-import { BenchmarkStatus } from "@/utils/hooks/api/ycsb/useBenchmark";
-
-interface ProgressCardProps {
-  benchmarkStatus: BenchmarkStatus;
-  title?: string;
-  databaseLabels?: [string, string];
-  completedWorkloadsLabel?: string;
-  totalWorkloads?: number;
-}
+import type { ProgressCardProps } from "./types";
 
 export const ProgressCard = ({
   benchmarkStatus,

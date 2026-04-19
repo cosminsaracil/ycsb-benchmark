@@ -7,5 +7,5 @@ Step 1/2: Preparing schema and seed data...
   ✓ Schema ready and seed data loaded
 Step 2/2: Running measured workload...
   ✓ SQL-W3 completed successfully
-  Throughput: 495.19 ops/sec | Avg latency: 15889.28 μs | P95: 28769.97 μs | P99: 38241.17 μs
+  Throughput: 335.53 ops/sec | Avg latency: 23662.03 μs | P95: 44486.04 μs | P99: 86915.26 μs
 SQL benchmark completed successfully for mysql

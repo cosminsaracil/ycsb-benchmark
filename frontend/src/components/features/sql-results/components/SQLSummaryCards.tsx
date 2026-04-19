@@ -3,24 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import { DB_COLORS } from "@/utils/constants";
-
-interface SQLSummaryStats {
-  avg: number;
-  min: number;
-  max: number;
-}
-
-interface SQLSummaryCardsProps {
-  summaryStats: {
-    postgres: SQLSummaryStats;
-    mysql: SQLSummaryStats;
-  } | null;
-  postgresWins: boolean;
-  currentTheme: string;
-  formatNumber: (value: number, decimals?: number) => string;
-  metricLabel: string;
-  metricUnit: string;
-}
+import type { SQLSummaryCardsProps } from "../types";
 
 export const SQLSummaryCards = ({
   summaryStats,

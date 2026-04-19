@@ -4,14 +4,15 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import YCSBResults from "@/components/features/ycsb-results";
-import { fetchYCSBResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
+import { fetchYCSBResults } from "@/hooks/api/services/ycsb";
+import { QUERY_KEYS } from "@/constants/api";
 
 export default async function YCSB() {
   const queryClient = new QueryClient();
 
   // Prefetch the results data
   await queryClient.prefetchQuery({
-    queryKey: ["resultsYCSB"],
+    queryKey: QUERY_KEYS.ycsbResults,
     queryFn: fetchYCSBResults,
   });
 

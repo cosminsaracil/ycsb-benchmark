@@ -4,13 +4,14 @@ import {
   HydrationBoundary,
 } from "@tanstack/react-query";
 import SQLResults from "@/components/features/sql-results";
-import { fetchSQLResults } from "@/utils/hooks/api/sql/useGetAllResults";
+import { fetchSQLResults } from "@/hooks/api/services/sql";
+import { QUERY_KEYS } from "@/constants/api";
 
 export default async function SQLPage() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["sql-results"],
+    queryKey: QUERY_KEYS.sqlResults,
     queryFn: fetchSQLResults,
   });
 

@@ -7,6 +7,22 @@ const PROGRESS_PER_DATABASE = 50;
 const PROGRESS_PER_WORKLOAD = PROGRESS_PER_DATABASE / WORKLOADS.length;
 const PROGRESS_PER_STEP = PROGRESS_PER_WORKLOAD / STEPS_PER_WORKLOAD;
 
+function getDatabaseBaseProgress(database) {
+  return database === "mysql" ? PROGRESS_PER_DATABASE : 0;
+}
+
+function getCompletedWorkloadCountForDatabase(database) {
+  const prefix = `${database}-`;
+  return sqlBenchmarkStatus.completedWorkloads.filter((workload) =>
+    workload.startsWith(prefix),
+  ).length;
+}
+
+function getWorkloadIndex(workload) {
+  const index = WORKLOADS.indexOf(workload?.toLowerCase());
+  return index >= 0 ? index : 0;
+}
+
 let sqlBenchmarkStatus = {
   isRunning: false,
   progress: 0,
@@ -19,21 +35,24 @@ let sqlBenchmarkStatus = {
 };
 
 function calculateProgress(database, workload, step) {
-  let progress = 0;
+  const completedCount = getCompletedWorkloadCountForDatabase(database);
+  const databaseBase = getDatabaseBaseProgress(database);
+  const workloadIndex = getWorkloadIndex(workload);
+  let progress = databaseBase + completedCount * PROGRESS_PER_WORKLOAD;
 
-  if (database === "mysql") {
-    progress += PROGRESS_PER_DATABASE;
-  }
+  if (workload) {
+    const runningWorkloadIndex = Math.min(workloadIndex, WORKLOADS.length - 1);
+    progress = databaseBase + runningWorkloadIndex * PROGRESS_PER_WORKLOAD;
 
-  const workloadIndex = WORKLOADS.indexOf(workload?.toLowerCase());
-  if (workloadIndex > 0) {
-    progress += workloadIndex * PROGRESS_PER_WORKLOAD;
-  }
-
-  const stepMatch = step?.match(/Step (\d+)\/2/);
-  if (stepMatch) {
-    const currentStep = parseInt(stepMatch[1], 10);
-    progress += (currentStep - 1) * PROGRESS_PER_STEP;
+    if (step === "Step 1/2") {
+      progress += PROGRESS_PER_STEP;
+    } else if (step === "Step 2/2") {
+      progress += PROGRESS_PER_STEP * 2;
+    } else if (step === "Completed") {
+      progress += PROGRESS_PER_WORKLOAD;
+    } else {
+      progress += PROGRESS_PER_WORKLOAD * 0.15;
+    }
   }
 
   return Math.min(Math.round(progress * 10) / 10, 100);
@@ -75,6 +94,9 @@ function runSqlBenchmark() {
       sqlBenchmarkStatus.currentWorkload = currentWorkload
         .toUpperCase()
         .replace("_", "-");
+      currentStep = null;
+      sqlBenchmarkStatus.currentStep = null;
+      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: starting workload...`;
     }
 
     if (output.includes("Step 1/2")) {
@@ -92,6 +114,8 @@ function runSqlBenchmark() {
       if (!sqlBenchmarkStatus.completedWorkloads.includes(completedKey)) {
         sqlBenchmarkStatus.completedWorkloads.push(completedKey);
       }
+      sqlBenchmarkStatus.currentStep = "Completed";
+      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: completed successfully.`;
     }
 
     if (
@@ -113,6 +137,8 @@ function runSqlBenchmark() {
         currentStep,
       );
       sqlBenchmarkStatus.progress = calculatedProgress;
+    } else if (currentDatabase) {
+      sqlBenchmarkStatus.progress = getDatabaseBaseProgress(currentDatabase);
     }
   });
 

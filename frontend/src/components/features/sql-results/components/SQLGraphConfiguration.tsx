@@ -10,17 +10,7 @@ import { Select } from "@/components/ui/Select";
 import { Badge } from "@/components/ui/badge";
 import { Info } from "lucide-react";
 import { SQL_WORKLOADS, SQL_METRICS } from "@/utils/constants";
-
-interface SQLGraphConfigurationProps {
-  selectedMetric: string;
-  setSelectedMetric: (metric: string) => void;
-  selectedWorkloads: string[];
-  setSelectedWorkloads: (workloads: string[]) => void;
-  chartType: "bar" | "line";
-  setChartType: (type: "bar" | "line") => void;
-  currentTheme: string;
-  postgresWins: boolean;
-}
+import type { SQLGraphConfigurationProps } from "../types";
 
 export const SQLGraphConfiguration = ({
   selectedMetric,

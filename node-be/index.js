@@ -193,11 +193,25 @@ app.post("/api/ai/summarize", async (req, res) => {
       },
     };
 
+    const throughputLeader =
+      summary.postgres.avgThroughput >= summary.mysql.avgThroughput
+        ? "PostgreSQL"
+        : "MySQL";
+    const latencyLeader =
+      summary.postgres.avgLatency <= summary.mysql.avgLatency
+        ? "PostgreSQL"
+        : "MySQL";
+    const overallLeader =
+      throughputLeader === latencyLeader ? throughputLeader : "mixed";
+
     const prompt = `You are a database performance analyst. Based on the following SQL benchmark results, provide a concise, professional summary (2-3 paragraphs).
 
 Benchmark Details:
 - Workloads tested: ${summary.workloads.join(", ")}
 - Databases compared: ${summary.databases.join(", ")}
+- Throughput leader: ${throughputLeader}
+- Latency leader: ${latencyLeader}
+- Overall leader: ${overallLeader}
 
 PostgreSQL Performance:
 - Average Throughput: ${summary.postgres.avgThroughput.toFixed(2)} ops/sec
@@ -213,9 +227,12 @@ MySQL Performance:
 
 Please provide:
 1. What the benchmark was about
-2. Key findings and which database performed better overall
-3. Why one database outperformed the other (based on throughput and latency metrics)
-4. A brief conclusion
+2. Which database won overall and why it won
+3. The winner's practical advantages, such as higher throughput, lower average latency, and better tail latency consistency
+4. Any notable trade-offs or cases where the loser may still be acceptable
+5. A brief conclusion
+
+Important: explicitly explain why the winner is better using the measured metrics, not generic database facts. Focus on the observed benchmark results, especially throughput, average latency, P95, and P99 latency.
 
 Keep it concise and technical.`;
 

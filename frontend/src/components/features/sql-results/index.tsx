@@ -15,8 +15,8 @@ import {
   SQL_METRICS,
   SQL_WORKLOADS,
 } from "@/utils/constants";
-import { useGetAllSQLResults } from "@/utils/hooks/api/sql/useGetAllResults";
-import { useAISummary } from "@/utils/hooks/api/sql/useAISummary";
+import { formatBenchmarkNumber, toNumber } from "./utils";
+import { useAISummary, useGetAllSQLResults } from "@/hooks/api/sql";
 import { SQLGraphConfiguration } from "./components/SQLGraphConfiguration";
 import { SQLInformationSection } from "./components/SQLInformationSection";
 import { SQLSummaryCards } from "./components/SQLSummaryCards";
@@ -35,15 +35,6 @@ export default function SQLResults() {
     generateSummary,
   } = useAISummary();
   const currentTheme = useCurrentTheme();
-
-  const toNumber = (value: string | number | null | undefined) =>
-    Number(value ?? 0);
-
-  const formatNumber = (value: string | number, decimals = 2) =>
-    toNumber(value).toLocaleString("en-US", {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    });
 
   const chartData = useMemo(() => {
     if (!results?.data) {
@@ -168,7 +159,7 @@ export default function SQLResults() {
             fontFamily: "monospace",
           }}
         >
-          {formatNumber(value, 2)} {metricInfo?.unit}
+          {formatBenchmarkNumber(value, 2)} {metricInfo?.unit}
         </span>
       </div>
     </div>
@@ -337,7 +328,7 @@ export default function SQLResults() {
           summaryStats={summaryStats}
           postgresWins={postgresWins}
           currentTheme={currentTheme}
-          formatNumber={formatNumber}
+          formatNumber={formatBenchmarkNumber}
           metricLabel={metricInfo?.label}
           metricUnit={metricInfo?.unit}
         />
@@ -376,11 +367,11 @@ export default function SQLResults() {
                     legend: metricInfo?.unit,
                     legendPosition: "middle",
                     legendOffset: -55,
-                    format: (value) => formatNumber(value, 0),
+                    format: (value) => formatBenchmarkNumber(value, 0),
                   }}
                   labelSkipWidth={12}
                   labelSkipHeight={12}
-                  label={(d) => formatNumber(d.value ?? 0, 2)}
+                  label={(d) => formatBenchmarkNumber(d.value ?? 0, 2)}
                   legends={[
                     {
                       dataFrom: "keys",
@@ -431,7 +422,7 @@ export default function SQLResults() {
                     legend: metricInfo?.unit,
                     legendPosition: "middle",
                     legendOffset: -70,
-                    format: (value) => formatNumber(value, 0),
+                    format: (value) => formatBenchmarkNumber(value, 0),
                   }}
                   pointSize={8}
                   pointBorderWidth={2}
@@ -505,16 +496,16 @@ export default function SQLResults() {
                     <td className="py-3 pr-4">{row.database}</td>
                     <td className="py-3 pr-4">{row.workload}</td>
                     <td className="py-3 pr-4">
-                      {formatNumber(row.throughput_ops_sec)}
+                      {formatBenchmarkNumber(row.throughput_ops_sec)}
                     </td>
                     <td className="py-3 pr-4">
-                      {formatNumber(row.avg_latency_us)}
+                      {formatBenchmarkNumber(row.avg_latency_us)}
                     </td>
                     <td className="py-3 pr-4">
-                      {formatNumber(row.p95_latency_us)}
+                      {formatBenchmarkNumber(row.p95_latency_us)}
                     </td>
                     <td className="py-3 pr-4">
-                      {formatNumber(row.p99_latency_us)}
+                      {formatBenchmarkNumber(row.p99_latency_us)}
                     </td>
                     <td className="py-3 pr-4">{row.operations_failed}</td>
                   </tr>

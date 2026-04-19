@@ -1,14 +1,15 @@
 import { QueryClient } from "@tanstack/react-query";
-import { fetchYCSBResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
+import { fetchYCSBResults } from "@/hooks/api/services/ycsb";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import Dashboard from "@/components/features/dashboard";
+import { QUERY_KEYS } from "@/constants/api";
 
 export default async function HomePage() {
   const queryClient = new QueryClient();
 
   // Prefetch the results data - BOTH
   await queryClient.prefetchQuery({
-    queryKey: ["resultsYCSB"],
+    queryKey: QUERY_KEYS.ycsbResults,
     queryFn: fetchYCSBResults,
   });
   return (

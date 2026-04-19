@@ -1,18 +1,15 @@
 "use client";
 import { useEffect } from "react";
 import { ROUTES } from "@/utils/routes";
-import { useGetAllYCSBResults } from "@/utils/hooks/api/ycsb/useGetAllResults";
-import { useGetDBStatusConnections } from "@/utils/hooks/api/ycsb/useGetStatusConnections";
+import {
+  useBenchmarkStatus,
+  useGetAllYCSBResults,
+  useGetDBStatusConnections,
+  useStartBenchmark,
+} from "@/hooks/api/ycsb";
 import { BenchmarkCard } from "./components/BenchmarkCard";
 import { ProgressCard } from "./components/ProgressCard";
-import {
-  useStartBenchmark,
-  useBenchmarkStatus,
-} from "@/utils/hooks/api/ycsb/useBenchmark";
-import {
-  useStartSQLBenchmark,
-  useSQLBenchmarkStatus,
-} from "@/utils/hooks/api/sql/useBenchmark";
+import { useSQLBenchmarkStatus, useStartSQLBenchmark } from "@/hooks/api/sql";
 
 export default function Dashboard() {
   // Fetch YCSB benchmark results

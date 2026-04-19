@@ -10,12 +10,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { SQL_WORKLOAD_INFO, INFO_SECTION_SQL_METRICS } from "@/utils/constants";
+import type { SQLInformationSectionProps } from "../types";
 
 export const SQLInformationSection = ({
   currentTheme,
-}: {
-  currentTheme: string;
-}) => {
+}: SQLInformationSectionProps) => {
   const [activeTab, setActiveTab] = useState<"workloads" | "metrics">(
     "workloads",
   );

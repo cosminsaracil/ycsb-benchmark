@@ -9,16 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles, X } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useCurrentTheme } from "@/utils/useCurrentTheme";
-
-interface AISummaryModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  summary: string | null;
-  isLoading: boolean;
-  error: string | null;
-}
+import type { AISummaryModalProps } from "../types";
 
 export function AISummaryModal({
   isOpen,

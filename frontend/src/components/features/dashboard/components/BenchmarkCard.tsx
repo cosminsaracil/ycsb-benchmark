@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { DbStatusIndicator } from "./StatusIndicator";
+import type { BenchmarkCardProps } from "./types";
 
 const CONNECTION_LABELS: Record<string, string> = {
   redis: "Redis",
@@ -19,16 +20,7 @@ export const BenchmarkCard = ({
   onCheckConnection,
   isRunning,
   isStarting,
-}: {
-  title: string;
-  isReady: boolean;
-  dashboardLink: string;
-  handleStartBenchmark: () => void;
-  databaseStatus: Record<string, string>;
-  onCheckConnection: () => void;
-  isRunning?: boolean;
-  isStarting?: boolean;
-}) => (
+}: BenchmarkCardProps) => (
   <div className="flex-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-md p-6 flex flex-col justify-between">
     <div>
       <h2 className="text-lg font-semibold mb-4 text-neutral-700 dark:text-neutral-300">
