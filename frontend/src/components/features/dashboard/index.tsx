@@ -9,6 +9,10 @@ import {
   useStartBenchmark,
   useBenchmarkStatus,
 } from "@/utils/hooks/api/ycsb/useBenchmark";
+import {
+  useStartSQLBenchmark,
+  useSQLBenchmarkStatus,
+} from "@/utils/hooks/api/sql/useBenchmark";
 
 export default function Dashboard() {
   // Fetch YCSB benchmark results
@@ -27,12 +31,24 @@ export default function Dashboard() {
     refetch: refetchDBStatus,
   } = useGetDBStatusConnections();
 
+  const {
+    status: sqlBenchmarkStatus,
+    error: sqlStatusError,
+    refetch: refetchSQLStatus,
+  } = useSQLBenchmarkStatus();
+
   // Benchmark control hooks
   const {
     startBenchmark,
     isLoading: isStarting,
     error: startError,
   } = useStartBenchmark();
+
+  const {
+    startSQLBenchmark,
+    isLoading: isStartingSQL,
+    error: startSQLError,
+  } = useStartSQLBenchmark();
 
   const { status: benchmarkStatus, error: statusError } = useBenchmarkStatus();
 
@@ -75,6 +91,16 @@ export default function Dashboard() {
   const resultsYCSB = ycsbData.data;
   const hasResults = resultsYCSB.length > 0;
 
+  const ycsbConnectionStatus = {
+    redis: ycsbDBStatus.redis,
+    mongo: ycsbDBStatus.mongo,
+  };
+
+  const sqlConnectionStatus = {
+    postgres: ycsbDBStatus.postgres,
+    mysql: ycsbDBStatus.mysql,
+  };
+
   const handleStartYCSBBenchmark = async () => {
     try {
       await startBenchmark();
@@ -84,8 +110,13 @@ export default function Dashboard() {
     }
   };
 
-  const handleStartSQLBenchmark = () => {
-    console.log("Start SQL benchmark clicked");
+  const handleStartSQLBenchmark = async () => {
+    try {
+      await startSQLBenchmark();
+      refetchSQLStatus();
+    } catch (err) {
+      console.error("Failed to start SQL benchmark:", err);
+    }
   };
 
   return (
@@ -95,6 +126,16 @@ export default function Dashboard() {
       {/* Benchmark Progress Section */}
       {benchmarkStatus.isRunning && (
         <ProgressCard benchmarkStatus={benchmarkStatus} />
+      )}
+
+      {sqlBenchmarkStatus.isRunning && (
+        <ProgressCard
+          benchmarkStatus={sqlBenchmarkStatus}
+          title="SQL benchmark in progress"
+          databaseLabels={["PostgreSQL", "MySQL"]}
+          completedWorkloadsLabel="workloads"
+          totalWorkloads={8}
+        />
       )}
 
       {/* Error Display Section */}
@@ -120,6 +161,28 @@ export default function Dashboard() {
         </div>
       )}
 
+      {(startSQLError || sqlStatusError) && (
+        <div className="w-full max-w-6xl bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <div className="flex items-center gap-3">
+            <svg
+              className="w-5 h-5 text-red-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <p className="text-red-800 dark:text-red-200">
+              <span className="font-semibold">SQL Error:</span>{" "}
+              {startSQLError || sqlStatusError}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Benchmark Cards */}
       <div className="flex flex-col lg:flex-row w-full max-w-6xl gap-8">
         <div className="flex-1">
@@ -128,7 +191,7 @@ export default function Dashboard() {
             isReady={hasResults}
             dashboardLink={ROUTES.YCSB}
             handleStartBenchmark={handleStartYCSBBenchmark}
-            databaseStatus={ycsbDBStatus}
+            databaseStatus={ycsbConnectionStatus}
             onCheckConnection={refetchDBStatus}
             isRunning={benchmarkStatus.isRunning}
             isStarting={isStarting}
@@ -137,11 +200,13 @@ export default function Dashboard() {
         <div className="flex-1">
           <BenchmarkCard
             title="SQL Benchmark"
-            isReady={false}
-            dashboardLink={""}
+            isReady={true}
+            dashboardLink={ROUTES.SQL}
             handleStartBenchmark={handleStartSQLBenchmark}
-            databaseStatus={{}}
-            onCheckConnection={() => console.log("SQL connection check")}
+            databaseStatus={sqlConnectionStatus}
+            onCheckConnection={refetchSQLStatus}
+            isRunning={sqlBenchmarkStatus.isRunning}
+            isStarting={isStartingSQL}
           />
         </div>
       </div>

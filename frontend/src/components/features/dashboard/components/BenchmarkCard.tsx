@@ -3,6 +3,13 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { DbStatusIndicator } from "./StatusIndicator";
 
+const CONNECTION_LABELS: Record<string, string> = {
+  redis: "Redis",
+  mongo: "MongoDB",
+  postgres: "PostgreSQL",
+  mysql: "MySQL",
+};
+
 export const BenchmarkCard = ({
   title,
   isReady,
@@ -83,14 +90,13 @@ export const BenchmarkCard = ({
           </p>
 
           <div className="flex flex-col gap-2">
-            <DbStatusIndicator
-              name="Redis"
-              isOnline={databaseStatus.redis === "running"}
-            />
-            <DbStatusIndicator
-              name="MongoDB"
-              isOnline={databaseStatus.mongo === "running"}
-            />
+            {Object.entries(databaseStatus).map(([key, status]) => (
+              <DbStatusIndicator
+                key={key}
+                name={CONNECTION_LABELS[key] ?? key}
+                isOnline={status === "running"}
+              />
+            ))}
           </div>
         </div>
       )}

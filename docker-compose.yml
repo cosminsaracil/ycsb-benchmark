@@ -15,6 +15,35 @@ services:
     networks:
       - ycsb-network
 
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    container_name: postgres-ycsb
+    environment:
+      POSTGRES_DB: ycsb
+      POSTGRES_USER: ycsb
+      POSTGRES_PASSWORD: ycsb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ycsb-network
+
+  mysql:
+    image: mysql:8.4
+    ports:
+      - "3306:3306"
+    container_name: mysql-ycsb
+    environment:
+      MYSQL_DATABASE: ycsb
+      MYSQL_USER: ycsb
+      MYSQL_PASSWORD: ycsb
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - ycsb-network
+
   ycsb:
     build:
       context: .
@@ -23,6 +52,8 @@ services:
     depends_on:
       - redis
       - mongodb
+      - postgres
+      - mysql
     networks:
       - ycsb-network
     volumes:
@@ -39,3 +70,5 @@ networks:
 
 volumes:
   ycsb-results:
+  postgres-data:
+  mysql-data:

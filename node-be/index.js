@@ -12,6 +12,10 @@ import {
   startBenchmark,
   getBenchmarkStatus,
 } from "./services/benchmark.service.js";
+import {
+  startSqlBenchmark,
+  getSqlBenchmarkStatus,
+} from "./services/sql-benchmark.service.js";
 
 dotenv.config();
 
@@ -24,12 +28,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // Load CSV results
-async function loadResults() {
-  const resultsFile = path.join(
-    process.cwd(),
-    "../results/benchmark_summary.csv"
-  );
-
+async function loadResults(resultsFile, benchmarkName) {
   if (!fs.existsSync(resultsFile)) {
     console.error("Results file not found:", resultsFile);
     throw new Error("Results file not found");
@@ -47,25 +46,66 @@ async function loadResults() {
 
     const cleanedData = cleanFloatValues(data);
     return {
-      filename: "benchmark_summary.csv",
-      benchmark: "ycsb-Benchmark",
+      filename: path.basename(resultsFile),
+      benchmark: benchmarkName,
       data: cleanedData,
     };
   } catch (err) {
-    console.error("Error reading file benchmark_summary.csv:", err.message);
+    console.error(
+      "Error reading file",
+      path.basename(resultsFile),
+      err.message,
+    );
     throw err;
   }
+}
+
+async function loadYCSBResults() {
+  const resultsFile = path.join(
+    process.cwd(),
+    "../results/benchmark_summary.csv",
+  );
+
+  return loadResults(resultsFile, "ycsb-Benchmark");
+}
+
+async function loadSqlResults() {
+  const resultsFile = path.join(
+    process.cwd(),
+    "../results/sql_benchmark_summary.csv",
+  );
+
+  if (!fs.existsSync(resultsFile)) {
+    return {
+      filename: "sql_benchmark_summary.csv",
+      benchmark: "sql-Benchmark",
+      data: [],
+    };
+  }
+
+  return loadResults(resultsFile, "sql-Benchmark");
 }
 
 // Routes
 // GET /api/results
 app.get("/api/results", async (req, res) => {
   try {
-    const results = await loadResults();
+    const results = await loadYCSBResults();
     res.json(results);
   } catch (err) {
     console.error("Error fetching results:", err);
     res.status(500).json({ detail: "Error accessing results" });
+  }
+});
+
+// GET /api/sql/results
+app.get("/api/sql/results", async (req, res) => {
+  try {
+    const results = await loadSqlResults();
+    res.json(results);
+  } catch (err) {
+    console.error("Error fetching SQL results:", err);
+    res.status(500).json({ detail: "Error accessing SQL results" });
   }
 });
 
@@ -81,6 +121,25 @@ app.post("/api/benchmark/start", async (req, res) => {
     const status = startBenchmark();
     res.json({
       message: "Benchmark started successfully",
+      status: status,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// GET /api/sql/benchmark/status
+app.get("/api/sql/benchmark/status", (req, res) => {
+  const status = getSqlBenchmarkStatus();
+  res.json(status);
+});
+
+// POST /api/sql/benchmark/start
+app.post("/api/sql/benchmark/start", async (req, res) => {
+  try {
+    const status = startSqlBenchmark();
+    res.json({
+      message: "SQL benchmark started successfully",
       status: status,
     });
   } catch (error) {

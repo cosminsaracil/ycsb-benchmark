@@ -2,9 +2,19 @@ import { BenchmarkStatus } from "@/utils/hooks/api/ycsb/useBenchmark";
 
 interface ProgressCardProps {
   benchmarkStatus: BenchmarkStatus;
+  title?: string;
+  databaseLabels?: [string, string];
+  completedWorkloadsLabel?: string;
+  totalWorkloads?: number;
 }
 
-export const ProgressCard = ({ benchmarkStatus }: ProgressCardProps) => {
+export const ProgressCard = ({
+  benchmarkStatus,
+  title = "Benchmark in progress",
+  databaseLabels = ["Redis", "MongoDB"],
+  completedWorkloadsLabel = "workloads",
+  totalWorkloads = 12,
+}: ProgressCardProps) => {
   return (
     <div className="w-full max-w-6xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border border-blue-200 dark:border-blue-800 rounded-xl p-8 shadow-lg">
       {/* Header */}
@@ -15,7 +25,7 @@ export const ProgressCard = ({ benchmarkStatus }: ProgressCardProps) => {
             <div className="absolute inset-0 w-3 h-3 bg-blue-600 rounded-full animate-ping"></div>
           </div>
           <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-100">
-            Benchmark in progress
+            {title}
           </h2>
         </div>
         <div className="text-right">
@@ -46,10 +56,10 @@ export const ProgressCard = ({ benchmarkStatus }: ProgressCardProps) => {
         {/* Redis/MongoDB Split Indicator */}
         <div className="flex mt-2 text-xs text-blue-700 dark:text-blue-300">
           <div className="flex-1 text-left">
-            <span className="font-medium">Redis (0-50%)</span>
+            <span className="font-medium">{databaseLabels[0]} (0-50%)</span>
           </div>
           <div className="flex-1 text-right">
-            <span className="font-medium">MongoDB (50-100%)</span>
+            <span className="font-medium">{databaseLabels[1]} (50-100%)</span>
           </div>
         </div>
       </div>
@@ -115,8 +125,8 @@ export const ProgressCard = ({ benchmarkStatus }: ProgressCardProps) => {
               />
             </svg>
             <span className="font-medium">
-              Completed: {benchmarkStatus.completedWorkloads.length} / 12
-              workloads
+              Completed: {benchmarkStatus.completedWorkloads.length} /{" "}
+              {totalWorkloads} {completedWorkloadsLabel}
             </span>
           </div>
         )}
