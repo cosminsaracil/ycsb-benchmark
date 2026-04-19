@@ -5,7 +5,8 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Activity, CircleAlert, Sparkles } from "lucide-react";
 import { useCurrentTheme } from "@/utils/useCurrentTheme";
 import {
   DB_COLORS,
@@ -15,8 +16,10 @@ import {
   SQL_WORKLOADS,
 } from "@/utils/constants";
 import { useGetAllSQLResults } from "@/utils/hooks/api/sql/useGetAllResults";
+import { useAISummary } from "@/utils/hooks/api/sql/useAISummary";
 import { SQLGraphConfiguration } from "./components/SQLGraphConfiguration";
 import { SQLInformationSection } from "./components/SQLInformationSection";
+import { SQLSummaryCards } from "./components/SQLSummaryCards";
 
 export default function SQLResults() {
   const { data: results, isLoading, error } = useGetAllSQLResults();
@@ -24,6 +27,13 @@ export default function SQLResults() {
   const [selectedWorkloads, setSelectedWorkloads] =
     useState<string[]>(SQL_WORKLOADS);
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
+  const {
+    summary,
+    isLoading: isSummaryLoading,
+    error: summaryError,
+    isFromCache,
+    generateSummary,
+  } = useAISummary();
   const currentTheme = useCurrentTheme();
 
   const toNumber = (value: string | number | null | undefined) =>
@@ -41,7 +51,9 @@ export default function SQLResults() {
     }
 
     return selectedWorkloads.map((workload) => {
-      const row: Record<string, string | number> = { workload };
+      const row: Record<string, string | number> = {
+        workload: `SQL-${workload}`,
+      };
       ["postgres", "mysql"].forEach((database) => {
         const entry = results.data.find(
           (item) =>
@@ -105,6 +117,63 @@ export default function SQLResults() {
 
   const theme = currentTheme === "dark" ? NIVO_THEME_DARK : NIVO_THEME_LIGHT;
 
+  const renderTooltip = (
+    title: string,
+    seriesLabel: string,
+    seriesColor: string,
+    value: string | number,
+  ) => (
+    <div
+      style={{
+        padding: "10px 14px",
+        background: currentTheme === "dark" ? "#1f2937" : "#ffffff",
+        border: `1px solid ${currentTheme === "dark" ? "#374151" : "#e5e7eb"}`,
+        borderRadius: 8,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          fontWeight: 600,
+          marginBottom: 4,
+        }}
+      >
+        {title}
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            borderRadius: 2,
+            backgroundColor: seriesColor,
+            marginRight: 8,
+          }}
+        />
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: 500,
+            textTransform: "capitalize",
+          }}
+        >
+          {seriesLabel}:
+        </span>
+        <span
+          style={{
+            marginLeft: 8,
+            fontSize: 13,
+            fontWeight: 600,
+            fontFamily: "monospace",
+          }}
+        >
+          {formatNumber(value, 2)} {metricInfo?.unit}
+        </span>
+      </div>
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -165,7 +234,92 @@ export default function SQLResults() {
             join-heavy, aggregation-heavy, transaction-heavy, and mixed workload
             patterns.
           </p>
+          <div className="flex justify-center pt-4">
+            <Button
+              onClick={() => {
+                generateSummary(results);
+              }}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
+              disabled={isSummaryLoading}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              {isSummaryLoading ? "Generating Summary..." : "Get AI Summary"}
+            </Button>
+          </div>
         </div>
+
+        {(isSummaryLoading || summaryError || summary) && (
+          <Card className="shadow-sm border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-br from-violet-50/80 via-blue-50/60 to-gray-100 dark:from-gray-950 dark:via-violet-950/20 dark:to-gray-900 overflow-hidden">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-violet-600" />
+                AI Benchmark Summary
+                {isFromCache && (
+                  <span className="relative inline-flex items-center group">
+                    <CircleAlert className="w-4 h-4 text-amber-500" />
+                    <span className="pointer-events-none absolute left-1/2 top-full mt-2 w-64 -translate-x-1/2 rounded-md border border-amber-300/60 bg-amber-50 px-3 py-2 text-xs font-normal text-amber-900 opacity-0 shadow-md transition-opacity group-hover:opacity-100 dark:border-amber-800/60 dark:bg-amber-950 dark:text-amber-100">
+                      Showing cached summary. Check console for AI request
+                      details.
+                    </span>
+                  </span>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isSummaryLoading && (
+                <div className="flex flex-col items-center justify-center py-8 space-y-6">
+                  <div className="relative w-20 h-20">
+                    <div
+                      className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 border-r-purple-600"
+                      style={{ animation: "spin 2.4s linear infinite" }}
+                    />
+                    <div
+                      className="absolute inset-2 rounded-full border-4 border-transparent border-b-blue-500 border-l-pink-500"
+                      style={{ animation: "spin 1.6s linear reverse infinite" }}
+                    />
+                    <div
+                      className="absolute inset-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
+                      style={{
+                        animation:
+                          "pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                      }}
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground animate-pulse">
+                    Analyzing throughput and latency trends...
+                  </p>
+                  <style>{`
+                    @keyframes spin {
+                      from { transform: rotate(0deg); }
+                      to { transform: rotate(360deg); }
+                    }
+                  `}</style>
+                </div>
+              )}
+
+              {summaryError && !isSummaryLoading && !summary && (
+                <div className="rounded-xl border border-red-300/70 dark:border-red-900 bg-red-50/60 dark:bg-red-950/20 p-4">
+                  <p className="text-sm text-red-700 dark:text-red-300 font-medium">
+                    Failed to generate AI summary
+                  </p>
+                  <p className="text-xs mt-2 text-red-600 dark:text-red-400">
+                    {summaryError}
+                  </p>
+                </div>
+              )}
+
+              {summary && !isSummaryLoading && (
+                <div className="rounded-xl p-[1px] bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-400 shadow-[0_0_0_1px_rgba(139,92,246,0.08)]">
+                  <div className="rounded-[11px] bg-white/85 dark:bg-gray-900/80 p-5">
+                    <p className="text-sm leading-7 whitespace-pre-wrap text-gray-800 dark:text-gray-100">
+                      {summary}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Controls */}
         <SQLGraphConfiguration
@@ -179,59 +333,14 @@ export default function SQLResults() {
           postgresWins={postgresWins}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="shadow-sm transition-all hover:shadow-md border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Average {metricInfo?.label}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div
-                className="text-4xl font-bold tabular-nums"
-                style={{ color: DB_COLORS.postgres }}
-              >
-                {formatNumber(summaryStats?.postgres.avg || 0)}
-              </div>
-              <div className="text-xs text-muted-foreground uppercase tracking-wider">
-                {metricInfo?.unit}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="shadow-sm transition-all hover:shadow-md border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                MySQL Average
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div
-                className="text-4xl font-bold tabular-nums"
-                style={{ color: DB_COLORS.mysql }}
-              >
-                {formatNumber(summaryStats?.mysql.avg || 0)}
-              </div>
-              <div className="text-xs text-muted-foreground uppercase tracking-wider">
-                {metricInfo?.unit}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="shadow-sm transition-all hover:shadow-md border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Performance Leader
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="text-2xl font-bold tabular-nums">
-                {postgresWins ? "PostgreSQL" : "MySQL"}
-              </div>
-              <div className="text-xs text-muted-foreground uppercase tracking-wider">
-                winner
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <SQLSummaryCards
+          summaryStats={summaryStats}
+          postgresWins={postgresWins}
+          currentTheme={currentTheme}
+          formatNumber={formatNumber}
+          metricLabel={metricInfo?.label}
+          metricUnit={metricInfo?.unit}
+        />
 
         <Card className="p-8 shadow-sm border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
           <CardHeader className="px-0 pt-0">
@@ -287,6 +396,14 @@ export default function SQLResults() {
                       symbolSize: 12,
                     },
                   ]}
+                  tooltip={({ id, value, indexValue }) =>
+                    renderTooltip(
+                      String(indexValue),
+                      String(id),
+                      DB_COLORS[id as keyof typeof DB_COLORS],
+                      value ?? 0,
+                    )
+                  }
                 />
               ) : (
                 <ResponsiveLine
@@ -348,6 +465,14 @@ export default function SQLResults() {
                       ],
                     },
                   ]}
+                  tooltip={({ point }) =>
+                    renderTooltip(
+                      String(point.data.x),
+                      String(point.seriesId),
+                      point.seriesColor,
+                      point.data.y as number,
+                    )
+                  }
                 />
               )}
             </div>
@@ -399,7 +524,6 @@ export default function SQLResults() {
           </CardContent>
         </Card>
 
-        {/* Information Section */}
         <SQLInformationSection currentTheme={currentTheme} />
       </div>
     </div>
