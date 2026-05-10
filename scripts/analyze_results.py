@@ -2,10 +2,36 @@
 
 import os
 import re
+import datetime
+import shutil
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+
+RESULTS_ROOT = Path('/ycsb/results')
+RUNS_ROOT = RESULTS_ROOT / 'runs' / 'ycsb'
+
+
+def save_run_snapshot(summary_csv: Path, plot_png: Path | None = None) -> Path:
+    """Copy the latest summary (and optional plot + per-db raw outputs) into a
+    timestamped subfolder under results/runs/ycsb/. Returns the run directory."""
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
+    run_dir = RUNS_ROOT / timestamp
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    if summary_csv.exists():
+        shutil.copy2(summary_csv, run_dir / 'summary.csv')
+    if plot_png and plot_png.exists():
+        shutil.copy2(plot_png, run_dir / plot_png.name)
+
+    for db in ('redis', 'mongodb'):
+        src = RESULTS_ROOT / db
+        if src.exists() and src.is_dir():
+            shutil.copytree(src, run_dir / db, dirs_exist_ok=True)
+
+    print(f"Run snapshot saved to: {run_dir}")
+    return run_dir
 
 def parse_ycsb_output(file_path):
     """Parse YCSB output file and extract metrics"""
@@ -92,9 +118,13 @@ def analyze_results():
     generate_plots(df)
     
     # Save detailed results
-    df.to_csv('/ycsb/results/benchmark_summary.csv', index=False)
-    print("Detailed results saved to: /ycsb/results/benchmark_summary.csv")
-    
+    summary_csv = RESULTS_ROOT / 'benchmark_summary.csv'
+    df.to_csv(summary_csv, index=False)
+    print(f"Detailed results saved to: {summary_csv}")
+
+    # Snapshot this run for historical reports
+    save_run_snapshot(summary_csv, RESULTS_ROOT / 'benchmark_comparison.png')
+
     return df
 
 def generate_plots(df):

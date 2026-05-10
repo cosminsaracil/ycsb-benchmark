@@ -11,8 +11,8 @@ export default async function SQLPage() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: QUERY_KEYS.sqlResults,
-    queryFn: fetchSQLResults,
+    queryKey: [...QUERY_KEYS.sqlResults, "latest"],
+    queryFn: () => fetchSQLResults(),
   });
 
   return (

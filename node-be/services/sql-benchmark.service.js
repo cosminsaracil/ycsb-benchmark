@@ -1,21 +1,11 @@
 import { exec } from "child_process";
 
 const WORKLOADS = ["sql_w1", "sql_w2", "sql_w3", "sql_w4"];
-const DATABASES = ["postgres", "mysql"];
-const STEPS_PER_WORKLOAD = 2;
 const PROGRESS_PER_DATABASE = 50;
 const PROGRESS_PER_WORKLOAD = PROGRESS_PER_DATABASE / WORKLOADS.length;
-const PROGRESS_PER_STEP = PROGRESS_PER_WORKLOAD / STEPS_PER_WORKLOAD;
 
 function getDatabaseBaseProgress(database) {
   return database === "mysql" ? PROGRESS_PER_DATABASE : 0;
-}
-
-function getCompletedWorkloadCountForDatabase(database) {
-  const prefix = `${database}-`;
-  return sqlBenchmarkStatus.completedWorkloads.filter((workload) =>
-    workload.startsWith(prefix),
-  ).length;
 }
 
 function getWorkloadIndex(workload) {
@@ -34,28 +24,18 @@ let sqlBenchmarkStatus = {
   completedWorkloads: [],
 };
 
-function calculateProgress(database, workload, step) {
-  const completedCount = getCompletedWorkloadCountForDatabase(database);
-  const databaseBase = getDatabaseBaseProgress(database);
-  const workloadIndex = getWorkloadIndex(workload);
-  let progress = databaseBase + completedCount * PROGRESS_PER_WORKLOAD;
-
-  if (workload) {
-    const runningWorkloadIndex = Math.min(workloadIndex, WORKLOADS.length - 1);
-    progress = databaseBase + runningWorkloadIndex * PROGRESS_PER_WORKLOAD;
-
-    if (step === "Step 1/2") {
-      progress += PROGRESS_PER_STEP;
-    } else if (step === "Step 2/2") {
-      progress += PROGRESS_PER_STEP * 2;
-    } else if (step === "Completed") {
-      progress += PROGRESS_PER_WORKLOAD;
-    } else {
-      progress += PROGRESS_PER_WORKLOAD * 0.15;
-    }
-  }
-
-  return Math.min(Math.round(progress * 10) / 10, 100);
+// The SQL shell script redirects the per-workload Python output to files, so
+// the only signals the parent sees are "Running workload sql_wN" (start) and
+// "completed successfully" / "completed with warnings" (end). Progress is
+// computed from those two events — no Step 1/2 markers are visible here.
+function calculateWorkloadProgress(database, workload, phase) {
+  const base = getDatabaseBaseProgress(database);
+  const idx = getWorkloadIndex(workload);
+  const offset =
+    phase === "completed"
+      ? (idx + 1) * PROGRESS_PER_WORKLOAD
+      : (idx + 0.5) * PROGRESS_PER_WORKLOAD; // mid-slot while running
+  return Math.min(Math.round((base + offset) * 10) / 10, 100);
 }
 
 function runSqlBenchmark() {
@@ -70,7 +50,6 @@ function runSqlBenchmark() {
 
   let currentDatabase = null;
   let currentWorkload = null;
-  let currentStep = null;
 
   benchmarkProcess.stdout.on("data", (data) => {
     const output = data.toString();
@@ -78,67 +57,68 @@ function runSqlBenchmark() {
 
     if (output.includes("PHASE 1: PostgreSQL SQL Benchmarks")) {
       currentDatabase = "postgres";
+      currentWorkload = null;
       sqlBenchmarkStatus.currentDatabase = "PostgreSQL";
+      sqlBenchmarkStatus.currentWorkload = null;
+      sqlBenchmarkStatus.currentStep = "Initializing";
       sqlBenchmarkStatus.message = "Starting PostgreSQL SQL benchmarks...";
       sqlBenchmarkStatus.progress = 0;
     } else if (output.includes("PHASE 2: MySQL SQL Benchmarks")) {
       currentDatabase = "mysql";
+      currentWorkload = null;
       sqlBenchmarkStatus.currentDatabase = "MySQL";
+      sqlBenchmarkStatus.currentWorkload = null;
+      sqlBenchmarkStatus.currentStep = "Initializing";
       sqlBenchmarkStatus.message = "Starting MySQL SQL benchmarks...";
-      sqlBenchmarkStatus.progress = 50;
+      sqlBenchmarkStatus.progress = PROGRESS_PER_DATABASE;
     }
 
     const workloadMatch = output.match(/Running workload (sql_w[1-4])/i);
-    if (workloadMatch) {
+    if (workloadMatch && currentDatabase) {
       currentWorkload = workloadMatch[1].toLowerCase();
       sqlBenchmarkStatus.currentWorkload = currentWorkload
         .toUpperCase()
         .replace("_", "-");
-      currentStep = null;
-      sqlBenchmarkStatus.currentStep = null;
-      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: starting workload...`;
+      sqlBenchmarkStatus.currentStep = "Running";
+      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: running workload...`;
+      sqlBenchmarkStatus.progress = calculateWorkloadProgress(
+        currentDatabase,
+        currentWorkload,
+        "running",
+      );
     }
 
-    if (output.includes("Step 1/2")) {
-      currentStep = "Step 1/2";
-      sqlBenchmarkStatus.currentStep = "Preparing schema";
-      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: Preparing schema and seed data...`;
-    } else if (output.includes("Step 2/2")) {
-      currentStep = "Step 2/2";
-      sqlBenchmarkStatus.currentStep = "Running benchmark";
-      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: Running measured workload...`;
-    }
-
-    if (output.includes("completed successfully") && currentWorkload) {
+    const completedMatch =
+      output.includes("completed successfully") ||
+      output.includes("completed with warnings");
+    if (completedMatch && currentDatabase && currentWorkload) {
       const completedKey = `${currentDatabase}-${currentWorkload}`;
       if (!sqlBenchmarkStatus.completedWorkloads.includes(completedKey)) {
         sqlBenchmarkStatus.completedWorkloads.push(completedKey);
       }
       sqlBenchmarkStatus.currentStep = "Completed";
-      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: completed successfully.`;
+      sqlBenchmarkStatus.message = `${sqlBenchmarkStatus.currentDatabase} - ${sqlBenchmarkStatus.currentWorkload}: ${
+        output.includes("with warnings")
+          ? "completed with warnings"
+          : "completed successfully"
+      }.`;
+      sqlBenchmarkStatus.progress = calculateWorkloadProgress(
+        currentDatabase,
+        currentWorkload,
+        "completed",
+      );
     }
 
     if (
       output.includes("SQL Benchmark Results Summary") ||
       output.includes("analyze_sql_results.py")
     ) {
-      sqlBenchmarkStatus.progress = 95;
+      sqlBenchmarkStatus.progress = Math.max(sqlBenchmarkStatus.progress, 97);
       sqlBenchmarkStatus.message =
         "Analyzing SQL results and generating summary...";
       sqlBenchmarkStatus.currentDatabase = null;
       sqlBenchmarkStatus.currentWorkload = null;
       sqlBenchmarkStatus.currentStep = "Analyzing";
-    }
-
-    if (currentDatabase && currentWorkload && currentStep) {
-      const calculatedProgress = calculateProgress(
-        currentDatabase,
-        currentWorkload,
-        currentStep,
-      );
-      sqlBenchmarkStatus.progress = calculatedProgress;
-    } else if (currentDatabase) {
-      sqlBenchmarkStatus.progress = getDatabaseBaseProgress(currentDatabase);
     }
   });
 

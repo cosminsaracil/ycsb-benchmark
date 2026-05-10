@@ -5,8 +5,14 @@ import type {
   SQLResults,
 } from "@/types/benchmark";
 
-export const fetchSQLResults = async (): Promise<SQLResults> =>
-  apiRequest<SQLResults>("/api/sql/results", { cache: "no-store" });
+export const fetchSQLResults = async (
+  runId?: string | null,
+): Promise<SQLResults> => {
+  const query = runId ? `?runId=${encodeURIComponent(runId)}` : "";
+  return apiRequest<SQLResults>(`/api/sql/results${query}`, {
+    cache: "no-store",
+  });
+};
 
 export const startSQLBenchmarkRequest = async () =>
   apiRequest<{ message: string; status: SQLBenchmarkStatus }>(

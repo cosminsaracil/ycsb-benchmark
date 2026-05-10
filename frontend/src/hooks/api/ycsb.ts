@@ -1,11 +1,17 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { DEFAULT_STATUS_POLL_INTERVAL, QUERY_KEYS } from "@/constants/api";
+import {
+  CACHED_YCSB_SUMMARY,
+  DEFAULT_STATUS_POLL_INTERVAL,
+  QUERY_KEYS,
+} from "@/constants/api";
 import {
   fetchDBStatusConnections,
   fetchYCSBBenchmarkStatus,
   fetchYCSBResults,
+  requestYCSBAISummary,
   startYCSBBenchmarkRequest,
 } from "@/hooks/api/services/ycsb";
+import { useAISummary as useAISummaryGeneric } from "@/hooks/api/useAISummary";
 import type {
   BenchmarkStatus,
   DbConnectionsStatus,
@@ -23,10 +29,12 @@ const emptyStatus: BenchmarkStatus = {
   completedWorkloads: [],
 };
 
-export const useGetAllYCSBResults = () => {
+export const useGetAllYCSBResults = (runId?: string | null) => {
   return useQuery<YCSBResults, Error>({
-    queryKey: QUERY_KEYS.ycsbResults,
-    queryFn: fetchYCSBResults,
+    queryKey: [...QUERY_KEYS.ycsbResults, runId ?? "latest"],
+    queryFn: () => fetchYCSBResults(runId),
+    staleTime: 0,
+    refetchOnMount: "always",
   });
 };
 
@@ -64,6 +72,9 @@ export const useBenchmarkStatus = (
     isFetching: query.isFetching,
   };
 };
+
+export const useYCSBAISummary = () =>
+  useAISummaryGeneric<YCSBResults>(requestYCSBAISummary, CACHED_YCSB_SUMMARY);
 
 export {
   fetchDBStatusConnections,

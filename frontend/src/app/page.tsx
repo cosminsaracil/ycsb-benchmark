@@ -9,8 +9,8 @@ export default async function HomePage() {
 
   // Prefetch the results data - BOTH
   await queryClient.prefetchQuery({
-    queryKey: QUERY_KEYS.ycsbResults,
-    queryFn: fetchYCSBResults,
+    queryKey: [...QUERY_KEYS.ycsbResults, "latest"],
+    queryFn: () => fetchYCSBResults(),
   });
   return (
     <div>

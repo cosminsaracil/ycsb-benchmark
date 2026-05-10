@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npx --prefix frontend tsc -p frontend --noEmit)",
+      "Bash(node --check index.js)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('../scripts/analyze_results.py'\\).read\\(\\)\\); ast.parse\\(open\\('../scripts/analyze_sql_results.py'\\).read\\(\\)\\); print\\('PYTHON_OK'\\)\")",
+      "Read(//d/Facultate/Master/Disertatie/**)",
+      "Bash(node --check services/sql-benchmark.service.js)",
+      "Bash(node --check ../node-be/services/sql-benchmark.service.js)",
+      "Bash(node --check node-be/services/sql-benchmark.service.js)"
+    ]
+  }
+}

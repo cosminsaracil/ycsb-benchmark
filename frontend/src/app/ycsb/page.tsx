@@ -12,8 +12,8 @@ export default async function YCSB() {
 
   // Prefetch the results data
   await queryClient.prefetchQuery({
-    queryKey: QUERY_KEYS.ycsbResults,
-    queryFn: fetchYCSBResults,
+    queryKey: [...QUERY_KEYS.ycsbResults, "latest"],
+    queryFn: () => fetchYCSBResults(),
   });
 
   return (

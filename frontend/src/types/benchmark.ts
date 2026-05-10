@@ -30,6 +30,7 @@ export interface SQLBenchmarkRow {
   operations_failed: string | number;
   thread_count: string | number;
   seed: string | number;
+  [key: string]: string | number;
 }
 
 export interface BenchmarkResponse<T> {
@@ -62,6 +63,20 @@ export interface DbConnectionsStatus {
   [key: string]: string;
 }
 
+export type BenchmarkModule = "ycsb" | "sql";
+
+export interface BenchmarkRun {
+  id: string;
+  timestamp: string;
+  hasSummary: boolean;
+  sizeBytes: number;
+}
+
+export interface BenchmarkRunsResponse {
+  module: BenchmarkModule;
+  runs: BenchmarkRun[];
+}
+
 export interface AISummaryResponse {
   success: boolean;
   summary: string;
@@ -81,5 +96,30 @@ export interface AISummaryResponse {
       p95Latency: number;
       p99Latency: number;
     };
+  };
+}
+
+export interface YCSBAIDatabaseStats {
+  avgThroughput: number;
+  avgReadLatency: number;
+  p95ReadLatency: number;
+  p99ReadLatency: number;
+  avgUpdateLatency: number;
+  p95UpdateLatency: number;
+  p99UpdateLatency: number;
+  avgInsertLatency: number;
+  avgScanLatency: number;
+}
+
+export interface YCSBAISummaryResponse {
+  success: boolean;
+  summary: string;
+  model?: string;
+  dataUsed: {
+    benchmark: string;
+    workloads: string[];
+    databases: string[];
+    redis: YCSBAIDatabaseStats;
+    mongodb: YCSBAIDatabaseStats;
   };
 }

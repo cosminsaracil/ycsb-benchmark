@@ -1,4 +1,3 @@
-import { useCallback, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   CACHED_SQL_SUMMARY,
@@ -11,6 +10,7 @@ import {
   requestAISummary,
   startSQLBenchmarkRequest,
 } from "@/hooks/api/services/sql";
+import { useAISummary as useAISummaryGeneric } from "@/hooks/api/useAISummary";
 import type { SQLBenchmarkStatus, SQLResults } from "@/types/benchmark";
 
 const emptyStatus: SQLBenchmarkStatus = {
@@ -24,10 +24,12 @@ const emptyStatus: SQLBenchmarkStatus = {
   completedWorkloads: [],
 };
 
-export const useGetAllSQLResults = () => {
+export const useGetAllSQLResults = (runId?: string | null) => {
   return useQuery<SQLResults, Error>({
-    queryKey: QUERY_KEYS.sqlResults,
-    queryFn: fetchSQLResults,
+    queryKey: [...QUERY_KEYS.sqlResults, runId ?? "latest"],
+    queryFn: () => fetchSQLResults(runId),
+    staleTime: 0,
+    refetchOnMount: "always",
   });
 };
 
@@ -60,46 +62,7 @@ export const useSQLBenchmarkStatus = (
   };
 };
 
-export const useAISummary = () => {
-  const [summary, setSummary] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isFromCache, setIsFromCache] = useState(false);
-
-  const generateSummary = useCallback(async (results: SQLResults) => {
-    setIsLoading(true);
-    setError(null);
-    setSummary(null);
-    setIsFromCache(false);
-
-    try {
-      const data = await requestAISummary(results);
-      setSummary(data.summary);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      setError(errorMessage);
-      setSummary(CACHED_SQL_SUMMARY);
-      setIsFromCache(true);
-      console.error("Error generating AI summary, using cached text:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const clearSummary = useCallback(() => {
-    setSummary(null);
-    setError(null);
-    setIsFromCache(false);
-  }, []);
-
-  return {
-    summary,
-    isLoading,
-    error,
-    isFromCache,
-    generateSummary,
-    clearSummary,
-  };
-};
+export const useAISummary = () =>
+  useAISummaryGeneric<SQLResults>(requestAISummary, CACHED_SQL_SUMMARY);
 
 export { fetchSQLBenchmarkStatus, fetchSQLResults, startSQLBenchmarkRequest };
