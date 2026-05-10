@@ -185,6 +185,8 @@ export default function Dashboard() {
         <div className="flex-1">
           <BenchmarkCard
             title="YCSB"
+            accent="ycsb"
+            tagline="Tier 1 — NoSQL"
             isReady={hasResults}
             dashboardLink={ROUTES.YCSB}
             handleStartBenchmark={handleStartYCSBBenchmark}
@@ -197,6 +199,8 @@ export default function Dashboard() {
         <div className="flex-1">
           <BenchmarkCard
             title="SQL Benchmark"
+            accent="sql"
+            tagline="Tier 2 — Relational"
             isReady={true}
             dashboardLink={ROUTES.SQL}
             handleStartBenchmark={handleStartSQLBenchmark}

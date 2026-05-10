@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Trash2, History, Loader2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/Select";
@@ -34,10 +33,14 @@ type Props = {
   module: BenchmarkModule;
   selectedRunId: string | null;
   onChange: (runId: string | null) => void;
-  /** Pass the parent's results query isFetching to show a "loading new run" hint */
+  /** Parent's results query isFetching, used to show a "loading new run" hint. */
   isFetching?: boolean;
 };
 
+/**
+ * Inline run selector designed to live inside another card's header.
+ * Layout: a compact controls row + a "Viewing" footer line.
+ */
 export const RunSelector = ({
   module,
   selectedRunId,
@@ -72,54 +75,53 @@ export const RunSelector = ({
   };
 
   return (
-    <Card className="shadow-sm border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
-      <CardContent className="py-4 space-y-3">
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground shrink-0">
-            <History className="w-4 h-4 text-primary" />
-            Report
-          </div>
-          <div className="flex-1 min-w-[220px]">
-            <Select
-              value={selectedRunId ?? LATEST_VALUE}
-              onChange={handleChange}
-              options={options}
-              placeholder={isLoading ? "Loading runs..." : "Select a run"}
-              fullWidth
-              disabled={isLoading || runs.length === 0}
-            />
-          </div>
-          <div className="text-xs text-muted-foreground shrink-0">
+    <div className="flex flex-col gap-2 min-w-[260px]">
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground shrink-0">
+          <History className="w-3.5 h-3.5" />
+          Report
+        </div>
+        <div className="flex-1 min-w-[180px]">
+          <Select
+            value={selectedRunId ?? LATEST_VALUE}
+            onChange={handleChange}
+            options={options}
+            placeholder={isLoading ? "Loading runs..." : "Select a run"}
+            fullWidth
+            disabled={isLoading || runs.length === 0}
+          />
+        </div>
+        {selected && (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setConfirmTarget(selected)}
+            disabled={deleteMutation.isPending}
+            aria-label="Delete this run"
+            className="shrink-0 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        )}
+      </div>
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span className="shrink-0">Viewing</span>
+        <Badge variant="secondary" className="font-mono px-2 py-0.5 truncate">
+          {viewingLabel}
+        </Badge>
+        {isFetching ? (
+          <span className="inline-flex items-center gap-1 text-primary">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Loading...
+          </span>
+        ) : (
+          <span className="shrink-0">
             {runs.length === 0
-              ? "No historical runs yet"
-              : `${runs.length} run${runs.length === 1 ? "" : "s"} available`}
-          </div>
-          {selected && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setConfirmTarget(selected)}
-              disabled={deleteMutation.isPending}
-              className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-            >
-              <Trash2 className="w-4 h-4 mr-1.5" />
-              Delete
-            </Button>
-          )}
-        </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>Viewing:</span>
-          <Badge variant="secondary" className="font-mono px-2 py-0.5">
-            {viewingLabel}
-          </Badge>
-          {isFetching && (
-            <span className="inline-flex items-center gap-1.5 text-primary">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Loading run data...
-            </span>
-          )}
-        </div>
-      </CardContent>
+              ? "No history yet"
+              : `${runs.length} saved`}
+          </span>
+        )}
+      </div>
 
       <Dialog
         open={!!confirmTarget}
@@ -156,6 +158,6 @@ export const RunSelector = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </div>
   );
 };

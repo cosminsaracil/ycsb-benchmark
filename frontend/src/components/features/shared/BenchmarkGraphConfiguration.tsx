@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import {
   Card,
@@ -25,6 +26,8 @@ type Props = {
   currentTheme: string;
   leaderLabel: string;
   leaderTone?: "default" | "destructive";
+  /** Slot rendered in the top-right of the header (e.g. RunSelector). */
+  headerRight?: ReactNode;
 };
 
 export const BenchmarkGraphConfiguration = ({
@@ -40,6 +43,7 @@ export const BenchmarkGraphConfiguration = ({
   currentTheme,
   leaderLabel,
   leaderTone = "default",
+  headerRight,
 }: Props) => {
   return (
     <Card
@@ -53,7 +57,7 @@ export const BenchmarkGraphConfiguration = ({
       )}
     >
       <CardHeader className="pb-4">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <CardTitle className="flex items-center gap-2 text-xl">
               <Info className="w-5 h-5 text-primary" />
@@ -61,6 +65,18 @@ export const BenchmarkGraphConfiguration = ({
             </CardTitle>
             <CardDescription className="mt-1.5">{description}</CardDescription>
           </div>
+          {headerRight && (
+            <div
+              className={cn(
+                "md:pl-6 md:border-l",
+                currentTheme === "dark"
+                  ? "md:border-gray-800/60"
+                  : "md:border-gray-200/60",
+              )}
+            >
+              {headerRight}
+            </div>
+          )}
         </div>
       </CardHeader>
       <CardContent className="pt-0">

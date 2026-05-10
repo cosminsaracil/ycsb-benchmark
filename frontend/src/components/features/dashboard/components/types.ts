@@ -1,7 +1,10 @@
 import type { BenchmarkStatus } from "@/types/benchmark";
 
+export type BenchmarkAccent = "ycsb" | "sql";
+
 export interface DbStatusIndicatorProps {
   name: string;
+  dbKey?: string;
   isOnline: boolean;
 }
 
@@ -14,6 +17,8 @@ export interface BenchmarkCardProps {
   onCheckConnection: () => void;
   isRunning?: boolean;
   isStarting?: boolean;
+  accent: BenchmarkAccent;
+  tagline?: string;
 }
 
 export interface ProgressCardProps {

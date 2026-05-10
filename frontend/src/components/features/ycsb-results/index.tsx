@@ -85,13 +85,6 @@ export default function EnhancedYCSBDashboard() {
           )}
         </div>
 
-        <RunSelector
-          module="ycsb"
-          selectedRunId={selectedRunId}
-          onChange={setSelectedRunId}
-          isFetching={isFetching}
-        />
-
         {!results && (
           <div className="flex justify-center items-center py-20">
             <div className="animate-pulse text-muted-foreground">
@@ -105,12 +98,20 @@ export default function EnhancedYCSBDashboard() {
             <CardHeader className="px-0 pt-0 text-center space-y-3">
               <CardTitle className="text-2xl">No YCSB results yet</CardTitle>
             </CardHeader>
-            <CardContent className="px-0 pb-0 text-center space-y-3 text-muted-foreground">
-              <p>
+            <CardContent className="px-0 pb-0 space-y-5 text-muted-foreground">
+              <p className="text-center">
                 {selectedRunId
                   ? "This historical run has no summary data."
                   : "Run the YCSB benchmark from the dashboard to generate results."}
               </p>
+              <div className="mx-auto max-w-md">
+                <RunSelector
+                  module="ycsb"
+                  selectedRunId={selectedRunId}
+                  onChange={setSelectedRunId}
+                  isFetching={isFetching}
+                />
+              </div>
             </CardContent>
           </Card>
         )}
@@ -144,6 +145,14 @@ export default function EnhancedYCSBDashboard() {
               currentTheme={currentTheme}
               leaderLabel={redisWins ? "Redis" : "MongoDB"}
               leaderTone={redisWins ? "destructive" : "default"}
+              headerRight={
+                <RunSelector
+                  module="ycsb"
+                  selectedRunId={selectedRunId}
+                  onChange={setSelectedRunId}
+                  isFetching={isFetching}
+                />
+              }
             />
 
             <BenchmarkSummaryCards

@@ -92,13 +92,6 @@ export default function SQLResults() {
           )}
         </div>
 
-        <RunSelector
-          module="sql"
-          selectedRunId={selectedRunId}
-          onChange={setSelectedRunId}
-          isFetching={isFetching}
-        />
-
         {isLoading && (
           <div className="flex justify-center items-center py-20">
             <div className="animate-pulse text-muted-foreground">
@@ -120,12 +113,20 @@ export default function SQLResults() {
             <CardHeader className="px-0 pt-0 text-center space-y-3">
               <CardTitle className="text-2xl">No SQL results yet</CardTitle>
             </CardHeader>
-            <CardContent className="px-0 pb-0 text-center space-y-3 text-muted-foreground">
-              <p>
+            <CardContent className="px-0 pb-0 space-y-5 text-muted-foreground">
+              <p className="text-center">
                 {selectedRunId
                   ? "This historical run has no summary data."
                   : "Run the SQL benchmark from the dashboard to generate results."}
               </p>
+              <div className="mx-auto max-w-md">
+                <RunSelector
+                  module="sql"
+                  selectedRunId={selectedRunId}
+                  onChange={setSelectedRunId}
+                  isFetching={isFetching}
+                />
+              </div>
             </CardContent>
           </Card>
         )}
@@ -160,6 +161,14 @@ export default function SQLResults() {
               currentTheme={currentTheme}
               leaderLabel={postgresWins ? "PostgreSQL" : "MySQL"}
               leaderTone={postgresWins ? "destructive" : "default"}
+              headerRight={
+                <RunSelector
+                  module="sql"
+                  selectedRunId={selectedRunId}
+                  onChange={setSelectedRunId}
+                  isFetching={isFetching}
+                />
+              }
             />
 
             <BenchmarkSummaryCards
