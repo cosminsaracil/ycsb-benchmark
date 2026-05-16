@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity } from "lucide-react";
 import { useGetAllYCSBResults, useYCSBAISummary } from "@/hooks/api/ycsb";
 import { RunSelector } from "@/components/features/shared/RunSelector";
@@ -63,133 +61,191 @@ export default function EnhancedYCSBDashboard() {
   const hasData = !!results && results.data.length > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/10 p-6 md:p-10">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <div className="text-center space-y-4 py-8">
-          <Badge variant="outline" className="mb-3 px-3 py-1">
-            <Activity className="w-3.5 h-3.5 mr-1.5" />
-            YCSB Benchmark Suite
-          </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-red-600 bg-clip-text text-transparent">
-            Performance Dashboard
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Comprehensive performance analysis of Redis and MongoDB across
-            multiple workload patterns
-          </p>
-          {hasData && (
+    <div className="max-w-7xl mx-auto w-full flex flex-col gap-6 py-2">
+      <ResultsHeader
+        eyebrow="Tier 1 — NoSQL"
+        title="YCSB performance"
+        description="Performance analysis of Redis and MongoDB across YCSB workload patterns A–F."
+        action={
+          hasData ? (
             <AISummaryButton
               isLoading={isSummaryLoading}
               onGenerate={() => generateSummary(results)}
             />
-          )}
-        </div>
+          ) : null
+        }
+      />
 
-        {!results && (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-pulse text-muted-foreground">
-              Loading benchmark results...
-            </div>
-          </div>
-        )}
+      {!results && <ResultsSkeleton />}
 
-        {results && !hasData && (
-          <Card className="p-8 shadow-sm border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
-            <CardHeader className="px-0 pt-0 text-center space-y-3">
-              <CardTitle className="text-2xl">No YCSB results yet</CardTitle>
-            </CardHeader>
-            <CardContent className="px-0 pb-0 space-y-5 text-muted-foreground">
-              <p className="text-center">
-                {selectedRunId
-                  ? "This historical run has no summary data."
-                  : "Run the YCSB benchmark from the dashboard to generate results."}
-              </p>
-              <div className="mx-auto max-w-md">
-                <RunSelector
-                  module="ycsb"
-                  selectedRunId={selectedRunId}
-                  onChange={setSelectedRunId}
-                  isFetching={isFetching}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
+      {results && !hasData && (
+        <EmptyResults
+          message={
+            selectedRunId
+              ? "This historical run has no summary data."
+              : "Run the YCSB benchmark from the dashboard to generate results."
+          }
+        >
+          <RunSelector
+            module="ycsb"
+            selectedRunId={selectedRunId}
+            onChange={setSelectedRunId}
+            isFetching={isFetching}
+          />
+        </EmptyResults>
+      )}
 
-        {hasData && (
-          <>
-            <AISummaryCard
-              summary={summary}
-              isLoading={isSummaryLoading}
-              error={summaryError}
-              isFromCache={isFromCache}
-            />
+      {hasData && (
+        <>
+          <AISummaryCard
+            summary={summary}
+            isLoading={isSummaryLoading}
+            error={summaryError}
+            isFromCache={isFromCache}
+          />
 
-            <BenchmarkGraphConfiguration
-              metricOptions={Object.entries(METRICS).map(([k, v]) => ({
-                value: k,
-                label: v.label,
-              }))}
-              workloadOptions={[
-                { value: WORKLOADS.join(","), label: "All Workloads" },
-                { value: "A,B,C", label: "A, B, C" },
-                { value: "D,E,F", label: "D, E, F" },
-                ...WORKLOADS.map((w) => ({ value: w, label: `Workload ${w}` })),
-              ]}
-              selectedMetric={selectedMetric}
-              setSelectedMetric={setSelectedMetric}
-              selectedWorkloads={selectedWorkloads}
-              setSelectedWorkloads={setSelectedWorkloads}
-              chartType={chartType}
-              setChartType={setChartType}
-              currentTheme={currentTheme}
-              leaderLabel={redisWins ? "Redis" : "MongoDB"}
-              leaderTone={redisWins ? "destructive" : "default"}
-              headerRight={
-                <RunSelector
-                  module="ycsb"
-                  selectedRunId={selectedRunId}
-                  onChange={setSelectedRunId}
-                  isFetching={isFetching}
-                />
-              }
-            />
+          <BenchmarkGraphConfiguration
+            metricOptions={Object.entries(METRICS).map(([k, v]) => ({
+              value: k,
+              label: v.label,
+            }))}
+            workloadOptions={[
+              { value: WORKLOADS.join(","), label: "All workloads" },
+              { value: "A,B,C", label: "A, B, C" },
+              { value: "D,E,F", label: "D, E, F" },
+              ...WORKLOADS.map((w) => ({ value: w, label: `Workload ${w}` })),
+            ]}
+            selectedMetric={selectedMetric}
+            setSelectedMetric={setSelectedMetric}
+            selectedWorkloads={selectedWorkloads}
+            setSelectedWorkloads={setSelectedWorkloads}
+            chartType={chartType}
+            setChartType={setChartType}
+            currentTheme={currentTheme}
+            leaderLabel={redisWins ? "Redis" : "MongoDB"}
+            leaderTone={redisWins ? "destructive" : "default"}
+            headerRight={
+              <RunSelector
+                module="ycsb"
+                selectedRunId={selectedRunId}
+                onChange={setSelectedRunId}
+                isFetching={isFetching}
+              />
+            }
+          />
 
-            <BenchmarkSummaryCards
-              entries={[
-                {
-                  key: "redis",
-                  label: "Redis",
-                  stats: summaryStats.redis,
-                  isWinner: redisWins,
-                },
-                {
-                  key: "mongodb",
-                  label: "MongoDB",
-                  stats: summaryStats.mongodb,
-                  isWinner: !redisWins,
-                },
-              ]}
-              currentTheme={currentTheme}
-              formatNumber={formatBenchmarkNumber}
-              metricUnit={metricInfo?.unit}
-            />
+          <BenchmarkSummaryCards
+            entries={[
+              {
+                key: "redis",
+                label: "Redis",
+                stats: summaryStats.redis,
+                isWinner: redisWins,
+              },
+              {
+                key: "mongodb",
+                label: "MongoDB",
+                stats: summaryStats.mongodb,
+                isWinner: !redisWins,
+              },
+            ]}
+            formatNumber={formatBenchmarkNumber}
+            metricUnit={metricInfo?.unit}
+          />
 
-            <BenchmarkGraphCard
-              currentTheme={currentTheme}
-              chartType={chartType}
-              chartData={chartData}
-              lineData={lineData}
-              keys={["redis", "mongodb"]}
-              indexBy="workload"
-              metricInfo={metricInfo}
-              formatNumber={formatBenchmarkNumber}
-            />
-          </>
-        )}
+          <BenchmarkGraphCard
+            currentTheme={currentTheme}
+            chartType={chartType}
+            chartData={chartData}
+            lineData={lineData}
+            keys={["redis", "mongodb"]}
+            indexBy="workload"
+            metricInfo={metricInfo}
+            formatNumber={formatBenchmarkNumber}
+          />
+        </>
+      )}
 
-        <InformationSection currentTheme={currentTheme} />
-      </div>
+      <InformationSection currentTheme={currentTheme} />
     </div>
   );
 }
+
+const ResultsHeader = ({
+  eyebrow,
+  title,
+  description,
+  action,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  action?: React.ReactNode;
+}) => (
+  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-2">
+    <div className="flex flex-col gap-1.5">
+      <div className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500">
+        <Activity className="w-3 h-3" strokeWidth={1.75} />
+        {eyebrow}
+      </div>
+      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+        {title}
+      </h1>
+      <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-prose">
+        {description}
+      </p>
+    </div>
+    {action}
+  </div>
+);
+
+const EmptyResults = ({
+  message,
+  children,
+}: {
+  message: string;
+  children?: React.ReactNode;
+}) => (
+  <div className="rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-800 px-6 py-12 flex flex-col items-center gap-5">
+    <div className="text-center max-w-md">
+      <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500 mb-1.5">
+        No results
+      </div>
+      <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        {message}
+      </p>
+    </div>
+    {children && (
+      <div className="w-full max-w-md flex justify-center">{children}</div>
+    )}
+  </div>
+);
+
+const ResultsSkeleton = () => (
+  <div className="space-y-5">
+    <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6">
+      <div className="h-3 w-20 bg-neutral-100 dark:bg-neutral-900 rounded animate-pulse mb-3" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-9 rounded-md bg-neutral-100 dark:bg-neutral-900 animate-pulse"
+          />
+        ))}
+      </div>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="h-44 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6">
+        <div className="h-3 w-16 bg-neutral-100 dark:bg-neutral-900 rounded animate-pulse" />
+        <div className="h-8 w-32 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse mt-3" />
+        <div className="h-3 w-24 bg-neutral-100 dark:bg-neutral-900 rounded animate-pulse mt-6" />
+      </div>
+      <div className="h-44 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6">
+        <div className="h-3 w-16 bg-neutral-100 dark:bg-neutral-900 rounded animate-pulse" />
+        <div className="h-8 w-32 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse mt-3" />
+        <div className="h-3 w-24 bg-neutral-100 dark:bg-neutral-900 rounded animate-pulse mt-6" />
+      </div>
+    </div>
+    <div className="h-[480px] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 animate-pulse" />
+  </div>
+);

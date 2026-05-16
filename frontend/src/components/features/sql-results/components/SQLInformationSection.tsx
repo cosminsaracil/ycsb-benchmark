@@ -1,13 +1,11 @@
 import { Database, Clock, Info } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import {
   SQL_WORKLOAD_INFO,
   INFO_SECTION_SQL_METRICS,
 } from "@/utils/sql-constants";
 import { BenchmarkInfoCard } from "@/components/features/shared/BenchmarkInfoCard";
 
-type SQLInformationSectionProps = { currentTheme: string };
+type SQLInformationSectionProps = { currentTheme?: string };
 
 const WORKLOAD_RATIONALE: Record<string, string> = {
   W1: "This workload is a strong proxy for join planning quality and key lookup efficiency.",
@@ -28,53 +26,45 @@ const METRIC_USE_CASE: Record<string, string> = {
 };
 
 const StatPill = ({
-  currentTheme,
   icon: Icon,
   title,
   value,
   body,
 }: {
-  currentTheme: string;
   icon: typeof Database;
   title: string;
   value: string;
   body: string;
 }) => (
-  <div
-    className={cn(
-      "rounded-xl border p-4",
-      currentTheme === "dark"
-        ? "border-gray-800/60 bg-gray-900/40"
-        : "border-gray-200/60 bg-white/70",
-    )}
-  >
-    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-      <Icon className="w-4 h-4" />
+  <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4">
+    <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500">
+      <Icon className="w-3.5 h-3.5" strokeWidth={1.75} />
       {title}
     </div>
-    <div className="mt-3 text-2xl font-bold">{value}</div>
-    <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+    <div className="mt-2 text-2xl font-semibold font-mono tabular-nums tracking-tight text-neutral-900 dark:text-neutral-50">
+      {value}
+    </div>
+    <p className="mt-1 text-[12px] leading-relaxed text-neutral-600 dark:text-neutral-400">
+      {body}
+    </p>
   </div>
 );
 
-const HeaderExtras = ({ currentTheme }: SQLInformationSectionProps) => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+const HeaderExtras = () => (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
     <StatPill
-      currentTheme={currentTheme}
       icon={Database}
       title="Databases"
       value="2"
-      body="PostgreSQL and MySQL are compared side by side."
+      body="PostgreSQL and MySQL compared side by side."
     />
     <StatPill
-      currentTheme={currentTheme}
       icon={Clock}
       title="Workloads"
       value="4"
-      body="Join-heavy through mixed OLTP+OLAP benchmark shapes."
+      body="Join-heavy through mixed OLTP + OLAP shapes."
     />
     <StatPill
-      currentTheme={currentTheme}
       icon={Info}
       title="Metrics"
       value="4"
@@ -83,100 +73,82 @@ const HeaderExtras = ({ currentTheme }: SQLInformationSectionProps) => (
   </div>
 );
 
-const Workloads = ({ currentTheme }: SQLInformationSectionProps) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+const Workloads = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
     {Object.entries(SQL_WORKLOAD_INFO).map(([key, { name, desc }]) => (
       <div
         key={key}
-        className={cn(
-          "rounded-2xl border p-5 transition-all hover:shadow-md",
-          currentTheme === "dark"
-            ? "border-gray-800/60 bg-gray-900/35 hover:border-gray-700/80"
-            : "border-gray-200/70 bg-white/80 hover:border-gray-300/90",
-        )}
+        className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-5 transition-colors duration-200 ease-[var(--ease-out-strong)] hover:border-neutral-300 dark:hover:border-neutral-700"
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-3 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="outline" className="text-xs">
-                SQL-{key}
-              </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {name}
-              </Badge>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold">{name}</h4>
-              <p className="text-sm text-muted-foreground mt-1">{desc}</p>
-            </div>
-            <div className="rounded-lg bg-muted/40 p-3 text-sm leading-6 text-muted-foreground">
-              <span className="font-medium text-foreground">
-                Why it matters:{" "}
-              </span>
-              {WORKLOAD_RATIONALE[key]}
-            </div>
-          </div>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono uppercase tracking-[0.14em] border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300">
+            SQL-{key}
+          </span>
+        </div>
+        <h4 className="text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+          {name}
+        </h4>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-400">
+          {desc}
+        </p>
+        <div className="mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-800 text-[12px] leading-6 text-neutral-600 dark:text-neutral-400">
+          <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-neutral-500 mr-2">
+            Why
+          </span>
+          {WORKLOAD_RATIONALE[key]}
         </div>
       </div>
     ))}
   </div>
 );
 
-const Metrics = ({ currentTheme }: SQLInformationSectionProps) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+const Metrics = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
     {Object.entries(INFO_SECTION_SQL_METRICS).map(
       ([key, { label, unit, description, interpretation, badge }]) => (
         <div
           key={key}
-          className={cn(
-            "rounded-2xl border p-5 transition-all hover:shadow-md",
-            currentTheme === "dark"
-              ? "border-gray-800/60 bg-gray-900/35 hover:border-gray-700/80"
-              : "border-gray-200/70 bg-white/80 hover:border-gray-300/90",
-          )}
+          className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-5 transition-colors duration-200 ease-[var(--ease-out-strong)] hover:border-neutral-300 dark:hover:border-neutral-700"
         >
-          <div className="space-y-4">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h4 className="text-lg font-semibold">{label}</h4>
-                <p className="text-xs text-muted-foreground mt-1">SQL metric</p>
-              </div>
-              <Badge variant="outline" className="text-xs">
-                {badge}
-              </Badge>
-            </div>
-
-            <p className="text-sm text-muted-foreground leading-6">
-              {description}
-            </p>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-lg bg-muted/40 p-3">
-                <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                  Unit
-                </div>
-                <div className="mt-1 font-mono text-sm">{unit}</div>
-              </div>
-              <div className="rounded-lg bg-muted/40 p-3">
-                <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                  Interpretation
-                </div>
-                <div
-                  className={cn(
-                    "mt-1 text-sm font-medium",
-                    interpretation.includes("Higher")
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-amber-600 dark:text-amber-400",
-                  )}
-                >
-                  {interpretation}
-                </div>
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <div>
+              <h4 className="text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+                {label}
+              </h4>
+              <div className="mt-0.5 text-[11px] font-mono uppercase tracking-[0.14em] text-neutral-500">
+                SQL metric
               </div>
             </div>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-[0.14em] border border-neutral-200 dark:border-neutral-800 text-neutral-500">
+              {badge}
+            </span>
+          </div>
 
-            <div className="rounded-lg border border-dashed border-muted-foreground/20 bg-muted/20 p-3 text-sm text-muted-foreground leading-6">
-              {METRIC_USE_CASE[key]}
+          <p className="text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-400">
+            {description}
+          </p>
+
+          <div className="grid grid-cols-2 gap-3 mt-4">
+            <div className="rounded-md bg-neutral-50 dark:bg-neutral-900/40 p-3">
+              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-neutral-500">
+                Unit
+              </div>
+              <div className="mt-1 font-mono text-[13px] text-neutral-900 dark:text-neutral-100">
+                {unit}
+              </div>
             </div>
+            <div className="rounded-md bg-neutral-50 dark:bg-neutral-900/40 p-3">
+              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-neutral-500">
+                Interpretation
+              </div>
+              <div className="mt-1 text-[13px] text-neutral-900 dark:text-neutral-100">
+                {interpretation}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-md border border-dashed border-neutral-300 dark:border-neutral-800 p-3 text-[12px] leading-6 text-neutral-600 dark:text-neutral-400">
+            {METRIC_USE_CASE[key]}
           </div>
         </div>
       ),
@@ -189,10 +161,10 @@ export const SQLInformationSection = ({
 }: SQLInformationSectionProps) => (
   <BenchmarkInfoCard
     currentTheme={currentTheme}
-    title="SQL Benchmark Information"
-    description="Understanding SQL workload characteristics and performance metrics"
-    headerExtras={<HeaderExtras currentTheme={currentTheme} />}
-    workloadsContent={<Workloads currentTheme={currentTheme} />}
-    metricsContent={<Metrics currentTheme={currentTheme} />}
+    title="SQL benchmark information"
+    description="Understanding SQL workload characteristics and performance metrics."
+    headerExtras={<HeaderExtras />}
+    workloadsContent={<Workloads />}
+    metricsContent={<Metrics />}
   />
 );

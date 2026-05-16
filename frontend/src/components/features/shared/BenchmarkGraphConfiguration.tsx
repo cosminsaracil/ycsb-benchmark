@@ -1,15 +1,5 @@
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Select } from "@/components/ui/Select";
-import { Badge } from "@/components/ui/badge";
-import { Info } from "lucide-react";
 
 export type SelectOption = { value: string; label: string };
 
@@ -23,7 +13,7 @@ type Props = {
   setSelectedWorkloads: (workloads: string[]) => void;
   chartType: "bar" | "line";
   setChartType: (chartType: "bar" | "line") => void;
-  currentTheme: string;
+  currentTheme?: string;
   leaderLabel: string;
   leaderTone?: "default" | "destructive";
   /** Slot rendered in the top-right of the header (e.g. RunSelector). */
@@ -40,109 +30,83 @@ export const BenchmarkGraphConfiguration = ({
   setSelectedWorkloads,
   chartType,
   setChartType,
-  currentTheme,
   leaderLabel,
-  leaderTone = "default",
   headerRight,
 }: Props) => {
   return (
-    <Card
-      className={cn(
-        "p-8",
-        currentTheme === "dark"
-          ? "bg-gradient-to-br from-gray-950 to-gray-900"
-          : "bg-gradient-to-br from-gray-50 to-gray-100",
-        "shadow-sm",
-        currentTheme === "dark" ? "border-gray-800/60" : "border-gray-200/60",
-      )}
-    >
-      <CardHeader className="pb-4">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Info className="w-5 h-5 text-primary" />
-              Configuration
-            </CardTitle>
-            <CardDescription className="mt-1.5">{description}</CardDescription>
+    <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
+      <div className="px-6 pt-5 pb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="space-y-1">
+          <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500">
+            Configuration
           </div>
-          {headerRight && (
-            <div
-              className={cn(
-                "md:pl-6 md:border-l",
-                currentTheme === "dark"
-                  ? "md:border-gray-800/60"
-                  : "md:border-gray-200/60",
-              )}
-            >
-              {headerRight}
-            </div>
-          )}
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-prose">
+            {description}
+          </p>
         </div>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              Performance Metric
-            </label>
-            <Select
-              placeholder="Select a metric"
-              value={selectedMetric}
-              onChange={(value) => setSelectedMetric(value)}
-              options={metricOptions}
-              fullWidth
-            />
+        {headerRight && (
+          <div className="md:pl-6 md:border-l md:border-neutral-200 md:dark:border-neutral-800">
+            {headerRight}
           </div>
+        )}
+      </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              Workload Selection
-            </label>
-            <Select
-              value={selectedWorkloads.join(",")}
-              onChange={(value) => setSelectedWorkloads(value.split(","))}
-              options={workloadOptions}
-              fullWidth
-            />
-          </div>
+      <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Field label="Metric">
+          <Select
+            placeholder="Select a metric"
+            value={selectedMetric}
+            onChange={(value) => setSelectedMetric(value)}
+            options={metricOptions}
+            fullWidth
+          />
+        </Field>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              Visualization Type
-            </label>
-            <Select
-              value={chartType}
-              onChange={(value) => setChartType(value as "bar" | "line")}
-              options={[
-                { value: "bar", label: "Bar Chart" },
-                { value: "line", label: "Line Chart" },
-              ]}
-              fullWidth
-            />
-          </div>
+        <Field label="Workload">
+          <Select
+            value={selectedWorkloads.join(",")}
+            onChange={(value) => setSelectedWorkloads(value.split(","))}
+            options={workloadOptions}
+            fullWidth
+          />
+        </Field>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              Performance Leader
-            </label>
-            <div
-              className={cn(
-                "h-9 flex items-center px-3.5 rounded-lg border",
-                currentTheme === "dark"
-                  ? "border-gray-800/60 bg-muted/20"
-                  : "border-gray-200/60 bg-muted/30",
-              )}
-            >
-              <Badge
-                variant={leaderTone}
-                className="font-medium text-xs px-2.5 py-0.5"
-              >
-                {leaderLabel}
-              </Badge>
-            </div>
+        <Field label="Chart type">
+          <Select
+            value={chartType}
+            onChange={(value) => setChartType(value as "bar" | "line")}
+            options={[
+              { value: "bar", label: "Bar" },
+              { value: "line", label: "Line" },
+            ]}
+            fullWidth
+          />
+        </Field>
+
+        <Field label="Leader">
+          <div className="h-9 flex items-center px-3 rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40">
+            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+              <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              {leaderLabel}
+            </span>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </Field>
+      </div>
+    </div>
   );
 };
+
+const Field = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) => (
+  <div className="space-y-1.5">
+    <label className="block text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500">
+      {label}
+    </label>
+    {children}
+  </div>
+);

@@ -1,17 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Info, Database, Clock } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Database, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  currentTheme: string;
+  currentTheme?: string;
   title: string;
   description: string;
   headerExtras?: React.ReactNode;
@@ -21,7 +14,6 @@ type Props = {
 };
 
 export const BenchmarkInfoCard = ({
-  currentTheme,
   title,
   description,
   headerExtras,
@@ -34,86 +26,73 @@ export const BenchmarkInfoCard = ({
   );
 
   return (
-    <div className="space-y-6">
-      <Card
-        className={cn(
-          "shadow-sm",
-          currentTheme === "dark" ? "border-gray-800/60" : "border-gray-200/60",
-          currentTheme === "dark"
-            ? "bg-gradient-to-br from-gray-950 to-gray-900"
-            : "bg-gradient-to-br from-gray-50 to-gray-100",
-        )}
-      >
-        <CardHeader className="pb-6">
-          <div className="flex items-start justify-between">
-            <div className="space-y-1.5">
-              <CardTitle className="flex items-center gap-2.5 text-lg font-semibold">
-                <div
-                  className={cn(
-                    "flex items-center justify-center w-8 h-8 rounded-lg",
-                    currentTheme === "dark"
-                      ? "bg-blue-500/20 text-blue-400"
-                      : "bg-blue-500/10 text-blue-600",
-                  )}
-                >
-                  <Info className="w-4 h-4" />
-                </div>
-                {title}
-              </CardTitle>
-              <CardDescription className="text-sm max-w-2xl">
-                {description}
-              </CardDescription>
+    <div className="space-y-5">
+      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
+        <div className="px-6 pt-6 pb-5 space-y-4">
+          <div className="space-y-1.5">
+            <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500">
+              Reference
             </div>
+            <h2 className="text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+              {title}
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-prose">
+              {description}
+            </p>
           </div>
           {headerExtras}
-        </CardHeader>
+        </div>
 
-        <CardContent className="pt-0">
-          <div
-            className={cn(
-              "inline-flex rounded-lg p-1 mb-6",
-              currentTheme === "dark" ? "bg-gray-800/50" : "bg-gray-100",
-            )}
-          >
-            <button
+        <div className="px-6 pb-6">
+          <div className="inline-flex border-b border-neutral-200 dark:border-neutral-800 mb-5">
+            <TabButton
+              active={activeTab === "workloads"}
               onClick={() => setActiveTab("workloads")}
-              className={cn(
-                "px-4 py-2 rounded-md text-sm font-medium transition-all",
-                activeTab === "workloads"
-                  ? currentTheme === "dark"
-                    ? "bg-gray-900 text-white shadow-sm"
-                    : "bg-white text-gray-900 shadow-sm"
-                  : currentTheme === "dark"
-                    ? "text-gray-400 hover:text-gray-200"
-                    : "text-gray-600 hover:text-gray-900",
-              )}
+              icon={Database}
             >
-              <Database className="w-4 h-4 inline mr-2" />
               Workloads
-            </button>
-            <button
+            </TabButton>
+            <TabButton
+              active={activeTab === "metrics"}
               onClick={() => setActiveTab("metrics")}
-              className={cn(
-                "px-4 py-2 rounded-md text-sm font-medium transition-all",
-                activeTab === "metrics"
-                  ? currentTheme === "dark"
-                    ? "bg-gray-900 text-white shadow-sm"
-                    : "bg-white text-gray-900 shadow-sm"
-                  : currentTheme === "dark"
-                    ? "text-gray-400 hover:text-gray-200"
-                    : "text-gray-600 hover:text-gray-900",
-              )}
+              icon={Clock}
             >
-              <Clock className="w-4 h-4 inline mr-2" />
               Metrics
-            </button>
+            </TabButton>
           </div>
 
           {activeTab === "workloads" ? workloadsContent : metricsContent}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {footer}
     </div>
   );
 };
+
+const TabButton = ({
+  active,
+  onClick,
+  icon: Icon,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: typeof Database;
+  children: React.ReactNode;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={cn(
+      "relative inline-flex items-center gap-2 px-3 py-2.5 -mb-px text-sm font-medium",
+      "border-b transition-colors duration-150",
+      active
+        ? "border-neutral-900 dark:border-neutral-50 text-neutral-900 dark:text-neutral-50"
+        : "border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300",
+    )}
+  >
+    <Icon className="w-3.5 h-3.5" strokeWidth={1.75} />
+    {children}
+  </button>
+);

@@ -8,37 +8,33 @@ export const DbStatusIndicator = ({
 }: DbStatusIndicatorProps) => (
   <div
     className={cn(
-      "group/db flex items-center justify-between px-3.5 py-2.5 rounded-lg",
-      "border border-neutral-200/70 dark:border-neutral-800/70",
-      "bg-white/60 dark:bg-neutral-900/50 backdrop-blur-sm",
-      "transition-colors hover:bg-white dark:hover:bg-neutral-900/80",
+      "flex items-center justify-between px-3 py-2 rounded-md",
+      "border border-neutral-200 dark:border-neutral-800",
+      "bg-white dark:bg-neutral-950",
+      "transition-colors duration-150",
+      "hover:border-neutral-300 dark:hover:border-neutral-700",
     )}
   >
-    <div className="flex items-center gap-2.5 text-neutral-700 dark:text-neutral-200">
-      <Database size={15} strokeWidth={2.25} className="opacity-70" />
-      <span className="text-sm font-semibold tracking-tight">{name}</span>
+    <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-200">
+      <Database size={14} strokeWidth={1.75} className="text-neutral-400 dark:text-neutral-500" />
+      <span className="text-sm font-medium">{name}</span>
     </div>
-    <div className="flex items-center gap-2">
-      <span className="relative flex h-2 w-2">
-        {isOnline && (
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-        )}
-        <span
-          className={cn(
-            "relative inline-flex rounded-full h-2 w-2",
-            isOnline ? "bg-emerald-500" : "bg-rose-500",
-          )}
-        />
-      </span>
+    <div className="flex items-center gap-1.5">
       <span
         className={cn(
-          "text-[10px] uppercase font-bold tracking-[0.18em]",
+          "inline-flex rounded-full h-1.5 w-1.5",
+          isOnline ? "bg-emerald-500" : "bg-neutral-400 dark:bg-neutral-600",
+        )}
+      />
+      <span
+        className={cn(
+          "text-[11px] font-medium tabular-nums",
           isOnline
-            ? "text-emerald-600 dark:text-emerald-400"
-            : "text-rose-600 dark:text-rose-400",
+            ? "text-neutral-600 dark:text-neutral-400"
+            : "text-neutral-400 dark:text-neutral-500",
         )}
       >
-        {isOnline ? "Online" : "Offline"}
+        {isOnline ? "online" : "offline"}
       </span>
     </div>
   </div>

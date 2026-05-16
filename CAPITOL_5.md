@@ -94,14 +94,14 @@ Parametrii utilizați au fost: `RECORD_COUNT = 100.000`, `OPERATION_COUNT = 100.
 
 **Tabelul 5.1 Rezultate YCSB — throughput și latență medie de citire**
 
-| Workload | Profil | Redis (ops/sec) | MongoDB (ops/sec) | Redis read avg (μs) | MongoDB read avg (μs) | Câștigător |
-|---|---|---|---|---|---|---|
-| A | Update heavy (50/50) | 13.205 | **19.841** | 749 | 448 | MongoDB (×1,5) |
-| B | Read heavy (95/5) | 15.605 | **17.361** | 626 | 517 | MongoDB (×1,1) |
-| C | Read only | **26.660** | 23.452 | 364 | 379 | Redis (×1,1) |
-| D | Read latest | **26.575** | 9.646 | 349 | 939 | Redis (×2,8) |
-| E | Scan heavy | 651 | **5.331** | – | – | MongoDB (×8,2) |
-| F | Read-modify-write | **21.349** | 12.332 | 307 | 500 | Redis (×1,7) |
+| Workload | Profil               | Redis (ops/sec) | MongoDB (ops/sec) | Redis read avg (μs) | MongoDB read avg (μs) | Câștigător     |
+| -------- | -------------------- | --------------- | ----------------- | ------------------- | --------------------- | -------------- |
+| A        | Update heavy (50/50) | 13.205          | **19.841**        | 749                 | 448                   | MongoDB (×1,5) |
+| B        | Read heavy (95/5)    | 15.605          | **17.361**        | 626                 | 517                   | MongoDB (×1,1) |
+| C        | Read only            | **26.660**      | 23.452            | 364                 | 379                   | Redis (×1,1)   |
+| D        | Read latest          | **26.575**      | 9.646             | 349                 | 939                   | Redis (×2,8)   |
+| E        | Scan heavy           | 651             | **5.331**         | –                   | –                     | MongoDB (×8,2) |
+| F        | Read-modify-write    | **21.349**      | 12.332            | 307                 | 500                   | Redis (×1,7)   |
 
 **Interpretare per workload:**
 
@@ -125,18 +125,19 @@ Parametrii utilizați au fost: `SQL_OPERATION_COUNT = 2.000`, `SQL_THREADS = 8`,
 
 **Tabelul 5.2 Rezultate SQL — throughput și latențe**
 
-| Workload | Profil | PostgreSQL ops/s | MySQL ops/s | PG avg (μs) | MySQL avg (μs) | PG p99 (μs) | MySQL p99 (μs) | Câștigător |
-|---|---|---|---|---|---|---|---|---|
-| W1 | Join heavy | **6.152** | 1.250 | 1.222 | 6.268 | 2.800 | 12.212 | PostgreSQL (×4,9) |
-| W2 | Aggregation heavy | **464** | 70 | 16.428 | 111.600 | 39.002 | 276.032 | PostgreSQL (×6,6) |
-| W3 | Transaction heavy | **1.989** | 268 | 3.910 | 29.410 | 6.885 | 70.336 | PostgreSQL (×7,4) |
-| W4 | Mixed OLTP + OLAP | **1.015** | 205 | 6.970 | 34.299 | 41.423 | 214.814 | PostgreSQL (×5,0) |
+| Workload | Profil            | PostgreSQL ops/s | MySQL ops/s | PG avg (μs) | MySQL avg (μs) | PG p99 (μs) | MySQL p99 (μs) | Câștigător        |
+| -------- | ----------------- | ---------------- | ----------- | ----------- | -------------- | ----------- | -------------- | ----------------- |
+| W1       | Join heavy        | **6.152**        | 1.250       | 1.222       | 6.268          | 2.800       | 12.212         | PostgreSQL (×4,9) |
+| W2       | Aggregation heavy | **464**          | 70          | 16.428      | 111.600        | 39.002      | 276.032        | PostgreSQL (×6,6) |
+| W3       | Transaction heavy | **1.989**        | 268         | 3.910       | 29.410         | 6.885       | 70.336         | PostgreSQL (×7,4) |
+| W4       | Mixed OLTP + OLAP | **1.015**        | 205         | 6.970       | 34.299         | 41.423      | 214.814        | PostgreSQL (×5,0) |
 
 **Interpretare per workload:**
 
 **Workload W1 (join-heavy).** PostgreSQL este de aproximativ 5× mai rapid și are o latență p99 de ~4× mai mică (2,8 ms vs 12,2 ms). Diferența majoră vine din planificatorul de interogări al PostgreSQL, care utilizează cost-based optimization avansat pentru join-uri multi-tabel, alegând eficient între strategii hash-join, merge-join și nested-loop. MySQL InnoDB folosește predominant nested-loop join cu look-up prin indexuri, ceea ce penalizează interogările cu lanțuri lungi de join-uri (W1 implică 4 tabele).
 
 **Workload W2 (aggregation-heavy).** Avantajul PostgreSQL crește la ~6,6× la throughput și la ~7× la latența p99. Workload-ul W2 conține predominant interogări `GROUP BY` cu funcții de agregare pe categorii, iar PostgreSQL beneficiază aici de:
+
 - agregări mai eficiente prin algoritmi hash-aggregate paralelizabili;
 - statistici mai detaliate pe coloane (`pg_statistic`), care permit planificatorului să aleagă strategia optimă;
 - gestionare mai eficientă a memoriei pentru ordonarea și gruparea valorilor (`work_mem`).
@@ -144,6 +145,7 @@ Parametrii utilizați au fost: `SQL_OPERATION_COUNT = 2.000`, `SQL_THREADS = 8`,
 Latențele p99 de 276 ms la MySQL indică prezența unor outlieri semnificativi — operații care, deși au reușit, au depășit cu mult media. Acest comportament este tipic pentru sistemele care recurg la operații pe disk atunci când memoria de lucru este insuficientă.
 
 **Workload W3 (transaction-heavy).** Diferența cea mai pronunțată — PostgreSQL este de aproximativ 7,4× mai rapid în throughput. Workload-ul W3 implică tranzacții multi-statement cu UPDATE pe `products.stock`, INSERT în `orders` și `order_items`, plus UPDATE pe `users.balance`. Avantajul PostgreSQL ține de:
+
 - implementarea MVCC (Multi-Version Concurrency Control) care permite citiri concurente fără blocare;
 - mecanismele de detecție a deadlock-urilor mai eficiente;
 - WAL (Write-Ahead Logging) optimizat pentru tranzacții scurte cu fsync grupat.

@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Trash2, History, Loader2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/Select";
 import {
@@ -37,10 +36,6 @@ type Props = {
   isFetching?: boolean;
 };
 
-/**
- * Inline run selector designed to live inside another card's header.
- * Layout: a compact controls row + a "Viewing" footer line.
- */
 export const RunSelector = ({
   module,
   selectedRunId,
@@ -77,8 +72,8 @@ export const RunSelector = ({
   return (
     <div className="flex flex-col gap-2 min-w-[260px]">
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground shrink-0">
-          <History className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500 shrink-0">
+          <History className="w-3 h-3" strokeWidth={1.75} />
           Report
         </div>
         <div className="flex-1 min-w-[180px]">
@@ -86,7 +81,7 @@ export const RunSelector = ({
             value={selectedRunId ?? LATEST_VALUE}
             onChange={handleChange}
             options={options}
-            placeholder={isLoading ? "Loading runs..." : "Select a run"}
+            placeholder={isLoading ? "Loading…" : "Select a run"}
             fullWidth
             disabled={isLoading || runs.length === 0}
           />
@@ -98,27 +93,25 @@ export const RunSelector = ({
             onClick={() => setConfirmTarget(selected)}
             disabled={deleteMutation.isPending}
             aria-label="Delete this run"
-            className="shrink-0 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+            className="shrink-0 transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.96] hover:text-rose-600 dark:hover:text-rose-400"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3.5 h-3.5" strokeWidth={1.75} />
           </Button>
         )}
       </div>
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="flex items-center gap-2 text-xs text-neutral-500">
         <span className="shrink-0">Viewing</span>
-        <Badge variant="secondary" className="font-mono px-2 py-0.5 truncate">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 font-mono text-neutral-700 dark:text-neutral-300 truncate">
           {viewingLabel}
-        </Badge>
+        </span>
         {isFetching ? (
-          <span className="inline-flex items-center gap-1 text-primary">
+          <span className="inline-flex items-center gap-1 text-neutral-700 dark:text-neutral-300">
             <Loader2 className="w-3 h-3 animate-spin" />
-            Loading...
+            Loading
           </span>
         ) : (
-          <span className="shrink-0">
-            {runs.length === 0
-              ? "No history yet"
-              : `${runs.length} saved`}
+          <span className="shrink-0 font-mono tabular-nums text-neutral-400 dark:text-neutral-600">
+            {runs.length === 0 ? "No history" : `${runs.length} saved`}
           </span>
         )}
       </div>
@@ -153,7 +146,7 @@ export const RunSelector = ({
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete run"}
+              {deleteMutation.isPending ? "Deleting…" : "Delete run"}
             </Button>
           </DialogFooter>
         </DialogContent>

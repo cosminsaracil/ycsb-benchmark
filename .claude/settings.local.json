@@ -38,7 +38,14 @@
       "WebFetch(domain:api.github.com)",
       "Bash(mkdir -p .claude/skills/emil-design-eng .claude/skills/design-taste-frontend)",
       "Bash(cp /tmp/emil-skill.md .claude/skills/emil-design-eng/SKILL.md)",
-      "Bash(cp /tmp/taste-skill.md .claude/skills/design-taste-frontend/SKILL.md)"
+      "Bash(cp /tmp/taste-skill.md .claude/skills/design-taste-frontend/SKILL.md)",
+      "Skill(design-taste-frontend)",
+      "Skill(design-taste-frontend:*)",
+      "Skill(emil-design-eng)",
+      "Skill(emil-design-eng:*)",
+      "Bash(npx eslint *)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(tee ../tsc.log)"
     ],
     "additionalDirectories": [
       "\\tmp"

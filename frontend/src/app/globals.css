@@ -67,6 +67,11 @@
   --color-gray-800: #262626;
   --color-gray-900: #171717;
   --color-gray-950: #0a0a0a;
+
+  /* Strong easing curves — defaults are too weak for UI motion */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 :root {
@@ -198,5 +203,68 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* AI-surface accents — scoped iridescent border for AI summary. */
+@keyframes ai-border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.ai-border {
+  position: relative;
+  border-radius: 1rem;
+  padding: 1px;
+  background-image: linear-gradient(
+    110deg,
+    #a855f7 0%,
+    #d946ef 25%,
+    #06b6d4 50%,
+    #a855f7 75%,
+    #d946ef 100%
+  );
+  background-size: 200% 100%;
+  animation: ai-border-flow 8s linear infinite;
+}
+
+.ai-button {
+  background-image: linear-gradient(
+    110deg,
+    #7c3aed 0%,
+    #c026d3 35%,
+    #0891b2 70%,
+    #7c3aed 100%
+  );
+  background-size: 200% 100%;
+  animation: ai-border-flow 6s linear infinite;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 1px 2px rgba(124, 58, 237, 0.12);
+}
+
+.ai-button:hover {
+  filter: brightness(1.08);
+}
+
+.ai-icon-wrap {
+  background-image: linear-gradient(
+    135deg,
+    #a855f7 0%,
+    #d946ef 50%,
+    #06b6d4 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-border,
+  .ai-button {
+    animation: none;
   }
 }

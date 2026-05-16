@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { AlertCircle } from "lucide-react";
 import { ROUTES } from "@/utils/routes";
 import {
   useBenchmarkStatus,
@@ -58,30 +59,28 @@ export default function Dashboard() {
     }
   }, [benchmarkStatus.isRunning, benchmarkStatus.progress, refetchYCSB]);
 
-  // Loading states
+  // Loading state — skeleton matches layout instead of spinner
   if (isFetchingYCSB || isFetchingStatus) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
-  // Error states
+  // Error state — inline, not a full-screen block
   if (errorYCSB || errorStatus) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg text-red-600">Error loading data</div>
-      </div>
+      <Shell>
+        <DashboardHeader />
+        <InlineError message="Could not load benchmark data." />
+      </Shell>
     );
   }
 
-  // No data states
+  // No data — clean composition rather than a centered message
   if (!ycsbData?.data || !ycsbDBStatus) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">No data available</div>
-      </div>
+      <Shell>
+        <DashboardHeader />
+        <EmptyState />
+      </Shell>
     );
   }
 
@@ -116,11 +115,13 @@ export default function Dashboard() {
     }
   };
 
-  return (
-    <div className="flex flex-col items-center gap-8 p-6">
-      <h1 className="text-3xl font-bold mb-4 text-center">Benchmarks</h1>
+  const ycsbError = startError || statusError;
+  const sqlError = startSQLError || sqlStatusError;
 
-      {/* Benchmark Progress Section */}
+  return (
+    <Shell>
+      <DashboardHeader />
+
       {benchmarkStatus.isRunning && (
         <ProgressCard benchmarkStatus={benchmarkStatus} />
       )}
@@ -135,82 +136,116 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Error Display Section */}
-      {(startError || statusError) && (
-        <div className="w-full max-w-6xl bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <div className="flex items-center gap-3">
-            <svg
-              className="w-5 h-5 text-red-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <p className="text-red-800 dark:text-red-200">
-              <span className="font-semibold">Error:</span>{" "}
-              {startError || statusError}
-            </p>
-          </div>
-        </div>
-      )}
+      {ycsbError && <InlineError message={`YCSB: ${ycsbError}`} />}
+      {sqlError && <InlineError message={`SQL: ${sqlError}`} />}
 
-      {(startSQLError || sqlStatusError) && (
-        <div className="w-full max-w-6xl bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <div className="flex items-center gap-3">
-            <svg
-              className="w-5 h-5 text-red-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <p className="text-red-800 dark:text-red-200">
-              <span className="font-semibold">SQL Error:</span>{" "}
-              {startSQLError || sqlStatusError}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Benchmark Cards */}
-      <div className="flex flex-col lg:flex-row w-full max-w-6xl gap-8">
-        <div className="flex-1">
-          <BenchmarkCard
-            title="YCSB"
-            accent="ycsb"
-            tagline="Tier 1 — NoSQL"
-            isReady={hasResults}
-            dashboardLink={ROUTES.YCSB}
-            handleStartBenchmark={handleStartYCSBBenchmark}
-            databaseStatus={ycsbConnectionStatus}
-            onCheckConnection={refetchDBStatus}
-            isRunning={benchmarkStatus.isRunning}
-            isStarting={isStarting}
-          />
-        </div>
-        <div className="flex-1">
-          <BenchmarkCard
-            title="SQL Benchmark"
-            accent="sql"
-            tagline="Tier 2 — Relational"
-            isReady={true}
-            dashboardLink={ROUTES.SQL}
-            handleStartBenchmark={handleStartSQLBenchmark}
-            databaseStatus={sqlConnectionStatus}
-            onCheckConnection={refetchSQLStatus}
-            isRunning={sqlBenchmarkStatus.isRunning}
-            isStarting={isStartingSQL}
-          />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <BenchmarkCard
+          title="YCSB"
+          accent="ycsb"
+          tagline="Tier 1 — NoSQL"
+          isReady={hasResults}
+          dashboardLink={ROUTES.YCSB}
+          handleStartBenchmark={handleStartYCSBBenchmark}
+          databaseStatus={ycsbConnectionStatus}
+          onCheckConnection={refetchDBStatus}
+          isRunning={benchmarkStatus.isRunning}
+          isStarting={isStarting}
+        />
+        <BenchmarkCard
+          title="SQL Benchmark"
+          accent="sql"
+          tagline="Tier 2 — Relational"
+          isReady={true}
+          dashboardLink={ROUTES.SQL}
+          handleStartBenchmark={handleStartSQLBenchmark}
+          databaseStatus={sqlConnectionStatus}
+          onCheckConnection={refetchSQLStatus}
+          isRunning={sqlBenchmarkStatus.isRunning}
+          isStarting={isStartingSQL}
+        />
       </div>
-    </div>
+    </Shell>
   );
 }
+
+const Shell = ({ children }: { children: React.ReactNode }) => (
+  <div className="max-w-6xl mx-auto w-full flex flex-col gap-6 py-2">
+    {children}
+  </div>
+);
+
+const DashboardHeader = () => (
+  <div className="flex flex-col gap-1.5 pb-2">
+    <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500">
+      Overview
+    </div>
+    <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+      Benchmarks
+    </h1>
+    <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-prose">
+      Run NoSQL (YCSB) and relational (SQL) workloads. Check database connections before starting.
+    </p>
+  </div>
+);
+
+const InlineError = ({ message }: { message: string }) => (
+  <div
+    role="alert"
+    className="flex items-start gap-2.5 px-3.5 py-2.5 rounded-lg border border-rose-200 dark:border-rose-900/60 bg-rose-50/60 dark:bg-rose-950/20"
+  >
+    <AlertCircle
+      className="w-4 h-4 mt-0.5 text-rose-600 dark:text-rose-500 shrink-0"
+      strokeWidth={2}
+    />
+    <p className="text-[13px] leading-relaxed text-rose-800 dark:text-rose-300">
+      {message}
+    </p>
+  </div>
+);
+
+const EmptyState = () => (
+  <div className="rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-800 px-6 py-12 text-center">
+    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+      No data available yet.
+    </p>
+  </div>
+);
+
+const DashboardSkeleton = () => (
+  <Shell>
+    <div className="flex flex-col gap-1.5 pb-2">
+      <div className="h-3 w-16 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+      <div className="h-7 w-48 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse mt-1" />
+      <div className="h-4 w-80 max-w-full bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse mt-1" />
+    </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <SkeletonCard />
+      <SkeletonCard />
+    </div>
+  </Shell>
+);
+
+const SkeletonCard = () => (
+  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 flex flex-col gap-4">
+    <div className="flex items-start justify-between">
+      <div className="flex items-start gap-3">
+        <div className="w-9 h-9 rounded-lg bg-neutral-100 dark:bg-neutral-900 animate-pulse" />
+        <div className="space-y-2">
+          <div className="h-3 w-20 bg-neutral-100 dark:bg-neutral-900 rounded animate-pulse" />
+          <div className="h-5 w-16 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+        </div>
+      </div>
+      <div className="h-5 w-16 bg-neutral-100 dark:bg-neutral-900 rounded-full animate-pulse" />
+    </div>
+    <div className="h-12 rounded-lg bg-neutral-50 dark:bg-neutral-900/60 animate-pulse" />
+    <div className="flex flex-col gap-1.5">
+      <div className="h-9 rounded-md bg-neutral-50 dark:bg-neutral-900/60 animate-pulse" />
+      <div className="h-9 rounded-md bg-neutral-50 dark:bg-neutral-900/60 animate-pulse" />
+    </div>
+    <div className="flex gap-2 mt-1">
+      <div className="flex-1 h-9 rounded-md bg-neutral-100 dark:bg-neutral-900 animate-pulse" />
+      <div className="flex-1 h-9 rounded-md bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+    </div>
+  </div>
+);

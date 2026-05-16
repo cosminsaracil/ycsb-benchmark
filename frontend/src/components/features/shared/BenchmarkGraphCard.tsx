@@ -1,14 +1,6 @@
 "use client";
 import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
-import { cn } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import {
   NIVO_THEME_DARK,
   NIVO_THEME_LIGHT,
@@ -51,22 +43,37 @@ const renderTooltip = (
 ) => (
   <div
     style={{
-      padding: "10px 14px",
-      background: currentTheme === "dark" ? "#1f2937" : "#ffffff",
-      border: `1px solid ${currentTheme === "dark" ? "#374151" : "#e5e7eb"}`,
+      padding: "8px 12px",
+      background: currentTheme === "dark" ? "#0a0a0a" : "#ffffff",
+      border: `1px solid ${currentTheme === "dark" ? "#262626" : "#e5e5e5"}`,
       borderRadius: 8,
-      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+      boxShadow:
+        currentTheme === "dark"
+          ? "0 4px 12px rgba(0,0,0,0.4)"
+          : "0 4px 12px rgba(0,0,0,0.08)",
     }}
   >
-    <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{title}</div>
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <div
+    <div
+      style={{
+        fontSize: 11,
+        fontFamily:
+          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+        letterSpacing: "0.04em",
+        textTransform: "uppercase",
+        color: currentTheme === "dark" ? "#737373" : "#737373",
+        marginBottom: 6,
+      }}
+    >
+      {title}
+    </div>
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <span
         style={{
-          width: 10,
-          height: 10,
-          borderRadius: 2,
+          width: 8,
+          height: 8,
+          borderRadius: 999,
           backgroundColor: seriesColor,
-          marginRight: 8,
+          flexShrink: 0,
         }}
       />
       <span
@@ -74,19 +81,27 @@ const renderTooltip = (
           fontSize: 13,
           fontWeight: 500,
           textTransform: "capitalize",
+          color: currentTheme === "dark" ? "#e5e5e5" : "#171717",
         }}
       >
-        {seriesLabel}:
+        {seriesLabel}
       </span>
       <span
         style={{
-          marginLeft: 8,
+          marginLeft: "auto",
           fontSize: 13,
-          fontWeight: 600,
-          fontFamily: "monospace",
+          fontFamily:
+            "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+          fontVariantNumeric: "tabular-nums",
+          color: currentTheme === "dark" ? "#fafafa" : "#0a0a0a",
         }}
       >
-        {formatNumber(value, 2)} {unit}
+        {formatNumber(value, 2)}{" "}
+        <span
+          style={{ color: currentTheme === "dark" ? "#737373" : "#a3a3a3" }}
+        >
+          {unit}
+        </span>
       </span>
     </div>
   </div>
@@ -105,58 +120,46 @@ export const BenchmarkGraphCard = ({
 }: Props) => {
   const theme = currentTheme === "dark" ? NIVO_THEME_DARK : NIVO_THEME_LIGHT;
   const colorFor = (id: string) =>
-    DB_COLORS[id as keyof typeof DB_COLORS] ?? "#6b7280";
+    DB_COLORS[id as keyof typeof DB_COLORS] ?? "#737373";
 
   return (
-    <Card
-      className={cn(
-        "shadow-sm",
-        currentTheme === "dark" ? "border-gray-800/60" : "border-gray-200/60",
-        currentTheme === "dark"
-          ? "bg-gradient-to-br from-gray-950 to-gray-900"
-          : "bg-gradient-to-br from-gray-50 to-gray-100",
-      )}
-    >
-      <CardHeader className="pb-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <CardTitle className="text-xl">
-              {metricInfo?.label} Comparison
-            </CardTitle>
-            <CardDescription className="mt-1.5">
-              {metricInfo.higher
-                ? "Higher values indicate better performance"
-                : "Lower values indicate better performance"}
-            </CardDescription>
-          </div>
+    <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
+      <div className="px-6 pt-5 pb-4">
+        <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-neutral-500">
+          {metricInfo.higher
+            ? "Higher is better"
+            : "Lower is better"}
         </div>
-      </CardHeader>
-      <CardContent className="pt-0">
+        <h3 className="mt-1 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+          {metricInfo?.label}
+        </h3>
+      </div>
+      <div className="px-2 pb-4">
         <div style={{ height }}>
           {chartType === "bar" ? (
             <ResponsiveBar
               data={chartData}
               keys={keys}
               indexBy={indexBy}
-              margin={{ top: 50, right: 140, bottom: 70, left: 90 }}
-              padding={0.25}
+              margin={{ top: 24, right: 140, bottom: 60, left: 80 }}
+              padding={0.3}
               groupMode="grouped"
               colors={({ id }) => colorFor(String(id))}
               theme={theme}
               borderRadius={4}
               axisBottom={{
-                tickSize: 5,
-                tickPadding: 8,
+                tickSize: 0,
+                tickPadding: 10,
                 legend: "Workload",
                 legendPosition: "middle",
-                legendOffset: 50,
+                legendOffset: 44,
               }}
               axisLeft={{
-                tickSize: 5,
-                tickPadding: 8,
+                tickSize: 0,
+                tickPadding: 10,
                 legend: metricInfo?.unit,
                 legendPosition: "middle",
-                legendOffset: -70,
+                legendOffset: -64,
                 format: (value) => formatNumber(value, 0),
               }}
               labelSkipWidth={16}
@@ -172,8 +175,9 @@ export const BenchmarkGraphCard = ({
                   translateY: 0,
                   itemsSpacing: 8,
                   itemWidth: 100,
-                  itemHeight: 24,
-                  symbolSize: 18,
+                  itemHeight: 22,
+                  symbolSize: 10,
+                  symbolShape: "circle",
                   itemDirection: "left-to-right",
                 },
               ]}
@@ -194,33 +198,33 @@ export const BenchmarkGraphCard = ({
           ) : (
             <ResponsiveLine
               data={lineData}
-              margin={{ top: 50, right: 140, bottom: 70, left: 90 }}
+              margin={{ top: 24, right: 140, bottom: 60, left: 80 }}
               xScale={{ type: "point" }}
               yScale={{ type: "linear", min: "auto", max: "auto" }}
               curve="monotoneX"
               axisBottom={{
-                tickSize: 5,
-                tickPadding: 8,
+                tickSize: 0,
+                tickPadding: 10,
                 legend: "Workload",
                 legendPosition: "middle",
-                legendOffset: 50,
+                legendOffset: 44,
               }}
               axisLeft={{
-                tickSize: 5,
-                tickPadding: 8,
+                tickSize: 0,
+                tickPadding: 10,
                 legend: metricInfo?.unit,
                 legendPosition: "middle",
-                legendOffset: -70,
+                legendOffset: -64,
                 format: (value) => formatNumber(value, 0),
               }}
               colors={({ id }) => colorFor(String(id))}
               theme={theme}
-              pointSize={11}
+              pointSize={9}
               pointBorderWidth={2}
               pointBorderColor={{ from: "serieColor" }}
               enableArea={true}
-              areaOpacity={0.08}
-              lineWidth={3}
+              areaOpacity={0.06}
+              lineWidth={2}
               useMesh={true}
               legends={[
                 {
@@ -230,8 +234,9 @@ export const BenchmarkGraphCard = ({
                   translateY: 0,
                   itemsSpacing: 8,
                   itemWidth: 100,
-                  itemHeight: 24,
-                  symbolSize: 18,
+                  itemHeight: 22,
+                  symbolSize: 10,
+                  symbolShape: "circle",
                 },
               ]}
               tooltip={({ point }) =>
@@ -250,7 +255,7 @@ export const BenchmarkGraphCard = ({
             />
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
