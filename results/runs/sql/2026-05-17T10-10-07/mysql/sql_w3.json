@@ -1,0 +1,14 @@
+{
+  "database": "mysql",
+  "workload": "SQL-W3",
+  "description": "Transaction heavy",
+  "throughput_ops_sec": 452.967271480843,
+  "avg_latency_us": 17462.146247,
+  "p95_latency_us": 25783.972,
+  "p99_latency_us": 33667.067,
+  "operations_requested": 2000,
+  "operations_succeeded": 2000,
+  "operations_failed": 0,
+  "thread_count": 8,
+  "seed": 42
+}

@@ -1,0 +1,14 @@
+{
+  "database": "mysql",
+  "workload": "SQL-W4",
+  "description": "Mixed OLTP + OLAP",
+  "throughput_ops_sec": 204.29184660762547,
+  "avg_latency_us": 35497.4729295,
+  "p95_latency_us": 161691.636,
+  "p99_latency_us": 189559.97,
+  "operations_requested": 2000,
+  "operations_succeeded": 2000,
+  "operations_failed": 0,
+  "thread_count": 8,
+  "seed": 42
+}

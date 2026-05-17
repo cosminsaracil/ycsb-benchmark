@@ -1,0 +1,40 @@
+/usr/local/openjdk-11/bin/java -cp /ycsb/mongodb-binding/conf:/ycsb/conf:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar site.ycsb.Client -db site.ycsb.db.MongoDbClient -s -P workloads/workloada -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=1 -p operationcount=1 -p threadcount=1 -t
+Command line: -db site.ycsb.db.MongoDbClient -s -P workloads/workloada -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=1 -p operationcount=1 -p threadcount=1 -t
+YCSB Client 0.17.0
+
+Loading workload...
+Starting test.
+2025-05-31 13:19:49:302 0 sec: 0 operations; est completion in 0 second 
+mongo client connection created with mongodb://mongodb:27017/ycsb
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+2025-05-31 13:19:49:765 -5 sec: 1 operations; -0.17 current ops/sec; [READ: Count=0, Max=0, Min=9223372036854775807, Avg=NaN, 90=0, 99=0, 99.9=0, 99.99=0] [CLEANUP: Count=1, Max=2031, Min=2031, Avg=2031, 90=2031, 99=2031, 99.9=2031, 99.99=2031] [READ-FAILED: Count=1, Max=45983, Min=45952, Avg=45968, 90=45983, 99=45983, 99.9=45983, 99.99=45983] 
+[OVERALL], RunTime(ms), -5731
+[OVERALL], Throughput(ops/sec), -0.17448961786773687
+[TOTAL_GCS_G1_Young_Generation], Count, 1
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 8
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), -0.1395916942941895
+[TOTAL_GCS_G1_Old_Generation], Count, 0
+[TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
+[TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), -0.0
+[TOTAL_GCs], Count, 1
+[TOTAL_GC_TIME], Time(ms), 8
+[TOTAL_GC_TIME_%], Time(%), -0.1395916942941895
+[READ], Operations, 0
+[READ], AverageLatency(us), NaN
+[READ], MinLatency(us), 9223372036854775807
+[READ], MaxLatency(us), 0
+[READ], 95thPercentileLatency(us), 0
+[READ], 99thPercentileLatency(us), 0
+[READ], Return=NOT_FOUND, 1
+[CLEANUP], Operations, 1
+[CLEANUP], AverageLatency(us), 2031.0
+[CLEANUP], MinLatency(us), 2031
+[CLEANUP], MaxLatency(us), 2031
+[CLEANUP], 95thPercentileLatency(us), 2031
+[CLEANUP], 99thPercentileLatency(us), 2031
+[READ-FAILED], Operations, 1
+[READ-FAILED], AverageLatency(us), 45968.0
+[READ-FAILED], MinLatency(us), 45952
+[READ-FAILED], MaxLatency(us), 45983
+[READ-FAILED], 95thPercentileLatency(us), 45983
+[READ-FAILED], 99thPercentileLatency(us), 45983

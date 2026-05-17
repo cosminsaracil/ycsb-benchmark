@@ -1,0 +1,11 @@
+Starting SQL benchmark for postgres on postgres:5432
+===========================================================
+Running workload SQL-W4 (Mixed OLTP + OLAP)
+===========================================================
+Step 1/2: Preparing schema and seed data...
+  Seeding 10000 users, 1000 products, 10000 orders...
+  ✓ Schema ready and seed data loaded
+Step 2/2: Running measured workload...
+  ✓ SQL-W4 completed successfully
+  Throughput: 1047.79 ops/sec | Avg latency: 6679.17 μs | P95: 26610.78 μs | P99: 31228.26 μs
+SQL benchmark completed successfully for postgres

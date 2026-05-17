@@ -1,0 +1,51 @@
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar site.ycsb.Client -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadd -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+Command line: -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadd -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+YCSB Client 0.17.0
+
+Loading workload...
+Starting test.
+2026-05-17 10:15:04:998 0 sec: 0 operations; est completion in 0 second 
+mongo client connection created with mongodb://mongodb:27017/ycsb
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+2026-05-17 10:15:14:969 10 sec: 39910 operations; 3972.33 current ops/sec; est completion in 16 seconds [READ: Count=38090, Max=154879, Min=234, Avg=2169.63, 90=5067, 99=22335, 99.9=61791, 99.99=134143] [INSERT: Count=1977, Max=114111, Min=307, Avg=2834.36, 90=6835, 99=21935, 99.9=53567, 99.99=114111] 
+2026-05-17 10:15:21:827 16 sec: 100000 operations; 8760.75 current ops/sec; [READ: Count=56926, Max=59455, Min=200, Avg=1106.17, 90=2041, 99=11143, 99.9=28703, 99.99=45247] [CLEANUP: Count=10, Max=8175, Min=3, Avg=1052.2, 90=2315, 99=8175, 99.9=8175, 99.99=8175] [INSERT: Count=3007, Max=44447, Min=279, Avg=1486.81, 90=2711, 99=14735, 99.9=34815, 99.99=44447] 
+[OVERALL], RunTime(ms), 16905
+[OVERALL], Throughput(ops/sec), 5915.409642117716
+[TOTAL_GCS_G1_Young_Generation], Count, 22
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 467
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 2.7624963028689735
+[TOTAL_GCS_G1_Old_Generation], Count, 0
+[TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
+[TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
+[TOTAL_GCs], Count, 22
+[TOTAL_GC_TIME], Time(ms), 467
+[TOTAL_GC_TIME_%], Time(%), 2.7624963028689735
+[READ], Operations, 95016
+[READ], AverageLatency(us), 1532.4894544076787
+[READ], MinLatency(us), 200
+[READ], MaxLatency(us), 154879
+[READ], 95thPercentileLatency(us), 6131
+[READ], 99thPercentileLatency(us), 15391
+[READ], Return=OK, 95016
+[CLEANUP], Operations, 10
+[CLEANUP], AverageLatency(us), 1052.2
+[CLEANUP], MinLatency(us), 3
+[CLEANUP], MaxLatency(us), 8175
+[CLEANUP], 95thPercentileLatency(us), 8175
+[CLEANUP], 99thPercentileLatency(us), 8175
+[INSERT], Operations, 4984
+[INSERT], AverageLatency(us), 2021.3424959871588
+[INSERT], MinLatency(us), 279
+[INSERT], MaxLatency(us), 114111
+[INSERT], 95thPercentileLatency(us), 8155
+[INSERT], 99thPercentileLatency(us), 19919
+[INSERT], Return=OK, 4984

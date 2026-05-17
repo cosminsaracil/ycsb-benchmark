@@ -1,6 +1,6 @@
 # CAPITOLUL 5. EVALUAREA REZULTATELOR ÎN APLICAȚIE
 
-Acest capitol prezintă rezultatele obținute în cadrul studiului de caz, structurate pe două axe complementare. Prima axă (secțiunea 5.1) descrie interfața aplicației dezvoltate, care orchestrează rularea benchmark-urilor și vizualizarea rezultatelor pentru ambele module — YCSB pentru evaluarea NoSQL (Redis, MongoDB) și modulul propriu pentru evaluarea SQL (PostgreSQL, MySQL). A doua axă (secțiunea 5.2) prezintă valorile concrete obținute experimental și oferă o interpretare tehnică a acestora, evidențiind care sistem oferă performanță superioară pentru fiecare scenariu și de ce, în raport cu particularitățile arhitecturale ale fiecărei baze de date evaluate.
+Acest capitol prezintă rezultatele obținute în cadrul studiului de caz, structurate pe două axe complementare. Prima axă (secțiunea 5.1) descrie interfața aplicației dezvoltate, care orchestrează rularea benchmark-urilor și vizualizarea rezultatelor pentru ambele module — YCSB pentru evaluarea NoSQL (Redis, MongoDB) și modulul propriu pentru evaluarea SQL (PostgreSQL, MySQL). A doua axă (secțiunea 5.2) prezintă valorile concrete obținute experimental sub formă de tabele sintetice, urmând ca interpretarea tehnică detaliată a acestora și concluziile aferente să fie tratate în Capitolul 6.
 
 ## 5.1 Prezentarea interfeței aplicației
 
@@ -84,9 +84,9 @@ Selectorul multiplu de workload-uri permite includerea sau excluderea oricăruia
 
 ==introdu screenshot din selectorul de runs istorice (dropdown cu mai multe rulări timestamped) ==
 
-## 5.2 Rezultate experimentale și interpretare
+## 5.2 Rezultate experimentale
 
-Această secțiune prezintă valorile concrete obținute în urma rulării celor două module pe configurația de referință și oferă o interpretare tehnică a acestora. Toate testele au fost executate pe aceeași infrastructură containerizată, cu parametri reproductibili (seed fix 42, resetarea bazelor între workload-uri).
+Această secțiune prezintă valorile concrete obținute în urma rulării celor două module pe configurația de referință. Toate testele au fost executate pe aceeași infrastructură containerizată, cu parametri reproductibili (seed fix 42, resetarea bazelor între workload-uri). Interpretarea tehnică detaliată a acestor valori și concluziile derivate sunt prezentate în Capitolul 6.
 
 ### 5.2.1 Rezultate modulul YCSB (Redis vs MongoDB)
 
@@ -103,21 +103,7 @@ Parametrii utilizați au fost: `RECORD_COUNT = 100.000`, `OPERATION_COUNT = 100.
 | E        | Scan heavy           | 651             | **5.331**         | –                   | –                     | MongoDB (×8,2) |
 | F        | Read-modify-write    | **21.349**      | 12.332            | 307                 | 500                   | Redis (×1,7)   |
 
-**Interpretare per workload:**
-
-**Workload A (update heavy, 50/50).** MongoDB obține un avantaj de aproximativ 50% în throughput față de Redis, contraintuitiv pentru un sistem in-memory față de unul cu stocare persistentă. Explicația ține de modul în care fiecare sistem gestionează actualizările concurente: MongoDB folosește un mecanism eficient de write-batching la nivel de storage engine (WiredTiger), care optimizează scrierile concurente provenite de la cele 10 thread-uri, în timp ce Redis, deși operează în memorie, este predominant single-threaded pentru operațiile de scriere. Astfel, cu 50% updates, gâtuirea apare pe firul de execuție principal al Redis-ului, nu în operațiile de I/O.
-
-**Workload B (read heavy, 95/5).** Diferența se reduce la doar 11% în favoarea MongoDB. Pe măsură ce ponderea scrierilor scade, avantajul write-batching-ului dispare, iar diferența se atenuează semnificativ. Latențele medii de citire confirmă această tendință (626 μs pentru Redis vs. 517 μs pentru MongoDB).
-
-**Workload C (read only).** Redis recâștigă avantajul (~14% mai mult throughput), confirmând superioritatea sa pentru operațiile pure de citire — exact scenariul pentru care a fost optimizat: lookup direct în memorie pe o cheie. Latențele sunt similare (364 vs 379 μs), iar diferența vine din eficiența rețelei și a protocolului RESP.
-
-**Workload D (read latest).** Aici Redis obține cel mai mare avantaj — aproximativ 2,8× față de MongoDB. Pattern-ul „citire a celor mai recente date" favorizează puternic locality-ul de memorie al Redis-ului, în timp ce MongoDB suferă din cauza pattern-ului de inserare urmat imediat de citire, care invalidează cache-urile de pe storage și forțează accese la disk pe documente nou create.
-
-**Workload E (scan heavy).** Cea mai dramatică inversare: MongoDB este de aproximativ 8× mai rapid (5.331 vs 651 ops/sec). Redis nu este optimizat pentru operații de tip range scan — operația `SCAN` din protocolul Redis necesită iterare prin întreg keyspace-ul cu cursor, fără indexuri secundare native. MongoDB, în schimb, folosește indexuri B-tree pe câmpurile scanate, ceea ce reduce dramatic costul. Acest rezultat ilustrează că alegerea unei baze de date trebuie să țină cont de pattern-urile de acces — Redis este excelent pentru lookup-uri punctuale, dar slab pentru iterări pe intervale.
-
-**Workload F (read-modify-write).** Redis își recâștigă avantajul (~73%) datorită operațiilor atomice eficiente la nivel de cheie (`MULTI`/`EXEC`, comenzile native cu condiționalitate). MongoDB suferă din cauza overhead-ului mecanismelor optimiste de concurență (compare-and-swap pe documente întregi).
-
-**Concluzie YCSB.** Niciuna dintre cele două baze nu este universal superioară. Redis domină scenariile cu **citiri punctuale și read-modify-write** (C, D, F), iar MongoDB domină scenariile cu **scrieri batch și scanări** (A, B, E). Alegerea trebuie făcută în funcție de pattern-ul de acces al aplicației.
+Pe ansamblu, rezultatele YCSB sunt împărțite: MongoDB obține throughput superior pe workload-urile cu pondere de scriere și pe scanări (A, B, E), în timp ce Redis domină scenariile cu citiri punctuale și operații atomice (C, D, F). Diferențele variază de la marginale (×1,1 pentru workload-ul B) până la dramatice (×8,2 pentru workload-ul E).
 
 ### 5.2.2 Rezultate modulul SQL (PostgreSQL vs MySQL)
 
@@ -132,38 +118,4 @@ Parametrii utilizați au fost: `SQL_OPERATION_COUNT = 2.000`, `SQL_THREADS = 8`,
 | W3       | Transaction heavy | **1.989**        | 268         | 3.910       | 29.410         | 6.885       | 70.336         | PostgreSQL (×7,4) |
 | W4       | Mixed OLTP + OLAP | **1.015**        | 205         | 6.970       | 34.299         | 41.423      | 214.814        | PostgreSQL (×5,0) |
 
-**Interpretare per workload:**
-
-**Workload W1 (join-heavy).** PostgreSQL este de aproximativ 5× mai rapid și are o latență p99 de ~4× mai mică (2,8 ms vs 12,2 ms). Diferența majoră vine din planificatorul de interogări al PostgreSQL, care utilizează cost-based optimization avansat pentru join-uri multi-tabel, alegând eficient între strategii hash-join, merge-join și nested-loop. MySQL InnoDB folosește predominant nested-loop join cu look-up prin indexuri, ceea ce penalizează interogările cu lanțuri lungi de join-uri (W1 implică 4 tabele).
-
-**Workload W2 (aggregation-heavy).** Avantajul PostgreSQL crește la ~6,6× la throughput și la ~7× la latența p99. Workload-ul W2 conține predominant interogări `GROUP BY` cu funcții de agregare pe categorii, iar PostgreSQL beneficiază aici de:
-
-- agregări mai eficiente prin algoritmi hash-aggregate paralelizabili;
-- statistici mai detaliate pe coloane (`pg_statistic`), care permit planificatorului să aleagă strategia optimă;
-- gestionare mai eficientă a memoriei pentru ordonarea și gruparea valorilor (`work_mem`).
-
-Latențele p99 de 276 ms la MySQL indică prezența unor outlieri semnificativi — operații care, deși au reușit, au depășit cu mult media. Acest comportament este tipic pentru sistemele care recurg la operații pe disk atunci când memoria de lucru este insuficientă.
-
-**Workload W3 (transaction-heavy).** Diferența cea mai pronunțată — PostgreSQL este de aproximativ 7,4× mai rapid în throughput. Workload-ul W3 implică tranzacții multi-statement cu UPDATE pe `products.stock`, INSERT în `orders` și `order_items`, plus UPDATE pe `users.balance`. Avantajul PostgreSQL ține de:
-
-- implementarea MVCC (Multi-Version Concurrency Control) care permite citiri concurente fără blocare;
-- mecanismele de detecție a deadlock-urilor mai eficiente;
-- WAL (Write-Ahead Logging) optimizat pentru tranzacții scurte cu fsync grupat.
-
-MySQL InnoDB folosește și el MVCC, dar gen-locking-ul pe nivel de rând în combinație cu modul implicit `REPEATABLE READ` introduce conflict de scriere mai frecvent pe `products.stock`, ceea ce duce la latențe p99 de peste 70 ms.
-
-**Workload W4 (mixed OLTP + OLAP).** Combinație ponderată a celorlalte trei (55% W1 + 25% W2 + 20% W3). Rezultatul oglindește media ponderată a workload-urilor componente, cu PostgreSQL menținând avantajul de ~5×. Latența p99 ridicată (41 ms pentru PostgreSQL, 215 ms pentru MySQL) este influențată în principal de componenta de agregare (W2), care produce „spike-uri" punctuale.
-
-**Concluzie SQL.** Spre deosebire de modulul YCSB, unde rezultatele depind puternic de pattern-ul de acces, în modulul SQL **PostgreSQL domină categoric pe toate cele patru workload-uri**, cu factori multiplicativi între ×4,9 și ×7,4. Această dominanță reflectă diferențele arhitecturale fundamentale: PostgreSQL este proiectat din temelii ca sistem orientat OLTP+OLAP cu planificator avansat, în timp ce MySQL a evoluat istoric ca sistem optimizat pentru workload-uri web simple (citiri masive prin chei primare/secundare), iar suportul pentru join-uri complexe și agregări este mai limitat. Diferențele se accentuează cu cât interogarea este mai complexă din punct de vedere al planificării.
-
-### 5.2.3 Sinteza comparativă
-
-Cele două module construiesc împreună o imagine completă a peisajului bazelor de date moderne, evidențiind patru observații cheie:
-
-**1. Specializarea contează mai mult decât „performanța absolută".** Niciuna dintre cele patru baze de date evaluate nu este universal superioară. Redis excelează pe citiri punctuale, MongoDB pe scrieri batch și scanări, PostgreSQL pe interogări relaționale complexe, iar MySQL — deși inferior PostgreSQL-ului în acest studiu — rămâne competitiv pe workload-uri simple, neacoperite explicit aici.
-
-**2. Diferența între paradigme se vede în coada distribuției (p99), nu doar în medie.** În modulul SQL, latențele p99 ale MySQL sunt de 4–7× mai mari decât ale PostgreSQL, indicând nu doar performanță medie mai slabă, ci și **comportament mai puțin predictibil** sub sarcină. Pentru aplicații cu cerințe SLA stricte, această diferență este mai importantă decât diferența la media latențelor.
-
-**3. Modulul SQL completează metodologic modulul YCSB.** YCSB nu poate evalua scenarii reprezentative pentru bazele de date relaționale (join-uri, agregări, tranzacții multi-statement). Engine-ul propriu acoperă exact acest spațiu, păstrând în același timp metodologia inspirată din YCSB — faze separate de pregătire și măsurare, calcul de percentile, throughput sustained.
-
-**4. Valoarea unei aplicații unitare de benchmarking.** Faptul că toate cele patru baze sunt evaluate în același mediu containerizat, cu aceeași infrastructură de orchestrare și aceleași standarde de raportare, permite comparații consistente care ar fi extrem de greu de obținut prin instrumente disparate. Capacitatea aplicației de a arhiva snapshot-uri timestamped și de a oferi acces istoric extinde valoarea acestui cadru și pentru utilizări viitoare — de exemplu, evaluarea impactului unei migrări de versiune (PostgreSQL 16 → 17) sau a unei modificări de schemă pe aceleași workload-uri.
+Spre deosebire de modulul YCSB, unde rezultatele sunt împărțite în funcție de natura workload-ului, modulul SQL evidențiază o dominanță constantă a PostgreSQL pe toate cele patru workload-uri, cu factori multiplicativi între ×4,9 și ×7,4 atât la throughput, cât și la latențele percentile p99. Această uniformitate sugerează diferențe arhitecturale fundamentale între cele două sisteme, analizate în detaliu în Capitolul 6.

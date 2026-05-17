@@ -1,0 +1,52 @@
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar site.ycsb.Client -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloade -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+Command line: -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloade -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+YCSB Client 0.17.0
+
+Loading workload...
+Starting test.
+2026-05-17 09:43:12:879 0 sec: 0 operations; est completion in 0 second 
+mongo client connection created with mongodb://mongodb:27017/ycsb
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+2026-05-17 09:43:22:129 9 sec: 28032 operations; 3005.15 current ops/sec; est completion in 24 seconds [INSERT: Count=1360, Max=70655, Min=317, Avg=3146.05, 90=6827, 99=26367, 99.9=66047, 99.99=70655] [SCAN: Count=26788, Max=156031, Min=297, Avg=3251.18, 90=6747, 99=19279, 99.9=45023, 99.99=142079] 
+2026-05-17 09:43:32:126 19 sec: 69764 operations; 4174.03 current ops/sec; est completion in 9 second [INSERT: Count=2048, Max=28031, Min=283, Avg=1690.73, 90=3493, 99=10687, 99.9=18335, 99.99=28031] [SCAN: Count=39664, Max=37503, Min=292, Avg=2422.99, 90=5075, 99=13263, 99.9=24031, 99.99=31455] 
+2026-05-17 09:43:39:139 26 sec: 100000 operations; 4311.42 current ops/sec; [CLEANUP: Count=10, Max=6975, Min=3, Avg=701.8, 90=14, 99=6975, 99.9=6975, 99.99=6975] [INSERT: Count=1527, Max=18527, Min=291, Avg=1639.79, 90=3513, 99=9255, 99.9=14895, 99.99=18527] [SCAN: Count=28613, Max=58783, Min=278, Avg=2272.88, 90=4571, 99=11127, 99.9=17903, 99.99=29871] 
+[OVERALL], RunTime(ms), 26339
+[OVERALL], Throughput(ops/sec), 3796.6513535062077
+[TOTAL_GCS_G1_Young_Generation], Count, 107
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 800
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 3.037321082804966
+[TOTAL_GCS_G1_Old_Generation], Count, 0
+[TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
+[TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
+[TOTAL_GCs], Count, 107
+[TOTAL_GC_TIME], Time(ms), 800
+[TOTAL_GC_TIME_%], Time(%), 3.037321082804966
+[CLEANUP], Operations, 10
+[CLEANUP], AverageLatency(us), 701.8
+[CLEANUP], MinLatency(us), 3
+[CLEANUP], MaxLatency(us), 6975
+[CLEANUP], 95thPercentileLatency(us), 6975
+[CLEANUP], 99thPercentileLatency(us), 6975
+[INSERT], Operations, 4935
+[INSERT], AverageLatency(us), 2076.029989868288
+[INSERT], MinLatency(us), 283
+[INSERT], MaxLatency(us), 70655
+[INSERT], 95thPercentileLatency(us), 6623
+[INSERT], 99thPercentileLatency(us), 13879
+[INSERT], Return=OK, 4935
+[SCAN], Operations, 95065
+[SCAN], AverageLatency(us), 2611.1842844369644
+[SCAN], MinLatency(us), 278
+[SCAN], MaxLatency(us), 156031
+[SCAN], 95thPercentileLatency(us), 7531
+[SCAN], 99thPercentileLatency(us), 14159
+[SCAN], Return=OK, 95065

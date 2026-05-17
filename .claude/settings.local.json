@@ -45,10 +45,20 @@
       "Skill(emil-design-eng:*)",
       "Bash(npx eslint *)",
       "Bash(./node_modules/.bin/tsc --noEmit)",
-      "Bash(tee ../tsc.log)"
+      "Bash(tee ../tsc.log)",
+      "Bash(python -c \"import PyPDF2; print\\(PyPDF2.__version__\\)\")",
+      "Bash(python -c \"import pypdf; print\\(pypdf.__version__\\)\")",
+      "Bash(python -c \"import pdfplumber; print\\(pdfplumber.__version__\\)\")",
+      "Bash(pdftotext -layout \"D:/Facultate/Master/Disertatie/Raport sem IV/SĂRĂCIL Dragoș-Cosmin_Lucrare Disertatie_Sem III.pdf\" /tmp/diz/old_pdf.txt)",
+      "Bash(cp \"D:/Facultate/Master/Disertatie/Raport sem IV/SĂRĂCIL Dragoș-Cosmin_Lucrare Disertatie_Sem III.pdf\" /tmp/diz/old.pdf)",
+      "Bash(pdftotext -layout /tmp/diz/old.pdf /tmp/diz/old_pdf.txt)",
+      "Bash(cp /tmp/diz/old_pdf.txt \"C:/Users/Cosmin/AppData/Local/Temp/diz/old_pdf.txt\")",
+      "Bash(stat -c \"%y\" \"d:/Facultate/Master/Disertatie/benchmark-app/results/benchmark_summary.csv\" 2>/dev/null; ls -la --time-style=full-iso \"d:/Facultate/Master/Disertatie/benchmark-app/results/benchmark_summary.csv\")",
+      "Read(//d/Facultate/Master/Disertatie/benchmark-app/**)"
     ],
     "additionalDirectories": [
-      "\\tmp"
+      "\\tmp",
+      "\\tmp\\diz"
     ]
   }
 }

@@ -1,0 +1,11 @@
+Starting SQL benchmark for mysql on mysql:3306
+===========================================================
+Running workload SQL-W4 (Mixed OLTP + OLAP)
+===========================================================
+Step 1/2: Preparing schema and seed data...
+  Seeding 10000 users, 1000 products, 10000 orders...
+  ✓ Schema ready and seed data loaded
+Step 2/2: Running measured workload...
+  ✓ SQL-W4 completed successfully
+  Throughput: 258.02 ops/sec | Avg latency: 28207.07 μs | P95: 131453.90 μs | P99: 140988.40 μs
+SQL benchmark completed successfully for mysql

@@ -1,0 +1,57 @@
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar site.ycsb.Client -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadf -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+Command line: -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadf -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+YCSB Client 0.17.0
+
+Loading workload...
+Starting test.
+2026-05-17 09:43:49:638 0 sec: 0 operations; est completion in 0 second 
+mongo client connection created with mongodb://mongodb:27017/ycsb
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+2026-05-17 09:43:58:758 9 sec: 95427 operations; 10413.25 current ops/sec; est completion in 1 second [READ: Count=95461, Max=78399, Min=219, Avg=649.41, 90=1057, 99=3843, 99.9=10895, 99.99=30911] [READ-MODIFY-WRITE: Count=47928, Max=108991, Min=493, Avg=1309.29, 90=2089, 99=6707, 99.9=14007, 99.99=31247] [UPDATE: Count=47982, Max=25807, Min=224, Avg=650.97, 90=1065, 99=3755, 99.9=9679, 99.99=15607] 
+2026-05-17 09:43:59:370 9 sec: 100000 operations; 7447.88 current ops/sec; [READ: Count=4539, Max=19615, Min=233, Avg=708.49, 90=1143, 99=4791, 99.9=13119, 99.99=19615] [READ-MODIFY-WRITE: Count=2114, Max=26879, Min=501, Avg=1419.74, 90=2277, 99=8271, 99.9=14775, 99.99=26879] [CLEANUP: Count=10, Max=10703, Min=1, Avg=1074.7, 90=21, 99=10703, 99.9=10703, 99.99=10703] [UPDATE: Count=2060, Max=22271, Min=242, Avg=729.96, 90=1119, 99=6079, 99.9=13743, 99.99=22271] 
+[OVERALL], RunTime(ms), 9771
+[OVERALL], Throughput(ops/sec), 10234.367004400778
+[TOTAL_GCS_G1_Young_Generation], Count, 30
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 146
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 1.4942175826425135
+[TOTAL_GCS_G1_Old_Generation], Count, 0
+[TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
+[TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
+[TOTAL_GCs], Count, 30
+[TOTAL_GC_TIME], Time(ms), 146
+[TOTAL_GC_TIME_%], Time(%), 1.4942175826425135
+[READ], Operations, 100000
+[READ], AverageLatency(us), 652.09311
+[READ], MinLatency(us), 219
+[READ], MaxLatency(us), 78399
+[READ], 95thPercentileLatency(us), 1448
+[READ], 99thPercentileLatency(us), 3895
+[READ], Return=OK, 100000
+[READ-MODIFY-WRITE], Operations, 50042
+[READ-MODIFY-WRITE], AverageLatency(us), 1313.9562367611206
+[READ-MODIFY-WRITE], MinLatency(us), 493
+[READ-MODIFY-WRITE], MaxLatency(us), 108991
+[READ-MODIFY-WRITE], 95thPercentileLatency(us), 2863
+[READ-MODIFY-WRITE], 99thPercentileLatency(us), 6811
+[CLEANUP], Operations, 10
+[CLEANUP], AverageLatency(us), 1074.7
+[CLEANUP], MinLatency(us), 1
+[CLEANUP], MaxLatency(us), 10703
+[CLEANUP], 95thPercentileLatency(us), 10703
+[CLEANUP], 99thPercentileLatency(us), 10703
+[UPDATE], Operations, 50042
+[UPDATE], AverageLatency(us), 654.2235322329243
+[UPDATE], MinLatency(us), 224
+[UPDATE], MaxLatency(us), 25807
+[UPDATE], 95thPercentileLatency(us), 1452
+[UPDATE], 99thPercentileLatency(us), 3807
+[UPDATE], Return=OK, 50042

@@ -1,0 +1,11 @@
+Starting SQL benchmark for postgres on postgres:5432
+===========================================================
+Running workload SQL-W1 (Join heavy)
+===========================================================
+Step 1/2: Preparing schema and seed data...
+  Seeding 10000 users, 1000 products, 10000 orders...
+  ✓ Schema ready and seed data loaded
+Step 2/2: Running measured workload...
+  ✓ SQL-W1 completed successfully
+  Throughput: 3751.32 ops/sec | Avg latency: 1958.36 μs | P95: 3677.28 μs | P99: 4865.88 μs
+SQL benchmark completed successfully for postgres

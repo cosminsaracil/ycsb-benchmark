@@ -1,0 +1,14 @@
+{
+  "database": "postgres",
+  "workload": "SQL-W3",
+  "description": "Transaction heavy",
+  "throughput_ops_sec": 1305.8486092218434,
+  "avg_latency_us": 5947.29889,
+  "p95_latency_us": 8983.081,
+  "p99_latency_us": 11636.857,
+  "operations_requested": 2000,
+  "operations_succeeded": 2000,
+  "operations_failed": 0,
+  "thread_count": 8,
+  "seed": 42
+}

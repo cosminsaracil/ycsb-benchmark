@@ -1,0 +1,42 @@
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/redis-binding/lib/commons-pool2-2.4.2.jar:/ycsb/redis-binding/lib/jedis-2.9.0.jar:/ycsb/redis-binding/lib/redis-binding-0.17.0.jar site.ycsb.Client -load -db site.ycsb.db.RedisClient -s -P workloads/workloada -p redis.host=redis -p redis.port=6379 -p recordcount=100000 -p threadcount=10
+Command line: -load -db site.ycsb.db.RedisClient -s -P workloads/workloada -p redis.host=redis -p redis.port=6379 -p recordcount=100000 -p threadcount=10
+YCSB Client 0.17.0
+
+Loading workload...
+Starting test.
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+2026-05-17 10:08:01:717 0 sec: 0 operations; est completion in 0 second 
+2026-05-17 10:08:11:321 9 sec: 100000 operations; 10372.37 current ops/sec; [CLEANUP: Count=10, Max=785, Min=55, Avg=147.7, 90=121, 99=785, 99.9=785, 99.99=785] [INSERT: Count=100000, Max=11207, Min=232, Avg=952.8, 90=1253, 99=2029, 99.9=4519, 99.99=9879] 
+[OVERALL], RunTime(ms), 9641
+[OVERALL], Throughput(ops/sec), 10372.368011617053
+[TOTAL_GCS_G1_Young_Generation], Count, 16
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 53
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 0.5497355046157038
+[TOTAL_GCS_G1_Old_Generation], Count, 0
+[TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
+[TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
+[TOTAL_GCs], Count, 16
+[TOTAL_GC_TIME], Time(ms), 53
+[TOTAL_GC_TIME_%], Time(%), 0.5497355046157038
+[CLEANUP], Operations, 10
+[CLEANUP], AverageLatency(us), 147.7
+[CLEANUP], MinLatency(us), 55
+[CLEANUP], MaxLatency(us), 785
+[CLEANUP], 95thPercentileLatency(us), 785
+[CLEANUP], 99thPercentileLatency(us), 785
+[INSERT], Operations, 100000
+[INSERT], AverageLatency(us), 952.80124
+[INSERT], MinLatency(us), 232
+[INSERT], MaxLatency(us), 11207
+[INSERT], 95thPercentileLatency(us), 1394
+[INSERT], 99thPercentileLatency(us), 2029
+[INSERT], Return=OK, 100000

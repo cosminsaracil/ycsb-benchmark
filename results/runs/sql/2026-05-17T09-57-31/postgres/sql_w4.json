@@ -1,0 +1,14 @@
+{
+  "database": "postgres",
+  "workload": "SQL-W4",
+  "description": "Mixed OLTP + OLAP",
+  "throughput_ops_sec": 1041.965148437041,
+  "avg_latency_us": 6827.222684,
+  "p95_latency_us": 26389.822,
+  "p99_latency_us": 29311.353,
+  "operations_requested": 2000,
+  "operations_succeeded": 2000,
+  "operations_failed": 0,
+  "thread_count": 8,
+  "seed": 42
+}

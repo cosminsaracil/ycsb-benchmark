@@ -1,0 +1,50 @@
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar site.ycsb.Client -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadd -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+Command line: -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadd -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+YCSB Client 0.17.0
+
+Loading workload...
+Starting test.
+2026-05-17 09:35:50:473 0 sec: 0 operations; est completion in 0 second 
+mongo client connection created with mongodb://mongodb:27017/ycsb
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+2026-05-17 09:35:58:119 7 sec: 100000 operations; 13008.98 current ops/sec; [READ: Count=94990, Max=93503, Min=203, Avg=685.6, 90=1135, 99=6051, 99.9=14015, 99.99=83967] [CLEANUP: Count=10, Max=8223, Min=2, Avg=826.9, 90=22, 99=8223, 99.9=8223, 99.99=8223] [INSERT: Count=5010, Max=30719, Min=242, Avg=862.4, 90=1560, 99=6331, 99.9=19583, 99.99=28319] 
+[OVERALL], RunTime(ms), 7687
+[OVERALL], Throughput(ops/sec), 13008.976193573566
+[TOTAL_GCS_G1_Young_Generation], Count, 29
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 111
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 1.4439963574866659
+[TOTAL_GCS_G1_Old_Generation], Count, 0
+[TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
+[TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
+[TOTAL_GCs], Count, 29
+[TOTAL_GC_TIME], Time(ms), 111
+[TOTAL_GC_TIME_%], Time(%), 1.4439963574866659
+[READ], Operations, 94990
+[READ], AverageLatency(us), 685.6011790714812
+[READ], MinLatency(us), 203
+[READ], MaxLatency(us), 93503
+[READ], 95thPercentileLatency(us), 2097
+[READ], 99thPercentileLatency(us), 6051
+[READ], Return=OK, 94990
+[CLEANUP], Operations, 10
+[CLEANUP], AverageLatency(us), 826.9
+[CLEANUP], MinLatency(us), 2
+[CLEANUP], MaxLatency(us), 8223
+[CLEANUP], 95thPercentileLatency(us), 8223
+[CLEANUP], 99thPercentileLatency(us), 8223
+[INSERT], Operations, 5010
+[INSERT], AverageLatency(us), 862.4035928143712
+[INSERT], MinLatency(us), 242
+[INSERT], MaxLatency(us), 30719
+[INSERT], 95thPercentileLatency(us), 2607
+[INSERT], 99thPercentileLatency(us), 6331
+[INSERT], Return=OK, 5010
