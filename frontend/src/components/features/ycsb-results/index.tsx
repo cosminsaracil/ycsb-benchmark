@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 
 import { Activity } from "lucide-react";
 import { useGetAllYCSBResults, useYCSBAISummary } from "@/hooks/api/ycsb";
-import { RunSelector } from "@/components/features/shared/RunSelector";
+import {
+  AVERAGE_RUN_ID,
+  RunSelector,
+} from "@/components/features/shared/RunSelector";
 import { useCurrentTheme } from "@/utils/useCurrentTheme";
 import { METRICS, WORKLOADS } from "@/utils/ycsb-constants";
 import {
@@ -41,6 +44,18 @@ export default function EnhancedYCSBDashboard() {
     useState<string[]>(WORKLOADS);
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
   const currentTheme = useCurrentTheme();
+
+  const isAverageMode = selectedRunId === AVERAGE_RUN_ID;
+
+  // In average mode, only throughput is statistically valid to aggregate
+  // (mean of percentile latencies is not the same as percentile of the
+  // combined distribution). Force the metric to throughput and restrict
+  // the options shown to the user.
+  useEffect(() => {
+    if (isAverageMode && selectedMetric !== "throughput") {
+      setSelectedMetric("throughput");
+    }
+  }, [isAverageMode, selectedMetric]);
 
   const metricInfo = METRICS[selectedMetric as keyof typeof METRICS];
 
@@ -105,10 +120,12 @@ export default function EnhancedYCSBDashboard() {
           />
 
           <BenchmarkGraphConfiguration
-            metricOptions={Object.entries(METRICS).map(([k, v]) => ({
-              value: k,
-              label: v.label,
-            }))}
+            metricOptions={Object.entries(METRICS)
+              .filter(([k]) => !isAverageMode || k === "throughput")
+              .map(([k, v]) => ({
+                value: k,
+                label: v.label,
+              }))}
             workloadOptions={[
               { value: WORKLOADS.join(","), label: "All workloads" },
               { value: "A,B,C", label: "A, B, C" },

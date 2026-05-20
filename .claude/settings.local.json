@@ -54,7 +54,20 @@
       "Bash(pdftotext -layout /tmp/diz/old.pdf /tmp/diz/old_pdf.txt)",
       "Bash(cp /tmp/diz/old_pdf.txt \"C:/Users/Cosmin/AppData/Local/Temp/diz/old_pdf.txt\")",
       "Bash(stat -c \"%y\" \"d:/Facultate/Master/Disertatie/benchmark-app/results/benchmark_summary.csv\" 2>/dev/null; ls -la --time-style=full-iso \"d:/Facultate/Master/Disertatie/benchmark-app/results/benchmark_summary.csv\")",
-      "Read(//d/Facultate/Master/Disertatie/benchmark-app/**)"
+      "Read(//d/Facultate/Master/Disertatie/benchmark-app/**)",
+      "Bash(Get-ChildItem -Path d:\\\\Facultate\\\\Master\\\\Disertatie\\\\benchmark-app -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(node -e ' *)",
+      "Bash(curl -s \"http://localhost:8001/api/runs?module=sql\")",
+      "Bash(curl -s \"http://localhost:8001/api/sql/results?runId=__average__\")",
+      "Bash(cp \"/d/Facultate/Master/Disertatie/Raport sem IV/SCSS/SCSS_SĂRĂCIL_Dragoș-Cosmin.pdf\" /tmp/scss.pdf)",
+      "Bash(pdftotext -layout /tmp/scss.pdf /tmp/scss.txt)",
+      "Bash(cp /tmp/scss.txt \"C:/Users/Cosmin/AppData/Local/Temp/scss.txt\")",
+      "Bash(python -c \"import pptx; print\\('python-pptx version:', pptx.__version__\\)\")",
+      "Bash(pip install *)",
+      "Bash(python scripts/build_pptx.py)",
+      "Bash(where python *)",
+      "Bash(python -c \"import sys; print\\(sys.executable\\)\")"
     ],
     "additionalDirectories": [
       "\\tmp",

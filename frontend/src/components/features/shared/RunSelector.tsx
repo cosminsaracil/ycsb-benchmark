@@ -15,6 +15,8 @@ import { useDeleteRun, useRuns } from "@/hooks/api/runs";
 import type { BenchmarkModule, BenchmarkRun } from "@/types/benchmark";
 
 const LATEST_VALUE = "__latest__";
+export const AVERAGE_RUN_ID = "__average__";
+const AVERAGE_VALUE = AVERAGE_RUN_ID;
 
 const formatLabel = (run: BenchmarkRun) => {
   const dt = new Date(run.timestamp);
@@ -48,10 +50,23 @@ export const RunSelector = ({
 
   const runs = data?.runs ?? [];
   const selected = runs.find((r) => r.id === selectedRunId) ?? null;
-  const viewingLabel = selected ? formatLabel(selected) : "Latest run";
+  const isAverageSelected = selectedRunId === AVERAGE_VALUE;
+  const viewingLabel = isAverageSelected
+    ? `Average of ${runs.length} runs`
+    : selected
+      ? formatLabel(selected)
+      : "Latest run";
 
   const options = [
     { value: LATEST_VALUE, label: "Latest run" },
+    ...(runs.length >= 2
+      ? [
+          {
+            value: AVERAGE_VALUE,
+            label: `Average (${runs.length} runs)`,
+          },
+        ]
+      : []),
     ...runs.map((run) => ({
       value: run.id,
       label: formatLabel(run),
@@ -59,7 +74,11 @@ export const RunSelector = ({
   ];
 
   const handleChange = (value: string) => {
-    onChange(value === LATEST_VALUE ? null : value);
+    if (value === LATEST_VALUE) {
+      onChange(null);
+    } else {
+      onChange(value);
+    }
   };
 
   const handleDelete = async () => {
@@ -86,7 +105,7 @@ export const RunSelector = ({
             disabled={isLoading || runs.length === 0}
           />
         </div>
-        {selected && (
+        {selected && !isAverageSelected && (
           <Button
             variant="outline"
             size="icon"

@@ -60,6 +60,10 @@ class BenchmarkResult:
     seed: int
 
 
+# Small wrapper around the Postgres / MySQL drivers so the rest of the script
+# doesn't have to care which database it's talking to. Each method papers over
+# one dialect difference (how you connect, how you wipe state, how you load
+# the schema).
 class DatabaseClient:
     def __init__(self, args: argparse.Namespace):
         self.args = args
@@ -141,6 +145,10 @@ def bulk_insert(connection, sql: str, rows: list[tuple], batch_size: int = 1000)
     connection.commit()
 
 
+# Builds a fresh dataset (users, products, orders, order_items) and bulk-loads
+# it. Same seed always produces the same data, which is what keeps the
+# Postgres vs MySQL comparison fair. This runs before timing starts, so the
+# insert cost never shows up in the throughput numbers.
 def seed_database(connection, args: argparse.Namespace, rng: random.Random) -> None:
     users = []
     for user_id in range(1, args.users + 1):
@@ -240,6 +248,13 @@ def insert_generated_row(connection, dialect: str, table: str, values_sql: str, 
     return cursor.lastrowid
 
 
+# Each workload below represents one "operation". The harness calls one of
+# these in a tight loop across N threads and measures how long each call
+# takes — that's where the throughput and latency numbers come from.
+
+# W1 — join-heavy. Pulls a random order back together by joining four tables
+# (orders, users, order_items, products). Cheap per row, but the planner has
+# real work to do.
 def run_join_heavy(connection, dialect: str, rng: random.Random, counts: dict[str, int]) -> None:
     cursor = connection.cursor()
     order_id = rng.randint(1, counts["orders"])
@@ -256,6 +271,9 @@ def run_join_heavy(connection, dialect: str, rng: random.Random, counts: dict[st
     cursor.fetchall()
 
 
+# W2 — aggregation-heavy. Most of the time it does a big GROUP BY to compute
+# revenue per category (OLAP style). One in five calls instead writes a new
+# order, just so it's not purely read-only.
 def run_aggregation_heavy(connection, dialect: str, rng: random.Random, counts: dict[str, int]) -> None:
     cursor = connection.cursor()
     if rng.random() < 0.8:
@@ -289,6 +307,10 @@ def run_aggregation_heavy(connection, dialect: str, rng: random.Random, counts: 
         )
 
 
+# W3 — transactional. Simulates "buy a product": find one in stock, decrement
+# its stock, create the order and its line item, and debit the buyer's
+# balance. All four writes go in a single committed transaction, so this is
+# really measuring commit cost as much as anything else.
 def run_transaction_heavy(connection, dialect: str, rng: random.Random, counts: dict[str, int]) -> None:
     cursor = connection.cursor()
     user_id = rng.randint(1, counts["users"])
@@ -334,6 +356,9 @@ def run_transaction_heavy(connection, dialect: str, rng: random.Random, counts: 
     cursor.execute("UPDATE users SET balance = balance - %s WHERE id = %s", (total, user_id))
 
 
+# W4 — the mixed one. Rolls a die per call: mostly joins, sometimes an
+# aggregation, occasionally a full transaction. Closer to what a real
+# application's traffic shape tends to look like.
 def run_mixed_workload(connection, dialect: str, rng: random.Random, counts: dict[str, int]) -> None:
     roll = rng.random()
     if roll < 0.55:
@@ -352,6 +377,10 @@ WORKLOAD_FUNCTIONS: dict[str, Callable[[object, str, random.Random, dict[str, in
 }
 
 
+# Stats helper. We time every operation in nanoseconds and convert to
+# microseconds, then later report the mean plus P95/P99 — the percentiles
+# matter more than the average for understanding tail behaviour. Throughput
+# is just successful ops divided by wall-clock time across all threads.
 def percentile(values: list[float], ratio: float) -> float:
     if not values:
         return 0.0
@@ -482,6 +511,9 @@ def run_workload(client: DatabaseClient, args: argparse.Namespace, workload: str
     return result
 
 
+# Dumps one JSON file per workload into --results-dir (sql_w1.json, etc).
+# These are the raw artifacts; analyze_sql_results.py reads them afterwards
+# and turns them into the summary CSV the frontend graphs.
 def write_result_artifacts(results: list[BenchmarkResult], output_dir: Path, database: str) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     for result in results:

@@ -14,7 +14,10 @@ import { BenchmarkGraphConfiguration } from "@/components/features/shared/Benchm
 import { BenchmarkSummaryCards } from "@/components/features/shared/BenchmarkSummaryCards";
 import { useBenchmarkChartData } from "@/components/features/shared/useBenchmarkChartData";
 import { formatBenchmarkNumber } from "@/components/features/shared/format";
-import { RunSelector } from "@/components/features/shared/RunSelector";
+import {
+  AVERAGE_RUN_ID,
+  RunSelector,
+} from "@/components/features/shared/RunSelector";
 import type { SQLBenchmarkRow } from "@/types/benchmark";
 import { SQLInformationSection } from "./components/SQLInformationSection";
 
@@ -46,6 +49,18 @@ export default function SQLResults() {
   useEffect(() => {
     clearSummary();
   }, [selectedRunId, clearSummary]);
+
+  const isAverageMode = selectedRunId === AVERAGE_RUN_ID;
+
+  // In average mode, only throughput is statistically valid to aggregate
+  // (mean of percentile latencies is not the same as percentile of the
+  // combined distribution). Force the metric to throughput and restrict
+  // the options shown to the user.
+  useEffect(() => {
+    if (isAverageMode && selectedMetric !== "throughput_ops_sec") {
+      setSelectedMetric("throughput_ops_sec");
+    }
+  }, [isAverageMode, selectedMetric]);
 
   const metricInfo = SQL_METRICS[selectedMetric as keyof typeof SQL_METRICS];
 
@@ -115,10 +130,12 @@ export default function SQLResults() {
 
           <BenchmarkGraphConfiguration
             description="Customize your SQL benchmark view and analysis parameters."
-            metricOptions={Object.entries(SQL_METRICS).map(([k, v]) => ({
-              value: k,
-              label: v.label,
-            }))}
+            metricOptions={Object.entries(SQL_METRICS)
+              .filter(([k]) => !isAverageMode || k === "throughput_ops_sec")
+              .map(([k, v]) => ({
+                value: k,
+                label: v.label,
+              }))}
             workloadOptions={[
               { value: SQL_WORKLOADS.join(","), label: "All workloads" },
               { value: "W1,W2", label: "W1, W2" },

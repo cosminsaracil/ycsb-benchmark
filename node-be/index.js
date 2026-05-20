@@ -63,6 +63,7 @@ async function loadResults(resultsFile, benchmarkName) {
 
 const RESULTS_ROOT = path.resolve(process.cwd(), "../results");
 const RUN_ID_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}$/;
+const AVERAGE_RUN_ID = "__average__";
 
 const MODULE_CONFIG = {
   ycsb: {
@@ -79,6 +80,10 @@ const MODULE_CONFIG = {
 
 function isValidRunId(runId) {
   return typeof runId === "string" && RUN_ID_PATTERN.test(runId);
+}
+
+function isAverageRunId(runId) {
+  return runId === AVERAGE_RUN_ID;
 }
 
 function getRunSummaryPath(moduleKey, runId) {
@@ -118,6 +123,10 @@ async function loadModuleResults(moduleKey, runId) {
   const cfg = MODULE_CONFIG[moduleKey];
   if (!cfg) throw new Error(`Unknown module: ${moduleKey}`);
 
+  if (isAverageRunId(runId)) {
+    return loadAverageResults(moduleKey);
+  }
+
   let resultsFile;
   if (runId) {
     resultsFile = getRunSummaryPath(moduleKey, runId);
@@ -140,12 +149,95 @@ async function loadModuleResults(moduleKey, runId) {
   return loadResults(resultsFile, cfg.benchmarkName);
 }
 
+// Aggregate all snapshots for a module by computing arithmetic mean of numeric
+// columns, grouped by (database, workload). Returns the same shape as
+// loadResults so the frontend can render it as a regular run.
+async function loadAverageResults(moduleKey) {
+  const cfg = MODULE_CONFIG[moduleKey];
+  if (!cfg) throw new Error(`Unknown module: ${moduleKey}`);
+
+  const runs = listRuns(moduleKey).filter((r) => r.hasSummary);
+  if (runs.length === 0) {
+    return {
+      filename: `average-${moduleKey}.csv`,
+      benchmark: cfg.benchmarkName,
+      data: [],
+      meta: { aggregated: true, runCount: 0 },
+    };
+  }
+
+  // Load all snapshots in parallel
+  const loaded = await Promise.all(
+    runs.map((r) =>
+      loadResults(getRunSummaryPath(moduleKey, r.id), cfg.benchmarkName),
+    ),
+  );
+
+  // Group rows by (database, workload). For each group, average every numeric
+  // column across runs. Non-numeric columns (database, workload, description)
+  // are taken from the first occurrence.
+  const groups = new Map();
+  for (const result of loaded) {
+    for (const row of result.data) {
+      const key = `${row.database ?? ""}::${row.workload ?? ""}`;
+      if (!groups.has(key)) {
+        groups.set(key, { rows: [], sample: row });
+      }
+      groups.get(key).rows.push(row);
+    }
+  }
+
+  const aggregated = [];
+  for (const { rows, sample } of groups.values()) {
+    const merged = { ...sample };
+    const allKeys = new Set();
+    rows.forEach((r) => Object.keys(r).forEach((k) => allKeys.add(k)));
+
+    for (const key of allKeys) {
+      const numericValues = rows
+        .map((r) => {
+          const v = r[key];
+          if (v === null || v === undefined || v === "") return NaN;
+          const n = typeof v === "number" ? v : parseFloat(v);
+          return Number.isFinite(n) ? n : NaN;
+        })
+        .filter((n) => Number.isFinite(n));
+
+      if (numericValues.length > 0) {
+        // Average across all non-empty numeric values (ignore empty fields).
+        merged[key] =
+          numericValues.reduce((a, b) => a + b, 0) / numericValues.length;
+      } else {
+        // No numeric values across any run — keep the first non-empty raw value
+        // (e.g. text fields like database, workload, description).
+        const firstNonEmpty = rows.find(
+          (r) => r[key] !== null && r[key] !== undefined && r[key] !== "",
+        );
+        merged[key] = firstNonEmpty ? firstNonEmpty[key] : sample[key];
+      }
+    }
+
+    aggregated.push(merged);
+  }
+
+  return {
+    filename: `average-${moduleKey}.csv`,
+    benchmark: cfg.benchmarkName,
+    data: aggregated,
+    meta: {
+      aggregated: true,
+      runCount: runs.length,
+      runIds: runs.map((r) => r.id),
+    },
+  };
+}
+
 // Routes
 // GET /api/results?runId=<id>
 app.get("/api/results", async (req, res) => {
   try {
     const runId = req.query.runId ? String(req.query.runId) : null;
-    if (runId && !isValidRunId(runId)) {
+    if (runId && !isValidRunId(runId) && !isAverageRunId(runId)) {
       return res.status(400).json({ detail: "Invalid runId format" });
     }
     const results = await loadModuleResults("ycsb", runId);
@@ -162,7 +254,7 @@ app.get("/api/results", async (req, res) => {
 app.get("/api/sql/results", async (req, res) => {
   try {
     const runId = req.query.runId ? String(req.query.runId) : null;
-    if (runId && !isValidRunId(runId)) {
+    if (runId && !isValidRunId(runId) && !isAverageRunId(runId)) {
       return res.status(400).json({ detail: "Invalid runId format" });
     }
     const results = await loadModuleResults("sql", runId);
