@@ -1,0 +1,11 @@
+Starting SQL benchmark for mysql on mysql:3306
+===========================================================
+Running workload SQL-W3 (Transaction heavy)
+===========================================================
+Step 1/2: Preparing schema and seed data...
+  Seeding 10000 users, 1000 products, 10000 orders...
+  ✓ Schema ready and seed data loaded
+Step 2/2: Running measured workload...
+  ✓ SQL-W3 completed successfully
+  Throughput: 149.93 ops/sec | Avg latency: 52390.43 μs | P95: 103084.07 μs | P99: 138910.38 μs
+SQL benchmark completed successfully for mysql

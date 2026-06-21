@@ -126,6 +126,7 @@ export default function SQLResults() {
             isLoading={isSummaryLoading}
             error={summaryError}
             isFromCache={isFromCache}
+            onDismiss={clearSummary}
           />
 
           <BenchmarkGraphConfiguration
@@ -222,7 +223,7 @@ const ResultsHeader = ({
       <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
         {title}
       </h1>
-      <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-prose">
+      <p className="text-sm text-neutral-600 dark:text-neutral-400">
         {description}
       </p>
     </div>

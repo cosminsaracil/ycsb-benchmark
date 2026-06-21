@@ -1,0 +1,51 @@
+/opt/java/openjdk/bin/java  -classpath /ycsb/conf:/ycsb/lib/HdrHistogram-2.1.4.jar:/ycsb/lib/core-0.17.0.jar:/ycsb/lib/htrace-core4-4.1.0-incubating.jar:/ycsb/lib/jackson-core-asl-1.9.4.jar:/ycsb/lib/jackson-mapper-asl-1.9.4.jar:/ycsb/mongodb-binding/lib/logback-classic-1.1.2.jar:/ycsb/mongodb-binding/lib/logback-core-1.1.2.jar:/ycsb/mongodb-binding/lib/mongo-java-driver-3.8.0.jar:/ycsb/mongodb-binding/lib/mongodb-async-driver-2.0.1.jar:/ycsb/mongodb-binding/lib/mongodb-binding-0.17.0.jar:/ycsb/mongodb-binding/lib/slf4j-api-1.7.25.jar:/ycsb/mongodb-binding/lib/snappy-java-1.1.7.1.jar site.ycsb.Client -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadb -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+Command line: -t -db site.ycsb.db.MongoDbClient -s -P workloads/workloadb -p mongodb.url=mongodb://mongodb:27017/ycsb -p recordcount=100000 -p operationcount=100000 -p threadcount=10
+YCSB Client 0.17.0
+
+Loading workload...
+Starting test.
+2026-06-21 15:30:16:463 0 sec: 0 operations; est completion in 0 second 
+mongo client connection created with mongodb://mongodb:27017/ycsb
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+2026-06-21 15:30:24:391 7 sec: 70698 operations; 8839.46 current ops/sec; est completion in 4 second [READ: Count=67277, Max=113983, Min=202, Avg=1228.42, 90=2331, 99=13287, 99.9=32143, 99.99=106623] [UPDATE: Count=3581, Max=45311, Min=248, Avg=1674.55, 90=3677, 99=15543, 99.9=26671, 99.99=45311] 
+2026-06-21 15:30:26:856 10 sec: 100000 operations; 11887.22 current ops/sec; [READ: Count=27758, Max=34431, Min=197, Avg=700.67, 90=963, 99=8943, 99.9=18799, 99.99=28175] [CLEANUP: Count=10, Max=12927, Min=4, Avg=1300, 90=17, 99=12927, 99.9=12927, 99.99=12927] [UPDATE: Count=1384, Max=26815, Min=242, Avg=1075.68, 90=1951, 99=11695, 99.9=25663, 99.99=26815] 
+[OVERALL], RunTime(ms), 10464
+[OVERALL], Throughput(ops/sec), 9556.574923547401
+[TOTAL_GCS_G1_Young_Generation], Count, 26
+[TOTAL_GC_TIME_G1_Young_Generation], Time(ms), 280
+[TOTAL_GC_TIME_%_G1_Young_Generation], Time(%), 2.675840978593272
+[TOTAL_GCS_G1_Old_Generation], Count, 0
+[TOTAL_GC_TIME_G1_Old_Generation], Time(ms), 0
+[TOTAL_GC_TIME_%_G1_Old_Generation], Time(%), 0.0
+[TOTAL_GCs], Count, 26
+[TOTAL_GC_TIME], Time(ms), 280
+[TOTAL_GC_TIME_%], Time(%), 2.675840978593272
+[READ], Operations, 95035
+[READ], AverageLatency(us), 1074.2728784132162
+[READ], MinLatency(us), 197
+[READ], MaxLatency(us), 113983
+[READ], 95thPercentileLatency(us), 4395
+[READ], 99thPercentileLatency(us), 12503
+[READ], Return=OK, 95035
+[CLEANUP], Operations, 10
+[CLEANUP], AverageLatency(us), 1300.0
+[CLEANUP], MinLatency(us), 4
+[CLEANUP], MaxLatency(us), 12927
+[CLEANUP], 95thPercentileLatency(us), 12927
+[CLEANUP], 99thPercentileLatency(us), 12927
+[UPDATE], Operations, 4965
+[UPDATE], AverageLatency(us), 1507.6163141993957
+[UPDATE], MinLatency(us), 242
+[UPDATE], MaxLatency(us), 45311
+[UPDATE], 95thPercentileLatency(us), 6319
+[UPDATE], 99thPercentileLatency(us), 14151
+[UPDATE], Return=OK, 4965

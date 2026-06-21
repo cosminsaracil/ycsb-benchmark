@@ -1,4 +1,4 @@
-import { AlertCircle, Sparkles } from "lucide-react";
+import { AlertCircle, Sparkles, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -7,6 +7,7 @@ type Props = {
   error: string | null;
   isFromCache: boolean;
   onGenerate: () => void;
+  onDismiss?: () => void;
   loadingMessage?: string;
 };
 
@@ -39,6 +40,7 @@ export const AISummaryCard = ({
   isLoading,
   error,
   isFromCache,
+  onDismiss,
   loadingMessage = "Analyzing throughput and latency trends…",
 }: Omit<Props, "onGenerate">) => {
   if (!isLoading && !error && !summary) return null;
@@ -58,15 +60,33 @@ export const AISummaryCard = ({
               AI summary
             </h3>
           </div>
-          {isFromCache && (
-            <span
-              title="Showing cached summary. Check console for AI request details."
-              className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-[0.14em] border border-neutral-200 dark:border-neutral-800 text-neutral-500"
-            >
-              <span className="inline-flex h-1.5 w-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
-              cached
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {isFromCache && (
+              <span
+                title="Showing cached summary. Check console for AI request details."
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-[0.14em] border border-neutral-200 dark:border-neutral-800 text-neutral-500"
+              >
+                <span className="inline-flex h-1.5 w-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
+                cached
+              </span>
+            )}
+            {onDismiss && !isLoading && (
+              <button
+                type="button"
+                onClick={onDismiss}
+                aria-label="Hide AI summary"
+                title="Hide AI summary"
+                className={cn(
+                  "inline-flex items-center justify-center w-7 h-7 rounded-md shrink-0 cursor-pointer",
+                  "text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200",
+                  "hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition-colors",
+                  "outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                )}
+              >
+                <X className="w-4 h-4" strokeWidth={1.75} />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="px-6 pb-6">

@@ -341,16 +341,35 @@ app.post("/api/sql/benchmark/start", async (req, res) => {
 // Clients connections
 app.get("/api/check-connection", checkConnections);
 
+// A usable summary must be substantial prose, not a truncated fragment or a
+// stray bit of model reasoning. The prompt asks for 2-3 paragraphs covering
+// five points, so a real answer is comfortably longer than this floor.
+const MIN_SUMMARY_LENGTH = 300;
+
+function isUsableSummary(text) {
+  if (typeof text !== "string") return false;
+  const trimmed = text.trim();
+  if (trimmed.length < MIN_SUMMARY_LENGTH) return false;
+  // Reject fragments that don't start like a sentence (e.g. a leftover
+  // reasoning tail such as "95, and P99...").
+  if (!/^[A-Z"“]/.test(trimmed)) return false;
+  return true;
+}
+
 async function callOpenRouter(prompt, title) {
+  // Default to dependable instruction-tuned models. We deliberately avoid
+  // "openrouter/auto", which can route to reasoning models whose visible
+  // `content` comes back as a truncated fragment while the real output lands
+  // in a separate `reasoning` field.
   const preferredModels = process.env.OPENROUTER_MODELS
     ? process.env.OPENROUTER_MODELS.split(",")
         .map((model) => model.trim())
         .filter(Boolean)
     : [
-        "openrouter/auto",
         "meta-llama/llama-3.1-8b-instruct",
         "google/gemma-2-9b-it",
         "qwen/qwen-2.5-7b-instruct",
+        "mistralai/mistral-7b-instruct",
       ];
 
   let aiSummary = null;
@@ -365,7 +384,8 @@ async function callOpenRouter(prompt, title) {
           model,
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7,
-          max_tokens: 500,
+          // Generous budget so a 2-3 paragraph summary is never clipped.
+          max_tokens: 1200,
         },
         {
           headers: {
@@ -376,14 +396,30 @@ async function callOpenRouter(prompt, title) {
         },
       );
 
-      aiSummary = response.data?.choices?.[0]?.message?.content ?? null;
-      usedModel = model;
+      const choice = response.data?.choices?.[0];
+      const content = choice?.message?.content?.trim() || null;
+      const finishReason = choice?.finish_reason;
 
-      if (aiSummary) {
-        break;
+      if (!content) {
+        lastApiError = `${model}: Empty completion content`;
+        continue;
       }
 
-      lastApiError = `${model}: Empty completion content`;
+      // A "length" finish means the answer was cut off mid-thought. Don't
+      // serve a truncated summary — try the next model instead.
+      if (finishReason === "length") {
+        lastApiError = `${model}: Completion truncated (finish_reason=length)`;
+        continue;
+      }
+
+      if (!isUsableSummary(content)) {
+        lastApiError = `${model}: Completion too short or malformed`;
+        continue;
+      }
+
+      aiSummary = content;
+      usedModel = model;
+      break;
     } catch (apiError) {
       const status = apiError.response?.status;
       const detail =
